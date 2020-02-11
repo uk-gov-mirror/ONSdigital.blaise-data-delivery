@@ -1,0 +1,9 @@
+steps:
+- task: DotNetCoreCLI@1
+  displayName: 'dotnet-publish'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: RabbitMQ/RabbitMQ.csproj
+    arguments: ' -r win-x64 -c release'
+    zipAfterPublish: false

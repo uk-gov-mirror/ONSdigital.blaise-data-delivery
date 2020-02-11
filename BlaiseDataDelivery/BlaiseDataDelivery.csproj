@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="3.1.0" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="PgpCore" Version="2.2.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.112" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="StatNeth.Blaise.API">
+      <HintPath>..\StatNethApi\StatNeth.Blaise.API.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
