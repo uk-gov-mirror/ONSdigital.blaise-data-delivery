@@ -1,6 +1,6 @@
 ﻿using Blaise.Queue.Contracts.Interfaces.MessageHandlers;
 
-namespace BlaiseDataDelivery.MessageHandler
+namespace BlaiseDataDelivery.MessageHandlers
 {
     public class TestQueueEventHandlerCallback : IMessageHandlerCallback
     {

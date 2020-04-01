@@ -2,9 +2,9 @@
 using Blaise.Queue.Contracts.Interfaces;
 using Blaise.Queue.Contracts.Interfaces.MessageHandlers;
 using BlaiseDataDelivery.Interfaces.Providers;
-using BlaiseDataDelivery.Interfaces.Services;
+using BlaiseDataDelivery.Interfaces.Services.Queue;
 
-namespace BlaiseDataDelivery.Services
+namespace BlaiseDataDelivery.Services.Queue
 {
     public class SubscriptionService : ISubscriptionService
     {

@@ -1,6 +1,6 @@
 ﻿
 
-namespace BlaiseDataDelivery.Interfaces.Services
+namespace BlaiseDataDelivery.Interfaces.Services.Queue
 {
     public interface IPublishService
     {

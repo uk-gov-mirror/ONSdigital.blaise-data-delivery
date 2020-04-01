@@ -1,9 +1,9 @@
 ﻿using Blaise.Queue.Contracts.Enums;
 using Blaise.Queue.Contracts.Interfaces;
 using BlaiseDataDelivery.Interfaces.Providers;
-using BlaiseDataDelivery.Interfaces.Services;
+using BlaiseDataDelivery.Interfaces.Services.Queue;
 
-namespace BlaiseDataDelivery.Services
+namespace BlaiseDataDelivery.Services.Queue
 {
     public class PublishService : IPublishService
     {

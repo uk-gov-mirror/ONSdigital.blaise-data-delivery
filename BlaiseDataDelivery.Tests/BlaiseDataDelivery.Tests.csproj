@@ -66,8 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\PublishServiceTests.cs" />
-    <Compile Include="Services\SubscriptionServiceTests.cs" />
+    <Compile Include="Services\InitialiseDeliveryServiceTests.cs" />
+    <Compile Include="Services\Queue\PublishServiceTests.cs" />
+    <Compile Include="Services\Queue\SubscriptionServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -78,6 +79,9 @@
       <Project>{40e71d3d-bb81-4164-a763-9bb9fb52c745}</Project>
       <Name>BlaiseDataDelivery</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Blaise\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

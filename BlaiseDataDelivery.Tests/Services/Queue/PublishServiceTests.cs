@@ -3,11 +3,11 @@ using Blaise.Queue.Contracts.Interfaces;
 using Blaise.Queue.Contracts.Interfaces.Fluent;
 using Blaise.Queue.Contracts.Models;
 using BlaiseDataDelivery.Interfaces.Providers;
-using BlaiseDataDelivery.Services;
+using BlaiseDataDelivery.Services.Queue;
 using Moq;
 using NUnit.Framework;
 
-namespace BlaiseDataDelivery.Tests.Services
+namespace BlaiseDataDelivery.Tests.Services.Queue
 {
     public class PublishServiceTests
     {

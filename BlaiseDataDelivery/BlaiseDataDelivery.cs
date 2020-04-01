@@ -1,11 +1,19 @@
 ﻿using Blaise.Queue.Api;
 using Blaise.Queue.Contracts.Interfaces;
 using Blaise.Queue.Contracts.Interfaces.MessageHandlers;
+using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services;
-using BlaiseDataDelivery.MessageHandler;
+using BlaiseDataDelivery.Interfaces.Services.Blaise;
+using BlaiseDataDelivery.Interfaces.Services.File;
+using BlaiseDataDelivery.Interfaces.Services.Queue;
+using BlaiseDataDelivery.Mappers;
+using BlaiseDataDelivery.MessageHandlers;
 using BlaiseDataDelivery.Providers;
 using BlaiseDataDelivery.Services;
+using BlaiseDataDelivery.Services.Blaise;
+using BlaiseDataDelivery.Services.File;
+using BlaiseDataDelivery.Services.Queue;
 using System.ServiceProcess;
 using Unity;
 
@@ -14,7 +22,7 @@ namespace BlaiseDataDelivery
     partial class BlaiseDataDelivery : ServiceBase
     {
         private readonly IUnityContainer _unityContainer;
-        private readonly IDataDeliveryService _dataDeliveryService;
+        private readonly IInitialiseDeliveryService _dataDeliveryService;
 
         public BlaiseDataDelivery()
         {
@@ -26,25 +34,34 @@ namespace BlaiseDataDelivery
             //register dependencies
             _unityContainer.RegisterSingleton<IFluentQueueProvider, FluentQueueProvider>();
             _unityContainer.RegisterType<IConfigurationProvider, ConfigurationProvider>();
-            _unityContainer.RegisterType<IMessageHandlerCallback, TestQueueEventHandlerCallback>();
+
+            _unityContainer.RegisterType<IBlaiseDataService, BlaiseDataService>();
+
             _unityContainer.RegisterType<ISubscriptionService, SubscriptionService>();
             _unityContainer.RegisterType<IPublishService, PublishService>();
 
-            //main service
-            _unityContainer.RegisterType<IDataDeliveryService, DataDeliveryService>();
+            _unityContainer.RegisterType<IMessageModelMapper, MessageModelMapper>();
+
+            _unityContainer.RegisterType<IFileCreationService, FileCreationService>();
+            _unityContainer.RegisterType<IFileEncryptionService, FileEncryptionService>();
+            _unityContainer.RegisterType<IZipFileCreationService, ZipFileCreationService>();
+
+            //main service classes
+            _unityContainer.RegisterType<IInitialiseDeliveryService, InitialiseDeliveryService>();
+            _unityContainer.RegisterType<IMessageHandlerCallback, DataDeliveryMessageHandler>();
 
             //resolve all dependencies as DataDeliveryService class is the main service entry point
-            _dataDeliveryService = _unityContainer.Resolve<IDataDeliveryService>();
+            _dataDeliveryService = _unityContainer.Resolve<IInitialiseDeliveryService>();
         }
 
         protected override void OnStart(string[] args)
         {
-            _dataDeliveryService.Start();
+            _dataDeliveryService.SetupSubscription();
         }
 
         protected override void OnStop()
         {
-            _dataDeliveryService.Stop();
+            _dataDeliveryService.CancelSubscription();
         }
 
         public void OnDebug()
