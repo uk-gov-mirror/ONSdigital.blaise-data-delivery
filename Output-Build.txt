@@ -1,3 +1,0 @@
-﻿1>------ Build started: Project: BlaiseDataDelivery, Configuration: Debug Any CPU ------
-1>BlaiseDataDelivery -> C:\dde\BlaiseDataDelivery\bin\Debug\netcoreapp3.1\BlaiseDataDelivery.dll
-========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
