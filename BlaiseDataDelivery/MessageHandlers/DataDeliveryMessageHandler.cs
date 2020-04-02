@@ -1,7 +1,6 @@
 ﻿using Blaise.Queue.Contracts.Interfaces.MessageHandlers;
 using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Services.File;
-using System;
 
 namespace BlaiseDataDelivery.MessageHandlers
 {
@@ -21,11 +20,11 @@ namespace BlaiseDataDelivery.MessageHandlers
         public bool HandleMessage(string messageType, string message)
         {
             var messageModel = _mapper.MapToMessageModel(message);
-            var temporaryFilePath = _fileService.GetTemporaryFilePath(messageModel.SourceFilePath);
+            string temporaryFilePath = string.Empty;
 
             try
             {
-                _fileService.MoveFiles(messageModel.SourceFilePath, temporaryFilePath);
+                temporaryFilePath = _fileService.MoveFilesToTemporaryLocation(messageModel.SourceFilePath);
                 var encryptedFilePath = _fileService.EncryptFiles(temporaryFilePath);
                 var zipFilePath = _fileService.CreateZipFile(encryptedFilePath);
 
