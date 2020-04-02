@@ -33,7 +33,6 @@ namespace BlaiseDataDelivery.MessageHandlers
             catch
             {
                 _fileService.RestoreFilesToOriginalLocation(temporaryFilePath, messageModel.SourceFilePath);
-                _fileService.DeleteTemporaryFiles(temporaryFilePath);
 
                 return false;
             }
