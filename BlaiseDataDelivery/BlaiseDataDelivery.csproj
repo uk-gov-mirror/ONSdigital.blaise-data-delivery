@@ -83,7 +83,7 @@
     <Compile Include="Helpers\ParameterValidationHelper.cs" />
     <Compile Include="Interfaces\Mappers\IMessageModelMapper.cs" />
     <Compile Include="Interfaces\Providers\IConfigurationProvider.cs" />
-    <Compile Include="Interfaces\Services\File\IFileProcessingService.cs" />
+    <Compile Include="Interfaces\Services\File\IFileService.cs" />
     <Compile Include="Interfaces\Services\IInitialiseDeliveryService.cs" />
     <Compile Include="Interfaces\Services\File\IFileEncryptionService.cs" />
     <Compile Include="Interfaces\Services\File\IZipFileCreationService.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="MessageHandlers\TestQueueEventHandlerCallback.cs" />
     <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Providers\ConfigurationProvider.cs" />
-    <Compile Include="Services\File\FileProcessingService.cs" />
+    <Compile Include="Services\File\FileService.cs" />
     <Compile Include="Services\InitialiseDeliveryService.cs" />
     <Compile Include="Services\File\FileEncryptionService.cs" />
     <Compile Include="Services\Json\SerializerService.cs" />

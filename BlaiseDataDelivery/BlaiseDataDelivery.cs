@@ -37,7 +37,7 @@ namespace BlaiseDataDelivery
 
             _unityContainer.RegisterType<IMessageModelMapper, MessageModelMapper>();
 
-            _unityContainer.RegisterType<IFileProcessingService, FileProcessingService>();
+            _unityContainer.RegisterType<IFileService, FileService>();
             _unityContainer.RegisterType<IFileEncryptionService, FileEncryptionService>();
             _unityContainer.RegisterType<IZipFileCreationService, ZipFileCreationService>();
 
