@@ -10,6 +10,9 @@ namespace BlaiseDataDelivery.MessageHandlers
         private readonly IMessageModelMapper _mapper;
         private readonly IFileService _fileService;
 
+        private const string _encryptedFolderName = "encrypted";
+        private const string _zippedFolderName = "zipped";
+
         public DataDeliveryMessageHandler(
             IMessageModelMapper mapper,
             IFileService fileService)
@@ -24,9 +27,9 @@ namespace BlaiseDataDelivery.MessageHandlers
 
             try
             {
-                _fileService.MoveFilesToTemporaryFolder(messageModel.SourceFilePath, temporaryFilePath);
+                _fileService.MoveFiles(messageModel.SourceFilePath, temporaryFilePath);
                 var encryptedFilePath = _fileService.EncryptFiles(temporaryFilePath);
-                var zipFilePath = _fileService.CreateZipFile(encryptedFilePath, temporaryFilePath);
+                var zipFilePath = _fileService.CreateZipFile(encryptedFilePath);
 
                 _fileService.DeployZipFile(zipFilePath, messageModel.OutputFilePath);
                 _fileService.DeleteTemporaryFiles(temporaryFilePath);
@@ -35,7 +38,7 @@ namespace BlaiseDataDelivery.MessageHandlers
             }
             catch
             {
-                _fileService.RestoreFilesToOriginalLocation(messageModel.SourceFilePath, temporaryFilePath);
+                _fileService.RestoreFilesToOriginalLocation(temporaryFilePath, messageModel.SourceFilePath);
                 _fileService.DeleteTemporaryFiles(temporaryFilePath);
 
                 return false;

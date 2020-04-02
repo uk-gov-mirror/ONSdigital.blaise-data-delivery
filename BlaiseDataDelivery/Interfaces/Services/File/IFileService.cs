@@ -5,11 +5,11 @@ namespace BlaiseDataDelivery.Interfaces.Services.File
 {
     public interface IFileService
     {
-        void MoveFilesToTemporaryFolder(string sourceFilePath, string temporaryFilePath);
-        string EncryptFiles(string temporaryFilePath);
-        string CreateZipFile(string encryptedFilePath, string temporaryFilePath);
-        void DeployZipFile(string zipFilePath, string outputFilePath);
-        void DeleteTemporaryFiles(string temporaryFilePath);
-        void RestoreFilesToOriginalLocation(string sourceFilePath, string temporaryFilePath);
+        string MoveFiles(string sourceFilePath, string destinationFilePath);
+        string EncryptFiles(string sourceFilePath);
+        string CreateZipFile(string sourceFilePath);
+        void DeployZipFile(string sourceFilePath, string destinationFilePath);
+        void DeleteTemporaryFiles(string sourceFilePath);
+        void RestoreFilesToOriginalLocation(string sourceFilePath, string destinationFilePath);
     }
 }
