@@ -1,13 +1,44 @@
-﻿using BlaiseDataDelivery.Interfaces.Mappers;
+﻿using BlaiseDataDelivery.Helpers;
+using BlaiseDataDelivery.Interfaces.Mappers;
+using BlaiseDataDelivery.Interfaces.Services.Json;
 using BlaiseDataDelivery.Models;
+using System.Collections.Generic;
 
 namespace BlaiseDataDelivery.Mappers
 {
     public class MessageModelMapper : IMessageModelMapper
     {
-        public MessageModel MapToMessageModel(string message)
+        private readonly ISerializerService _serializerService;
+
+        public MessageModelMapper(ISerializerService serializerService)
         {
-            throw new System.NotImplementedException();
+            _serializerService = serializerService;
+        }
+
+        public MessageModel MapToMessageModel(string serialisedMessage)
+        {
+            serialisedMessage.ThrowExceptionIfNullOrEmpty("serialisedMessage");
+
+            var messageDictionary = _serializerService.DeserializeJsonMessage<Dictionary<string, string>>(serialisedMessage);
+
+            return new MessageModel
+            {
+                HostName = GetValue("source_hostname", messageDictionary),
+                InstrumentName = GetValue("source_instrument", messageDictionary),
+                ServerPark = GetValue("source_server_park", messageDictionary),
+                SourceFilePath = GetValue("source_file", messageDictionary),
+                OutputFilePath = GetValue("output_filepath", messageDictionary)
+            };
+        }
+
+        private string GetValue(string key, Dictionary<string, string> messageDictionary)
+        {
+            if (messageDictionary.ContainsKey(key))
+            {
+                return messageDictionary[key];
+            };
+
+            return null;
         }
     }
 }

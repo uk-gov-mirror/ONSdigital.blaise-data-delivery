@@ -14,6 +14,7 @@ namespace BlaiseDataDelivery.MessageHandlers
 
         public bool HandleMessage(string messageType, string message)
         {
+            var messageModel = _mapper.MapToMessageModel(message);
             return false;
         }
     }

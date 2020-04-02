@@ -2,7 +2,7 @@
 
 namespace BlaiseDataDelivery.Services.File
 {
-    public class FileCreationService : IFileCreationService
+    public class FileProcessingService : IFileProcessingService
     {
     }
 }

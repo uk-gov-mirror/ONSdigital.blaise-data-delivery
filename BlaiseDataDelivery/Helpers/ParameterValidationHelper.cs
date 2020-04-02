@@ -6,10 +6,15 @@ namespace BlaiseDataDelivery.Helpers
     {
         public static void ThrowExceptionIfNullOrEmpty(this string parameter, string parameterName)
         {
+            if(parameter == null)
+            {
+                throw new ArgumentNullException($"The parameter '{parameterName}' must be supplied"); 
+            }
+
             if (string.IsNullOrWhiteSpace(parameter))
             {
 
-                throw new ArgumentNullException($"The parameter {parameterName} must be supplied");
+                throw new ArgumentException($"A value for the parameter '{parameterName}' must be supplied");
             }
         }
 
@@ -17,7 +22,7 @@ namespace BlaiseDataDelivery.Helpers
         {
             if (parameter == null)
             {
-                throw new ArgumentNullException($"The parameter {parameterName} must be supplied");
+                throw new ArgumentNullException($"The parameter '{parameterName}' must be supplied");
             }
         }
     }
