@@ -10,9 +10,6 @@ namespace BlaiseDataDelivery.MessageHandlers
         private readonly IMessageModelMapper _mapper;
         private readonly IFileService _fileService;
 
-        private const string _encryptedFolderName = "encrypted";
-        private const string _zippedFolderName = "zipped";
-
         public DataDeliveryMessageHandler(
             IMessageModelMapper mapper,
             IFileService fileService)
