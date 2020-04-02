@@ -29,9 +29,6 @@ namespace BlaiseDataDelivery.MessageHandlers
                 var zipFilePath = _fileService.CreateZipFile(encryptedFilePath);
 
                 _fileService.DeployZipFile(zipFilePath, messageModel.OutputFilePath);
-                _fileService.DeleteTemporaryFiles(temporaryFilePath);
-
-                return true;
             }
             catch
             {
@@ -40,6 +37,10 @@ namespace BlaiseDataDelivery.MessageHandlers
 
                 return false;
             }
+
+            _fileService.DeleteTemporaryFiles(temporaryFilePath);
+
+            return true;
         }
     }
 }
