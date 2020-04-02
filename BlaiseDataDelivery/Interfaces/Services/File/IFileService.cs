@@ -5,6 +5,7 @@ namespace BlaiseDataDelivery.Interfaces.Services.File
 {
     public interface IFileService
     {
+        string GetTemporaryFilePath(string baseFilePath);
         string MoveFiles(string sourceFilePath, string destinationFilePath);
         string EncryptFiles(string sourceFilePath);
         string CreateZipFile(string sourceFilePath);

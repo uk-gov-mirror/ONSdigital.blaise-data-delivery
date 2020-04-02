@@ -14,13 +14,14 @@ namespace BlaiseDataDelivery.MessageHandlers
             IMessageModelMapper mapper,
             IFileService fileService)
         {
-            _mapper = mapper; 
+            _mapper = mapper;
+            _fileService = fileService;
         }
 
         public bool HandleMessage(string messageType, string message)
         {
             var messageModel = _mapper.MapToMessageModel(message);
-            var temporaryFilePath = GetTemporaryFilePath(messageModel.SourceFilePath);
+            var temporaryFilePath = _fileService.GetTemporaryFilePath(messageModel.SourceFilePath);
 
             try
             {
@@ -40,12 +41,6 @@ namespace BlaiseDataDelivery.MessageHandlers
 
                 return false;
             }
-        }
-
-        private string GetTemporaryFilePath(string sourceFilePath)
-        {
-            var uniqueFolderId = Guid.NewGuid().ToString();
-            return $"{sourceFilePath}\\{uniqueFolderId}";
         }
     }
 }
