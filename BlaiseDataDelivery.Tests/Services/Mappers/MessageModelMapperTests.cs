@@ -25,7 +25,7 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         }
 
         [Test]
-        public void Given_I_Call_MapToMessageModel_With_A_JsonMessage_Then_A_MessageModel_Is_Returned()
+        public void Given_Valid_Arguments_When_I_Call_MapToMessageModel_Then_A_MessageModel_Is_Returned()
         {
             //arrange
             var message = "Message";
@@ -39,7 +39,7 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         }
 
         [Test]
-        public void Given_I_Call_MapToMessageModel_With_A_JsonMessage_Then_A_The_Correct_Service_Call_Is_Made()
+        public void Given_Valid_Arguments_When_I_Call_MapToMessageModel_Then_A_The_Correct_Service_Call_Is_Made()
         {
             //arrange
             var message = "Message";
@@ -52,7 +52,7 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         }
 
         [Test]
-        public void Given_I_Call_MapToMessageModel_With_A_Valid_Json_Message_Then_A_MessageModel_With_The_Correct_Data_Is_Returned()
+        public void Given_Valid_Arguments_When_I_Call_MapToMessageModel_Then_A_MessageModel_With_The_Correct_Data_Is_Returned()
         {
             //arrange
             var message = "Message";
@@ -80,7 +80,7 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         }
 
         [Test]
-        public void Given_I_Call_MapToMessageModel_With_A_Valid_Json_Message_But_An_Expected_Field_Is_Missing_Then_The_Remainder_Of_The_Mode_Is_Returned()
+        public void Given_A_Host_Name_Is_Not_Provided_When_I_Call_MapToMessageModel_Then_The_Remainder_Of_The_Model_Is_Returned()
         {
             //arrange
             var message = "Message";
@@ -108,10 +108,10 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         }
 
         [Test]
-        public void Given_I_Call_MapToMessageModel_With_A_Null_Message_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_Message_WhenI_Call_MapToMessageModel_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var errorMessage = $"The parameter 'serialisedMessage' must be supplied";
+            var errorMessage = $"The argument 'serialisedMessage' must be supplied";
             string message = null;
 
             //act && assert
@@ -119,11 +119,11 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         }
 
         [Test]
-        public void Given_I_Call_MapToMessageModel_With_An_Empty_Message_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_Message_WhenI_Call_MapToMessageModel_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
             string message = string.Empty;
-            var errorMessage = $"A value for the parameter 'serialisedMessage' must be supplied";
+            var errorMessage = $"A value for the argument 'serialisedMessage' must be supplied";
 
             //act && assert
             var result = Assert.Throws<ArgumentException>(() => _sut.MapToMessageModel(message));

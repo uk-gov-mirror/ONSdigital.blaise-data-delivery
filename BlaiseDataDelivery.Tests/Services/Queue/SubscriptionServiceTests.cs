@@ -48,7 +48,7 @@ namespace BlaiseDataDelivery.Tests.Services.Queue
         }
 
         [Test]
-        public void Given_I_Call_SubscribeToDataDeliveryQueue_Then_The_Correct_Calls_Are_Made_To_Subscribe_To_The_Correct_Queue()
+        public void Given_Valid_Arguments_When_I_Call_SubscribeToDataDeliveryQueue_Then_The_Correct_Calls_Are_Made()
         {
             //arrange
             var queueName = "QueueName";
@@ -71,7 +71,7 @@ namespace BlaiseDataDelivery.Tests.Services.Queue
         }
 
         [Test]
-        public void Given_I_Call_CancelAllSubscriptionsAndDisposee_Then_The_Correct_Calls_Are_Made()
+        public void Given_I_Call_CancelAllSubscriptionsAndDispose_Then_The_Correct_Calls_Are_Made()
         {
             //arrange
             _fluentQueueRegisterMock.Setup(q => q.CancelAllSubscriptions()).Returns(_fluentQueueProviderMock.Object);
