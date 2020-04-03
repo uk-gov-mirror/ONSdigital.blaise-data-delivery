@@ -7,6 +7,8 @@ namespace BlaiseDataDelivery.Interfaces.Providers
     {
         string ExchangeName { get; }
 
+        string FilePattern { get; }
+
         string DataDevliveryQueueName { get; }
 
         string DataDevliveryRoutingKey { get; }

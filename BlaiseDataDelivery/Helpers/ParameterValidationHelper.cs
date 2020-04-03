@@ -8,7 +8,7 @@ namespace BlaiseDataDelivery.Helpers
         {
             if(parameter == null)
             {
-                throw new ArgumentNullException($"The argument '{parameterName}' must be supplied"); 
+                throw new ArgumentNullException(parameterName); 
             }
 
             if (string.IsNullOrWhiteSpace(parameter))

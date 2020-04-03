@@ -1,11 +1,17 @@
 ﻿
-using System;
 
 namespace BlaiseDataDelivery.Interfaces.Services.File
 {
     public interface IFileService
     {
-        string MoveFilesToTemporaryLocation(string sourceFilePath);
+        /// <summary>
+        /// Moved files to a sub golder
+        /// </summary>
+        /// <param name="sourceFilePath"></param>
+        /// <param name="filePattern"></param>
+        /// <param name="subFolderName"></param>
+        /// <returns>Full path to the sub folder</returns>
+        string MoveFilesToSubFolder(string sourceFilePath, string filePattern, string subFolderName);
         string EncryptFiles(string sourceFilePath);
         string CreateZipFile(string sourceFilePath);
         void DeployZipFile(string sourceFilePath, string destinationFilePath);

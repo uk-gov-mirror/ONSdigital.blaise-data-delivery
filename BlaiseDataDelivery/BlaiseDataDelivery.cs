@@ -47,7 +47,7 @@ namespace BlaiseDataDelivery
 
             _unityContainer.RegisterType<IFileService, FileService>();
             _unityContainer.RegisterType<IFileEncryptionService, FileEncryptionService>();
-            _unityContainer.RegisterType<IZipFileCreationService, ZipFileCreationService>();
+            _unityContainer.RegisterType<IFileZipService, FileZipService>();
 
             //main service classes
             _unityContainer.RegisterType<IInitialiseDeliveryService, InitialiseDeliveryService>();
@@ -59,14 +59,14 @@ namespace BlaiseDataDelivery
 
         protected override void OnStart(string[] args)
         {
-            _logger.Info("Start blaise data delivery service");
             _dataDeliveryService.SetupSubscription();
+            _logger.Info("Blaise data delivery service has started");
         }
 
         protected override void OnStop()
         {
-            _logger.Info("Stop blaise data delivery service");
             _dataDeliveryService.CancelSubscription();
+            _logger.Info("Blaise data delivery service has stopped");
         }
 
         public void OnDebug()

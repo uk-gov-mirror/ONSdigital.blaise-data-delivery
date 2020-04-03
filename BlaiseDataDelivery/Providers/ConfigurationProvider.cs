@@ -9,6 +9,8 @@ namespace BlaiseDataDelivery.Providers
     {
         public string ExchangeName => ConfigurationManager.AppSettings["RabbitExchange"]; 
 
+        public string FilePattern => ConfigurationManager.AppSettings["FilePattern"];
+
         public string DataDevliveryQueueName => ConfigurationManager.AppSettings["DataDeliveryQueueName"];
 
         public string DataDevliveryRoutingKey => ConfigurationManager.AppSettings["DataDevliveryRoutingKey"];
