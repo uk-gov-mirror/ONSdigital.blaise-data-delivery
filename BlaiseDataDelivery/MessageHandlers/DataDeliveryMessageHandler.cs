@@ -5,6 +5,7 @@ using BlaiseDataDelivery.Interfaces.Services.Files;
 using BlaiseDataDelivery.Models;
 using log4net;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BlaiseDataDelivery.MessageHandlers
@@ -14,13 +15,13 @@ namespace BlaiseDataDelivery.MessageHandlers
         private readonly ILog _logger;
         private readonly IConfigurationProvider _configuration;
         private readonly IMessageModelMapper _mapper;
-        private readonly IFileProcessingService _fileService;
+        private readonly IFileService _fileService;
 
         public DataDeliveryMessageHandler(
             ILog logger,
             IConfigurationProvider configuration,
             IMessageModelMapper mapper,
-            IFileProcessingService fileService)
+            IFileService fileService)
         {
             _logger = logger;
             _configuration = configuration;
@@ -33,17 +34,31 @@ namespace BlaiseDataDelivery.MessageHandlers
             try
             {
                 var messageModel = _mapper.MapToMessageModel(message);
+
+                //get a list of available files for data delivery
                 var filesToProcess = _fileService.GetFiles(messageModel.SourceFilePath, _configuration.FilePattern);
 
+                //no files available - an error must have occured
                 if(!filesToProcess.Any())
                 {
                     _logger.Info($"No files are available to process in the path '{messageModel.SourceFilePath}' for the file pattern '{_configuration.FilePattern}'");
                     return false;
                 }
 
+                //encrypt files
                 _fileService.EncryptFiles(filesToProcess);
-                _fileService.CreateZipFile(filesToProcess, GenerateZipFilePath(messageModel));
+
+                //create zip file from the encrypted files
+                var zipFile = GenerateZipFilePath(messageModel);
+                _fileService.CreateZipFile(filesToProcess, zipFile);
+
+                //upload the zip to bucket
+                _fileService.UploadFileToBucket(zipFile, _configuration.BucketName);
+
+                //clean up files
+                _fileService.DeleteFile(zipFile);
                 _fileService.DeleteFiles(filesToProcess);
+
             }
             catch(Exception ex)
             {
@@ -55,7 +70,10 @@ namespace BlaiseDataDelivery.MessageHandlers
 
         private string GenerateZipFilePath(MessageModel messageModel)
         {
-            return $"{messageModel.SourceFilePath}\\dd_{messageModel.InstrumentName}.zip";
+            var dateTime = DateTime.Now;
+
+            //generate a file name in the agreed format
+            return $"{messageModel.SourceFilePath}\\dd_{messageModel.InstrumentName}_{dateTime:ddmmyy}_{dateTime:hhmmss}.zip";
         }
     }
 }

@@ -45,10 +45,21 @@ namespace BlaiseDataDelivery
             _unityContainer.RegisterType<ISerializerService, SerializerService>();
             _unityContainer.RegisterType<IMessageModelMapper, MessageModelMapper>();
 
-            _unityContainer.RegisterType<IFileProcessingService, FileProcessingService>();
+            _unityContainer.RegisterType<IFileService, FileService>();
             _unityContainer.RegisterType<IFileDirectoryService, FileDirectoryService>();
             _unityContainer.RegisterType<IFileEncryptionService, FileEncryptionService>();
             _unityContainer.RegisterType<IFileZipService, FileZipService>();
+
+            // If running in Debug, get the credentials file that has access to bucket and place it in a directory of your choice. 
+            // Update the credFilePath variable with the full path to the file.
+#if (DEBUG)
+            _unityContainer.RegisterType<IStorageClientProvider, LocalStorageClientProvider>();
+#else
+            // When running in Release, the service will be running as compute account which will have access to all buckets.
+            _unityContainer.RegisterType<IStorageClientProvider, StorageClientProvider>();
+#endif
+
+            _unityContainer.RegisterType<IFileCloudStorageService, FileCloudStorageService>();
 
             //main service classes
             _unityContainer.RegisterType<IInitialiseDeliveryService, InitialiseDeliveryService>();

@@ -4,20 +4,23 @@ using System.Collections.Generic;
 
 namespace BlaiseDataDelivery.Services.Files
 {
-    public class FileProcessingService : IFileProcessingService
+    public class FileService : IFileService
     {
         private readonly IFileDirectoryService _directoryService;
         private readonly IFileEncryptionService _encryptionService;
         private readonly IFileZipService _zipService;
+        private readonly IFileCloudStorageService _cloudStorageService;
 
-        public FileProcessingService(
+        public FileService(
             IFileDirectoryService directoryService,
             IFileEncryptionService encryptionService,
-            IFileZipService zipService)
+            IFileZipService zipService,
+            IFileCloudStorageService cloudStorageService)
         {
             _directoryService = directoryService;
             _encryptionService = encryptionService;
             _zipService = zipService;
+            _cloudStorageService = cloudStorageService;
         }
 
         public void CreateZipFile(IEnumerable<string> files, string filePath)
@@ -25,16 +28,18 @@ namespace BlaiseDataDelivery.Services.Files
             _zipService.CreateZipFile(files, filePath);
         }
 
+        public void DeleteFile(string zipFile)
+        {
+            throw new NotImplementedException();
+        }
+
         public void DeleteFiles(IEnumerable<string> files)
         {
-            return;
+            foreach (var file in files)
+            {
+                _directoryService.DeleteFile(file);
+            }
         }
-
-        public void DeployFileToBucket(string zipFilePath)
-        {
-            return;
-        }
-
         public void EncryptFiles(IEnumerable<string> files)
         {
             return;
@@ -43,6 +48,11 @@ namespace BlaiseDataDelivery.Services.Files
         public IEnumerable<string> GetFiles(string path, string filePattern)
         {
             return _directoryService.GetFiles(path, filePattern);
+        }
+
+        public void UploadFileToBucket(string zipFilePath, string bucketName)
+        {
+            _cloudStorageService.UploadFileToBucket(zipFilePath, bucketName);
         }
     }
 }

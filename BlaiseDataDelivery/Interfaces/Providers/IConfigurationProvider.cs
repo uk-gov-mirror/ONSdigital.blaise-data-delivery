@@ -14,6 +14,7 @@ namespace BlaiseDataDelivery.Interfaces.Providers
         string DataDeliveryRoutingKey { get; }
 
         string BucketName { get; }
+        string CloudStorageKey { get; }
 
         ConnectionConfigurationModel GetQueueConnectionConfigurationModel();
 

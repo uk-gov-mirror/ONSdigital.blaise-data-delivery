@@ -54,7 +54,7 @@ namespace BlaiseDataDelivery.Tests.Services.Queue
             var queueName = "QueueName";
             var routingKey = "RoutingKey";
 
-            _configurationProviderMock.Setup(c => c.DataDevliveryQueueName).Returns(queueName);
+            _configurationProviderMock.Setup(c => c.DataDeliveryQueueName).Returns(queueName);
             _configurationProviderMock.Setup(c => c.DataDeliveryRoutingKey).Returns(routingKey);
 
             _fluentQueueRegisterMock.Setup(q => q.WithQueue(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>())).Returns(_fluentQueueSingleMock.Object);

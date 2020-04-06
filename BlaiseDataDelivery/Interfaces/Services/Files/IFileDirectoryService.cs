@@ -7,5 +7,6 @@ namespace BlaiseDataDelivery.Interfaces.Services.Files
         IEnumerable<string> GetFiles(string path, string filePattern);
 
         void MoveFiles(IEnumerable<string> files, string destinationPath);
+        void DeleteFile(string filePath);
     }
 }

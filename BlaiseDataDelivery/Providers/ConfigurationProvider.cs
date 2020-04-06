@@ -17,6 +17,8 @@ namespace BlaiseDataDelivery.Providers
 
         public string BucketName => ConfigurationManager.AppSettings["BucketName"];
 
+        public string CloudStorageKey => ConfigurationManager.AppSettings["CloudStorageKey"];
+
         public ConnectionConfigurationModel GetQueueConnectionConfigurationModel()
         {
 

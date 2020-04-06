@@ -2,12 +2,14 @@
 
 namespace BlaiseDataDelivery.Interfaces.Services.Files
 {
-    public interface IFileProcessingService
+    public interface IFileService
     {
         void CreateZipFile(IEnumerable<string> files, string filePath);
-        void DeleteFiles(IEnumerable<string> files);
         void EncryptFiles(IEnumerable<string> files);
         IEnumerable<string> GetFiles(string path, string filePattern);
-        void DeployFileToBucket(string zipFilePath);
+
+        void UploadFileToBucket(string zipFilePath, string bucketName);
+        void DeleteFiles(IEnumerable<string> filesToProcess);
+        void DeleteFile(string zipFile);
     }
 }

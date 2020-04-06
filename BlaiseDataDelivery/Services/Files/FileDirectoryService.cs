@@ -9,6 +9,13 @@ namespace BlaiseDataDelivery.Services.Files
 {
     public class FileDirectoryService : IFileDirectoryService
     {
+        public void DeleteFile(string filePath)
+        {
+            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+
+            File.Delete(filePath);
+        }
+
         public IEnumerable<string> GetFiles(string path, string filePattern)
         {
             path.ThrowExceptionIfNullOrEmpty("path");
