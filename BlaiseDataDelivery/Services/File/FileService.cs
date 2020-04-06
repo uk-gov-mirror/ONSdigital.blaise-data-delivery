@@ -40,17 +40,13 @@ namespace BlaiseDataDelivery.Services.File
             throw new NotImplementedException();
         }
 
-        public string MoveFilesToSubFolder(string sourceFilePath, string filePattern, string subFolderName)
+        public void MoveFiles(string sourceFilePath, string destinationFilePath, string filePattern)
         {
             sourceFilePath.ThrowExceptionIfNullOrEmpty("sourceFilePath");
+            destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
             filePattern.ThrowExceptionIfNullOrEmpty("filePattern");
-            subFolderName.ThrowExceptionIfNullOrEmpty("subFolderName");
-
-            var destinationFilePath = $"{sourceFilePath}\\{subFolderName}";
 
             _fileSystemService.MoveFiles(sourceFilePath, destinationFilePath, filePattern);
-
-            return destinationFilePath;
         }
 
         public void RestoreFilesToOriginalLocation(string sourceFilePath, string destinationFilePath)

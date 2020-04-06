@@ -2,6 +2,7 @@
 using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services.File;
+using BlaiseDataDelivery.Models;
 using log4net;
 using System;
 
@@ -31,11 +32,7 @@ namespace BlaiseDataDelivery.MessageHandlers
             try
             {
                 var messageModel = _mapper.MapToMessageModel(message);
-                
-                //unique folder to temporarily store files for process9ing
-                var temporarySubFolder = Guid.NewGuid().ToString();
-
-                var temporaryFilePath = _fileService.MoveFilesToSubFolder(messageModel.SourceFilePath, _configuration.FilePattern, temporarySubFolder);
+                var temporaryFilePath = MoveFilesToTemporaryPath(messageModel);
                 var encryptedFilePath = _fileService.EncryptFiles(temporaryFilePath);
                 var zipFilePath = _fileService.CreateZipFile(encryptedFilePath);
 
@@ -46,11 +43,23 @@ namespace BlaiseDataDelivery.MessageHandlers
             catch(Exception ex)
             {
                 _logger.Error($"An exception occured in processing messge {message} - {ex.Message}");
+
+                // unhappy path
                // _fileService.RestoreFilesToOriginalLocation(temporaryFilePath, messageModel.SourceFilePath);
                //return false;
             }
 
             return true;
+        }
+
+        private string MoveFilesToTemporaryPath(MessageModel messageModel)
+        {
+            //unique path to temporarily store files for processing
+            var temporarySubFolder = Guid.NewGuid().ToString();
+            var temporaryFilePath = $"{messageModel.SourceFilePath}\\{temporarySubFolder}";
+            _fileService.MoveFiles(messageModel.SourceFilePath, temporaryFilePath, _configuration.FilePattern);
+
+            return temporaryFilePath;
         }
     }
 }

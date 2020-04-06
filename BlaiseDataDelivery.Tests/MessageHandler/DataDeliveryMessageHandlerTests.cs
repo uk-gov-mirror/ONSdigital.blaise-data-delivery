@@ -45,7 +45,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _mapperMock.Setup(m => m.MapToMessageModel(_message)).Returns(_messageModel);
 
             _fileServiceMock = new Mock<IFileService>();
-            _fileServiceMock.Setup(f => f.MoveFilesToSubFolder(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<string>());
+            _fileServiceMock.Setup(f => f.MoveFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
             _fileServiceMock.Setup(f => f.EncryptFiles(It.IsAny<string>())).Returns(It.IsAny<string>());
             _fileServiceMock.Setup(f => f.CreateZipFile(It.IsAny<string>())).Returns(It.IsAny<string>());
             _fileServiceMock.Setup(f => f.DeployZipFile(It.IsAny<string>(), It.IsAny<string>()));
@@ -72,13 +72,15 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
         {
             //arrange
             var _filePattern = "*.*";
-            var _temporaryPath = "TempPath";
+            var _temporaryPath = string.Empty;
             var _encryptedPath = "EncryptedPath";
             var _zipPath = "ZipPath";
 
             _configurationMock.Setup(c => c.FilePattern).Returns(_filePattern);
 
-            _fileServiceMock.Setup(f => f.MoveFilesToSubFolder(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(_temporaryPath);
+            _fileServiceMock.Setup(f => f.MoveFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<string, string, string>((source, dest, pat) => _temporaryPath = dest);
+
             _fileServiceMock.Setup(f => f.EncryptFiles(It.IsAny<string>())).Returns(_encryptedPath);
             _fileServiceMock.Setup(f => f.CreateZipFile(It.IsAny<string>())).Returns(_zipPath);
 
@@ -87,7 +89,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
 
             //assert
             _mapperMock.Verify(v => v.MapToMessageModel(_message), Times.Once);
-            _fileServiceMock.Verify(v => v.MoveFilesToSubFolder(_messageModel.SourceFilePath, _filePattern, It.IsAny<string>()), Times.Once);
+            _fileServiceMock.Verify(v => v.MoveFiles(_messageModel.SourceFilePath, It.IsAny<string>(), _filePattern), Times.Once);
             _fileServiceMock.Verify(v => v.EncryptFiles(_temporaryPath), Times.Once);
             _fileServiceMock.Verify(v => v.CreateZipFile(_encryptedPath), Times.Once);
             _fileServiceMock.Verify(v => v.DeployZipFile(_zipPath, _messageModel.OutputFilePath), Times.Once);
@@ -97,20 +99,19 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
         [Test]
         public void Given_Valid_Arguments_When_HandleMessage_Is_Called_Then_A_Unique_SubFolder_Is_Created_each_Time()
         {
-
             //srrange act && assert
-            var subFolderName1 = string.Empty;
-            _fileServiceMock.Setup(f => f.MoveFilesToSubFolder(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Callback<string, string, string>((source, pat, sub) => subFolderName1 = sub);
+            var tempPath1 = string.Empty;
+            _fileServiceMock.Setup(f => f.MoveFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<string, string, string>((source, dest, pat) => tempPath1 = dest);
             _sut.HandleMessage(_messageType, _message);
 
 
-            var subFolderName2 = string.Empty;
-            _fileServiceMock.Setup(f => f.MoveFilesToSubFolder(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Callback<string, string, string>((source, pat, sub) => subFolderName2 = sub);
+            var tempPath2 = string.Empty;
+            _fileServiceMock.Setup(f => f.MoveFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<string, string, string>((source, dest, pat) => tempPath2 = dest);
             _sut.HandleMessage(_messageType, _message);
 
-            Assert.AreNotEqual(subFolderName1, subFolderName2);
+            Assert.AreNotEqual(tempPath1, tempPath2);
         }
     }
 }

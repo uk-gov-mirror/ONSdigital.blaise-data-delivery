@@ -4,14 +4,7 @@ namespace BlaiseDataDelivery.Interfaces.Services.File
 {
     public interface IFileService
     {
-        /// <summary>
-        /// Moved files to a sub golder
-        /// </summary>
-        /// <param name="sourceFilePath"></param>
-        /// <param name="filePattern"></param>
-        /// <param name="subFolderName"></param>
-        /// <returns>Full path to the sub folder</returns>
-        string MoveFilesToSubFolder(string sourceFilePath, string filePattern, string subFolderName);
+        void MoveFiles(string sourceFilePath, string destinationFilePath, string filePattern);
         string EncryptFiles(string sourceFilePath);
         string CreateZipFile(string sourceFilePath);
         void DeployZipFile(string sourceFilePath, string destinationFilePath);
