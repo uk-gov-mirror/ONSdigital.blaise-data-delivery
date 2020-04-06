@@ -105,7 +105,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
         }
 
         [Test]
-        public void Given_No_Files_Available_To_Process_When_HandleMessage_Is_Called_Then_False_Is_Returned()
+        public void Given_No_Files_Available_To_Process_When_HandleMessage_Is_Called_Then_True_Is_Returned()
         {
             //arrange
             _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(new List<string>());
@@ -115,7 +115,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
 
             //assert
             Assert.IsNotNull(result);
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Test]

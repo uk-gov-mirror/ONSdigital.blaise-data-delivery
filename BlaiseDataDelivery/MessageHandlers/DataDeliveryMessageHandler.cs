@@ -5,7 +5,6 @@ using BlaiseDataDelivery.Interfaces.Services.Files;
 using BlaiseDataDelivery.Models;
 using log4net;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace BlaiseDataDelivery.MessageHandlers
@@ -42,7 +41,7 @@ namespace BlaiseDataDelivery.MessageHandlers
                 if(!filesToProcess.Any())
                 {
                     _logger.Info($"No files are available to process in the path '{messageModel.SourceFilePath}' for the file pattern '{_configuration.FilePattern}'");
-                    return false;
+                    return true;
                 }
 
                 //encrypt files
