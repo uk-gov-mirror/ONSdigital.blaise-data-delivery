@@ -1,7 +1,7 @@
 ﻿using Blaise.Queue.Contracts.Interfaces.MessageHandlers;
 using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
-using BlaiseDataDelivery.Interfaces.Services.File;
+using BlaiseDataDelivery.Interfaces.Services.Files;
 using BlaiseDataDelivery.Models;
 using log4net;
 using System;
@@ -13,13 +13,13 @@ namespace BlaiseDataDelivery.MessageHandlers
         private readonly ILog _logger;
         private readonly IConfigurationProvider _configuration;
         private readonly IMessageModelMapper _mapper;
-        private readonly IFileService _fileService;
+        private readonly IFileProcessingService _fileService;
 
         public DataDeliveryMessageHandler(
             ILog logger,
             IConfigurationProvider configuration,
             IMessageModelMapper mapper,
-            IFileService fileService)
+            IFileProcessingService fileService)
         {
             _logger = logger;
             _configuration = configuration;

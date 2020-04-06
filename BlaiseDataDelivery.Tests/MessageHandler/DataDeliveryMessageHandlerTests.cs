@@ -1,6 +1,6 @@
 ﻿using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
-using BlaiseDataDelivery.Interfaces.Services.File;
+using BlaiseDataDelivery.Interfaces.Services.Files;
 using BlaiseDataDelivery.MessageHandlers;
 using BlaiseDataDelivery.Models;
 using log4net;
@@ -14,7 +14,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
         private Mock<ILog> _loggerMock;
         private Mock<IConfigurationProvider> _configurationMock;
         private Mock<IMessageModelMapper> _mapperMock;
-        private Mock<IFileService> _fileServiceMock;
+        private Mock<IFileProcessingService> _fileServiceMock;
 
         private readonly string _messageType;
         private readonly string _message;
@@ -44,7 +44,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _mapperMock = new Mock<IMessageModelMapper>();
             _mapperMock.Setup(m => m.MapToMessageModel(_message)).Returns(_messageModel);
 
-            _fileServiceMock = new Mock<IFileService>();
+            _fileServiceMock = new Mock<IFileProcessingService>();
             _fileServiceMock.Setup(f => f.MoveFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
             _fileServiceMock.Setup(f => f.EncryptFiles(It.IsAny<string>())).Returns(It.IsAny<string>());
             _fileServiceMock.Setup(f => f.CreateZipFile(It.IsAny<string>())).Returns(It.IsAny<string>());

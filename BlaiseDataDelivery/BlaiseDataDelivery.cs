@@ -4,14 +4,14 @@ using Blaise.Queue.Contracts.Interfaces.MessageHandlers;
 using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services;
-using BlaiseDataDelivery.Interfaces.Services.File;
+using BlaiseDataDelivery.Interfaces.Services.Files;
 using BlaiseDataDelivery.Interfaces.Services.Json;
 using BlaiseDataDelivery.Interfaces.Services.Queue;
 using BlaiseDataDelivery.Mappers;
 using BlaiseDataDelivery.MessageHandlers;
 using BlaiseDataDelivery.Providers;
 using BlaiseDataDelivery.Services;
-using BlaiseDataDelivery.Services.File;
+using BlaiseDataDelivery.Services.Files;
 using BlaiseDataDelivery.Services.Json;
 using BlaiseDataDelivery.Services.Queue;
 using log4net;
@@ -45,7 +45,8 @@ namespace BlaiseDataDelivery
             _unityContainer.RegisterType<ISerializerService, SerializerService>();
             _unityContainer.RegisterType<IMessageModelMapper, MessageModelMapper>();
 
-            _unityContainer.RegisterType<IFileService, FileService>();
+            _unityContainer.RegisterType<IFileProcessingService, FileProcessingService>();
+            _unityContainer.RegisterType<IFileSystemService, FileSystemService>();
             _unityContainer.RegisterType<IFileEncryptionService, FileEncryptionService>();
             _unityContainer.RegisterType<IFileZipService, FileZipService>();
 

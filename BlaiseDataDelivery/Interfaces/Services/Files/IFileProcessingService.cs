@@ -1,8 +1,8 @@
 ﻿
 
-namespace BlaiseDataDelivery.Interfaces.Services.File
+namespace BlaiseDataDelivery.Interfaces.Services.Files
 {
-    public interface IFileService
+    public interface IFileProcessingService
     {
         void MoveFiles(string sourceFilePath, string destinationFilePath, string filePattern);
         string EncryptFiles(string sourceFilePath);

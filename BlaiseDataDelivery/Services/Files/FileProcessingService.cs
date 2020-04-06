@@ -1,16 +1,16 @@
 ﻿using BlaiseDataDelivery.Helpers;
-using BlaiseDataDelivery.Interfaces.Services.File;
+using BlaiseDataDelivery.Interfaces.Services.Files;
 using System;
 
-namespace BlaiseDataDelivery.Services.File
+namespace BlaiseDataDelivery.Services.Files
 {
-    public class FileService : IFileService
+    public class FileProcessingService : IFileProcessingService
     {
         private readonly IFileSystemService _fileSystemService;
         private readonly IFileEncryptionService _encryptionService;
         private readonly IFileZipService _zipService;
 
-        public FileService(
+        public FileProcessingService(
             IFileSystemService fileSystemService,
             IFileEncryptionService encryptionService,
             IFileZipService zipService)

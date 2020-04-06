@@ -1,5 +1,5 @@
-﻿using BlaiseDataDelivery.Interfaces.Services.File;
-using BlaiseDataDelivery.Services.File;
+﻿using BlaiseDataDelivery.Interfaces.Services.Files;
+using BlaiseDataDelivery.Services.Files;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -12,7 +12,7 @@ namespace BlaiseDataDelivery.Tests.Services.File
         private Mock<IFileEncryptionService> _encryptionServiceMock;
         private Mock<IFileZipService> _zipServiceMock;
 
-        private FileService _sut;
+        private FileProcessingService _sut;
 
         [SetUp]
         public void SetUpTests()
@@ -23,7 +23,7 @@ namespace BlaiseDataDelivery.Tests.Services.File
             _encryptionServiceMock = new Mock<IFileEncryptionService>();
             _zipServiceMock = new Mock<IFileZipService>();
 
-            _sut = new FileService(_fileSystemServiceMock.Object, _encryptionServiceMock.Object, _zipServiceMock.Object);
+            _sut = new FileProcessingService(_fileSystemServiceMock.Object, _encryptionServiceMock.Object, _zipServiceMock.Object);
         }
 
         [Test]

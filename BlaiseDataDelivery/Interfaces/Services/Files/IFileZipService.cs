@@ -1,5 +1,5 @@
 ﻿
-namespace BlaiseDataDelivery.Interfaces.Services.File
+namespace BlaiseDataDelivery.Interfaces.Services.Files
 {
     public interface IFileZipService
     {
