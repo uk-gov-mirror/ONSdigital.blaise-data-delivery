@@ -32,6 +32,7 @@ namespace BlaiseDataDelivery.MessageHandlers
         {            
             try
             {
+                //map the message taken off the queue to a model we can use
                 var messageModel = _mapper.MapToMessageModel(message);
 
                 //get a list of available files for data delivery
@@ -48,7 +49,7 @@ namespace BlaiseDataDelivery.MessageHandlers
                 _fileService.EncryptFiles(filesToProcess);
 
                 //create zip file from the encrypted files
-                var zipFile = GenerateZipFilePath(messageModel);
+                var zipFile = GenerateZipFileNameAndPath(messageModel);
                 _fileService.CreateZipFile(filesToProcess, zipFile);
 
                 //upload the zip to bucket
@@ -67,7 +68,7 @@ namespace BlaiseDataDelivery.MessageHandlers
             return true;
         }
 
-        private string GenerateZipFilePath(MessageModel messageModel)
+        private string GenerateZipFileNameAndPath(MessageModel messageModel)
         {
             var dateTime = DateTime.Now;
 
