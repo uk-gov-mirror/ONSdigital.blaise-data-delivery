@@ -1,6 +1,7 @@
 ﻿using BlaiseDataDelivery.Helpers;
 using BlaiseDataDelivery.Interfaces.Services.Files;
 using System;
+using System.Collections.Generic;
 
 namespace BlaiseDataDelivery.Services.Files
 {
@@ -20,38 +21,27 @@ namespace BlaiseDataDelivery.Services.Files
             _zipService = zipService;
         }
 
-        public string CreateZipFile(string sourceFilePath)
+        public void CreateZipFile(IEnumerable<string> files, string path)
+        {
+            _zipService.CreateZipFile(files, path);
+        }
+
+        public void DeleteFiles(IEnumerable<string> files)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteTemporaryFiles(string sourceFilePath)
+        public void EncryptFiles(IEnumerable<string> files)
         {
             throw new NotImplementedException();
         }
 
-        public void DeployZipFile(string sourceFilePath, string destinationFilePath)
+        public IEnumerable<string> GetFiles(string path, string filePattern)
         {
-            throw new NotImplementedException();
-        }
-
-        public string EncryptFiles(string sourceFilePath)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MoveFiles(string sourceFilePath, string destinationFilePath, string filePattern)
-        {
-            sourceFilePath.ThrowExceptionIfNullOrEmpty("sourceFilePath");
-            destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
+            path.ThrowExceptionIfNullOrEmpty("path");
             filePattern.ThrowExceptionIfNullOrEmpty("filePattern");
 
-            _fileSystemService.MoveFiles(sourceFilePath, destinationFilePath, filePattern);
-        }
-
-        public void RestoreFilesToOriginalLocation(string sourceFilePath, string destinationFilePath)
-        {
-            throw new NotImplementedException();
+            return _fileSystemService.GetFiles(path, filePattern);
         }
     }
 }

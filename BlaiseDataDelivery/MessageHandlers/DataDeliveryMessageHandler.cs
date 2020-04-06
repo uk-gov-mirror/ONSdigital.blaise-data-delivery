@@ -2,9 +2,9 @@
 using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services.Files;
-using BlaiseDataDelivery.Models;
 using log4net;
 using System;
+using System.Linq;
 
 namespace BlaiseDataDelivery.MessageHandlers
 {
@@ -32,34 +32,24 @@ namespace BlaiseDataDelivery.MessageHandlers
             try
             {
                 var messageModel = _mapper.MapToMessageModel(message);
-                var temporaryFilePath = MoveFilesToTemporaryPath(messageModel);
-                var encryptedFilePath = _fileService.EncryptFiles(temporaryFilePath);
-                var zipFilePath = _fileService.CreateZipFile(encryptedFilePath);
+                var filesToProcess = _fileService.GetFiles(messageModel.SourceFilePath, _configuration.FilePattern);
 
-                _fileService.DeployZipFile(zipFilePath, messageModel.OutputFilePath);
+                if(!filesToProcess.Any())
+                {
+                    _logger.Info($"No files are available to process in the path '{messageModel.SourceFilePath}' for the file pattern '{_configuration.FilePattern}'");
+                    return false;
+                }
 
-                _fileService.DeleteTemporaryFiles(temporaryFilePath);
+                _fileService.EncryptFiles(filesToProcess);
+                _fileService.CreateZipFile(filesToProcess, messageModel.OutputFilePath);
+                _fileService.DeleteFiles(filesToProcess);
             }
             catch(Exception ex)
             {
                 _logger.Error($"An exception occured in processing messge {message} - {ex.Message}");
-
-                // unhappy path
-               // _fileService.RestoreFilesToOriginalLocation(temporaryFilePath, messageModel.SourceFilePath);
-               //return false;
             }
 
             return true;
-        }
-
-        private string MoveFilesToTemporaryPath(MessageModel messageModel)
-        {
-            //unique path to temporarily store files for processing
-            var temporarySubFolder = Guid.NewGuid().ToString();
-            var temporaryFilePath = $"{messageModel.SourceFilePath}\\{temporarySubFolder}";
-            _fileService.MoveFiles(messageModel.SourceFilePath, temporaryFilePath, _configuration.FilePattern);
-
-            return temporaryFilePath;
         }
     }
 }

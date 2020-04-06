@@ -1,14 +1,12 @@
-﻿
+﻿using System.Collections.Generic;
 
 namespace BlaiseDataDelivery.Interfaces.Services.Files
 {
     public interface IFileProcessingService
     {
-        void MoveFiles(string sourceFilePath, string destinationFilePath, string filePattern);
-        string EncryptFiles(string sourceFilePath);
-        string CreateZipFile(string sourceFilePath);
-        void DeployZipFile(string sourceFilePath, string destinationFilePath);
-        void DeleteTemporaryFiles(string sourceFilePath);
-        void RestoreFilesToOriginalLocation(string sourceFilePath, string destinationFilePath);
+        void CreateZipFile(IEnumerable<string> files, string path);
+        void DeleteFiles(IEnumerable<string> files);
+        void EncryptFiles(IEnumerable<string> files);
+        IEnumerable<string> GetFiles(string path, string filePattern);
     }
 }

@@ -1,7 +1,11 @@
-﻿namespace BlaiseDataDelivery.Interfaces.Services.Files
+﻿using System.Collections.Generic;
+
+namespace BlaiseDataDelivery.Interfaces.Services.Files
 {
     public interface IFileSystemService
     {
-        void MoveFiles(string sourceFilePath, string destinationFilePath, string filePattern);
+        IEnumerable<string> GetFiles(string path, string filePattern);
+
+        void MoveFiles(IEnumerable<string> files, string destinationPath);
     }
 }

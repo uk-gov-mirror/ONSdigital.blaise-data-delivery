@@ -1,4 +1,6 @@
 ﻿using BlaiseDataDelivery.Interfaces.Services.Files;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -6,26 +8,39 @@ namespace BlaiseDataDelivery.Services.Files
 {
     public class FileSystemService : IFileSystemService
     {
-        public void MoveFiles(string sourceFilePath, string destinationFilePath, string filePattern)
+        public IEnumerable<string> GetFiles(string path, string filePattern)
         {
-            var sourceFolder = new DirectoryInfo(sourceFilePath);
+            var directory = GetDirectory(path);
 
-            if(!sourceFolder.Exists)
+            var files = directory.GetFiles(filePattern);
+
+            return files.Select(f => f.FullName);
+        }
+
+        public void MoveFiles(IEnumerable<string> files, string destinationFilePath)
+        {
+            if (!files.Any())
             {
-                throw new DirectoryNotFoundException($"The dirctory '{sourceFilePath}' was not found");
+                throw new ArgumentException($"No files provided");
             }
 
-            var filesToMove = sourceFolder.GetFiles(filePattern);
-
-            if(!filesToMove.Any())
+            foreach (var fileToMove in files)
             {
-                throw new FileNotFoundException($"No files matching the file pattern '{filePattern}' were found");
+                File.Move(fileToMove, destinationFilePath);
+            }
+        }
+
+
+        private DirectoryInfo GetDirectory(string path)
+        {
+            var directory = new DirectoryInfo(path);
+
+            if (!directory.Exists)
+            {
+                throw new DirectoryNotFoundException($"The dirctory '{path}' was not found");
             }
 
-            foreach(var fileToMove in filesToMove)
-            {
-                File.Move(fileToMove.FullName, destinationFilePath);
-            }
+            return directory;
         }
     }
 }
