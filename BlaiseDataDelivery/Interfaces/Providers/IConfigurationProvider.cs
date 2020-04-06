@@ -9,13 +9,11 @@ namespace BlaiseDataDelivery.Interfaces.Providers
 
         string FilePattern { get; }
 
-        string DataDevliveryQueueName { get; }
+        string DataDeliveryQueueName { get; }
 
-        string DataDevliveryRoutingKey { get; }
+        string DataDeliveryRoutingKey { get; }
 
-        string StatusUpdateQueueName { get; }
-
-        string StatusUpdateRoutingKey { get; }
+        string BucketName { get; }
 
         ConnectionConfigurationModel GetQueueConnectionConfigurationModel();
 

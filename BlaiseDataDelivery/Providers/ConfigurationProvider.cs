@@ -11,13 +11,11 @@ namespace BlaiseDataDelivery.Providers
 
         public string FilePattern => ConfigurationManager.AppSettings["FilePattern"];
 
-        public string DataDevliveryQueueName => ConfigurationManager.AppSettings["DataDeliveryQueueName"];
+        public string DataDeliveryQueueName => ConfigurationManager.AppSettings["DataDeliveryQueueName"];
 
-        public string DataDevliveryRoutingKey => ConfigurationManager.AppSettings["DataDevliveryRoutingKey"];
+        public string DataDeliveryRoutingKey => ConfigurationManager.AppSettings["DataDeliveryRoutingKey"];
 
-        public string StatusUpdateQueueName => ConfigurationManager.AppSettings["StatusUpdateQueueName"];
-
-        public string StatusUpdateRoutingKey => ConfigurationManager.AppSettings["StatusUpdateRoutingKey"];
+        public string BucketName => ConfigurationManager.AppSettings["BucketName"];
 
         public ConnectionConfigurationModel GetQueueConnectionConfigurationModel()
         {

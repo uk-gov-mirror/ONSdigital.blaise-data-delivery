@@ -1,5 +1,4 @@
-﻿using BlaiseDataDelivery.Helpers;
-using BlaiseDataDelivery.Interfaces.Services.Files;
+﻿using BlaiseDataDelivery.Interfaces.Services.Files;
 using System;
 using System.Collections.Generic;
 
@@ -7,41 +6,43 @@ namespace BlaiseDataDelivery.Services.Files
 {
     public class FileProcessingService : IFileProcessingService
     {
-        private readonly IFileSystemService _fileSystemService;
+        private readonly IFileDirectoryService _directoryService;
         private readonly IFileEncryptionService _encryptionService;
         private readonly IFileZipService _zipService;
 
         public FileProcessingService(
-            IFileSystemService fileSystemService,
+            IFileDirectoryService directoryService,
             IFileEncryptionService encryptionService,
             IFileZipService zipService)
         {
-            _fileSystemService = fileSystemService;
+            _directoryService = directoryService;
             _encryptionService = encryptionService;
             _zipService = zipService;
         }
 
-        public void CreateZipFile(IEnumerable<string> files, string path)
+        public void CreateZipFile(IEnumerable<string> files, string filePath)
         {
-            _zipService.CreateZipFile(files, path);
+            _zipService.CreateZipFile(files, filePath);
         }
 
         public void DeleteFiles(IEnumerable<string> files)
         {
-            throw new NotImplementedException();
+            return;
+        }
+
+        public void DeployFileToBucket(string zipFilePath)
+        {
+            return;
         }
 
         public void EncryptFiles(IEnumerable<string> files)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public IEnumerable<string> GetFiles(string path, string filePattern)
         {
-            path.ThrowExceptionIfNullOrEmpty("path");
-            filePattern.ThrowExceptionIfNullOrEmpty("filePattern");
-
-            return _fileSystemService.GetFiles(path, filePattern);
+            return _directoryService.GetFiles(path, filePattern);
         }
     }
 }

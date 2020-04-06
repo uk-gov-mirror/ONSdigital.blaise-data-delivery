@@ -2,7 +2,7 @@
 
 namespace BlaiseDataDelivery.Interfaces.Services.Files
 {
-    public interface IFileSystemService
+    public interface IFileDirectoryService
     {
         IEnumerable<string> GetFiles(string path, string filePattern);
 

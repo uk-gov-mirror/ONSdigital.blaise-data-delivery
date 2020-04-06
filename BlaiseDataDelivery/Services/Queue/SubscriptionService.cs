@@ -27,7 +27,7 @@ namespace BlaiseDataDelivery.Services.Queue
             _queueProvider
                 .WithConnection(_configurationProvider.GetQueueConnectionConfigurationModel())
                 .WithExchange(_configurationProvider.ExchangeName, ExchangeType.direct, true)
-                .WithQueue(_configurationProvider.DataDevliveryQueueName, _configurationProvider.DataDevliveryRoutingKey, true)
+                .WithQueue(_configurationProvider.DataDeliveryQueueName, _configurationProvider.DataDeliveryRoutingKey, true)
                 .WithSubscription(_messageHandlerCallback);
         }
 

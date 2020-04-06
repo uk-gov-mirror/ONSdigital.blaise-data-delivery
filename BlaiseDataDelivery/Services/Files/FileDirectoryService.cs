@@ -1,4 +1,5 @@
-﻿using BlaiseDataDelivery.Interfaces.Services.Files;
+﻿using BlaiseDataDelivery.Helpers;
+using BlaiseDataDelivery.Interfaces.Services.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,12 +7,14 @@ using System.Linq;
 
 namespace BlaiseDataDelivery.Services.Files
 {
-    public class FileSystemService : IFileSystemService
+    public class FileDirectoryService : IFileDirectoryService
     {
         public IEnumerable<string> GetFiles(string path, string filePattern)
         {
-            var directory = GetDirectory(path);
+            path.ThrowExceptionIfNullOrEmpty("path");
+            filePattern.ThrowExceptionIfNullOrEmpty("filePattern");
 
+            var directory = GetDirectory(path);
             var files = directory.GetFiles(filePattern);
 
             return files.Select(f => f.FullName);
@@ -24,12 +27,14 @@ namespace BlaiseDataDelivery.Services.Files
                 throw new ArgumentException($"No files provided");
             }
 
+            destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
+
+
             foreach (var fileToMove in files)
             {
                 File.Move(fileToMove, destinationFilePath);
             }
         }
-
 
         private DirectoryInfo GetDirectory(string path)
         {

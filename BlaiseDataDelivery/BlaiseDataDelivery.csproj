@@ -47,6 +47,9 @@
     <Reference Include="Blaise.Queue.Rabbit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Blaise.Queue.2020.4.1.5\lib\net472\Blaise.Queue.Rabbit.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetZip, Version=1.13.7.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.13.7\lib\net40\DotNetZip.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -96,7 +99,7 @@
     <Compile Include="Interfaces\Mappers\IMessageModelMapper.cs" />
     <Compile Include="Interfaces\Providers\IConfigurationProvider.cs" />
     <Compile Include="Interfaces\Services\Files\IFileProcessingService.cs" />
-    <Compile Include="Interfaces\Services\Files\IFileSystemService.cs" />
+    <Compile Include="Interfaces\Services\Files\IFileDirectoryService.cs" />
     <Compile Include="Interfaces\Services\IInitialiseDeliveryService.cs" />
     <Compile Include="Interfaces\Services\Files\IFileEncryptionService.cs" />
     <Compile Include="Interfaces\Services\Files\IFileZipService.cs" />
@@ -108,7 +111,7 @@
     <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Providers\ConfigurationProvider.cs" />
     <Compile Include="Services\Files\FileProcessingService.cs" />
-    <Compile Include="Services\Files\FileSystemService.cs" />
+    <Compile Include="Services\Files\FileDirectoryService.cs" />
     <Compile Include="Services\InitialiseDeliveryService.cs" />
     <Compile Include="Services\Files\FileEncryptionService.cs" />
     <Compile Include="Services\Json\SerializerService.cs" />

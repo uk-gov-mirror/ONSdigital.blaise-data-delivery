@@ -2,6 +2,7 @@
 using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services.Files;
+using BlaiseDataDelivery.Models;
 using log4net;
 using System;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace BlaiseDataDelivery.MessageHandlers
                 }
 
                 _fileService.EncryptFiles(filesToProcess);
-                _fileService.CreateZipFile(filesToProcess, messageModel.OutputFilePath);
+                _fileService.CreateZipFile(filesToProcess, GenerateZipFilePath(messageModel));
                 _fileService.DeleteFiles(filesToProcess);
             }
             catch(Exception ex)
@@ -50,6 +51,11 @@ namespace BlaiseDataDelivery.MessageHandlers
             }
 
             return true;
+        }
+
+        private string GenerateZipFilePath(MessageModel messageModel)
+        {
+            return $"{messageModel.SourceFilePath}\\dd_{messageModel.InstrumentName}.zip";
         }
     }
 }

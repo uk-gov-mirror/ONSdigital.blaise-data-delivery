@@ -32,7 +32,8 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _messageModel = new MessageModel
             {
                 SourceFilePath = "SourcePath",
-                OutputFilePath = "OutputPath"
+                OutputFilePath = "OutputPath",
+                InstrumentName = "InstrumentName"
             };
         }
 
@@ -79,6 +80,8 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
                 "File2"
             };
 
+            var zipfilePath = "SourcePath\\dd_InstrumentName.zip";
+
             _configurationMock.Setup(c => c.FilePattern).Returns(filePattern);
 
             _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(filesToProcess);
@@ -91,7 +94,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
 
             _fileServiceMock.Verify(v => v.GetFiles(_messageModel.SourceFilePath, filePattern));
             _fileServiceMock.Verify(v => v.EncryptFiles(filesToProcess), Times.Once);
-            _fileServiceMock.Verify(v => v.CreateZipFile(filesToProcess, _messageModel.OutputFilePath), Times.Once);
+            _fileServiceMock.Verify(v => v.CreateZipFile(filesToProcess, zipfilePath), Times.Once);
             _fileServiceMock.Verify(v => v.DeleteFiles(filesToProcess), Times.Once);
         }
 

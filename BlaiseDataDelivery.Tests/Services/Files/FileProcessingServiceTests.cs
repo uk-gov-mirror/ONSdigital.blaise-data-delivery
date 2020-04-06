@@ -9,7 +9,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
 {
     public class FileProcessingServiceTests
     {
-        private Mock<IFileSystemService> _fileSystemServiceMock;
+        private Mock<IFileDirectoryService> _fileSystemServiceMock;
         private Mock<IFileEncryptionService> _encryptionServiceMock;
         private Mock<IFileZipService> _zipServiceMock;
 
@@ -18,7 +18,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
         [SetUp]
         public void SetUpTests()
         {
-            _fileSystemServiceMock = new Mock<IFileSystemService>();
+            _fileSystemServiceMock = new Mock<IFileDirectoryService>();
             _fileSystemServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IEnumerable<string>>);
 
             _encryptionServiceMock = new Mock<IFileEncryptionService>();
@@ -57,26 +57,6 @@ namespace BlaiseDataDelivery.Tests.Services.Files
 
             //assert
             _fileSystemServiceMock.Verify(v => v.GetFiles(path, filePattern), Times.Once);
-        }
-
-        [TestCase("", "filePattern", "A value for the argument 'path' must be supplied")]
-        [TestCase("path", "", "A value for the argument 'filePattern' must be supplied")]
-        public void Given_An_Empty_Argument_When_I_Call_GetFiles_Then_An_ArgumentException_Is_Thrown(string path, string filePattern, string errorMessage)
-        {
-
-            //act && assert
-            var result = Assert.Throws<ArgumentException>(() => _sut.GetFiles(path, filePattern));
-            Assert.AreEqual(errorMessage, result.Message);
-        }
-
-        [TestCase(null, "filePattern", "path")]
-        [TestCase("path", null, "filePattern")]
-        public void Given_A_Null_Argument_When_I_Call_GetFiles_Then_An_ArgumentException_Is_Thrown(string path, string filePattern, string parameterName)
-        {
-
-            //act && assert
-            var result = Assert.Throws<ArgumentNullException>(() => _sut.GetFiles(path, filePattern));
-            Assert.AreEqual(parameterName, result.ParamName);
         }
     }
 }
