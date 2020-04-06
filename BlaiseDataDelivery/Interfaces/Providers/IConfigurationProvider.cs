@@ -7,13 +7,14 @@ namespace BlaiseDataDelivery.Interfaces.Providers
     {
         string ExchangeName { get; }
 
-        string FilePattern { get; }
-
         string DataDeliveryQueueName { get; }
 
         string DataDeliveryRoutingKey { get; }
 
+        string FilePattern { get; }
+
         string BucketName { get; }
+
         string CloudStorageKey { get; }
 
         ConnectionConfigurationModel GetQueueConnectionConfigurationModel();

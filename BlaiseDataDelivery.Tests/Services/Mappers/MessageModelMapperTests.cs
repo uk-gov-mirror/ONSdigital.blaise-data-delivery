@@ -62,8 +62,7 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
                 {"source_hostname", "hostname" },
                 {"source_instrument", "OPN2004A" },
                 {"source_server_park", "LocalDevelopment" },
-                {"source_file", "D:\\Temp\\OPN" },
-                {"output_filepath", "D:\\Temp\\OPN\\Output" },
+                {"source_file", "D:\\Temp\\OPN" }
             };
 
             _serializerMock.Setup(s => s.DeserializeJsonMessage<Dictionary<string, string>>(It.IsAny<string>())).Returns(messageDictionary);
@@ -76,7 +75,6 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
             Assert.AreEqual("OPN2004A", result.InstrumentName);
             Assert.AreEqual("LocalDevelopment", result.ServerPark);
             Assert.AreEqual("D:\\Temp\\OPN", result.SourceFilePath);
-            Assert.AreEqual("D:\\Temp\\OPN\\Output", result.OutputFilePath);
         }
 
         [Test]
@@ -89,8 +87,7 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
             {
                 {"source_instrument", "OPN2004A" },
                 {"source_server_park", "LocalDevelopment" },
-                {"source_file", "D:\\Temp\\OPN" },
-                {"output_filepath", "D:\\Temp\\OPN\\Output" },
+                {"source_file", "D:\\Temp\\OPN" }
             };
 
             _serializerMock.Setup(s => s.DeserializeJsonMessage<Dictionary<string, string>>(It.IsAny<string>())).Returns(messageDictionary);
@@ -104,7 +101,6 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
             Assert.AreEqual("OPN2004A", result.InstrumentName);
             Assert.AreEqual("LocalDevelopment", result.ServerPark);
             Assert.AreEqual("D:\\Temp\\OPN", result.SourceFilePath);
-            Assert.AreEqual("D:\\Temp\\OPN\\Output", result.OutputFilePath);
         }
 
         [Test]

@@ -32,7 +32,6 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _messageModel = new MessageModel
             {
                 SourceFilePath = "SourcePath",
-                OutputFilePath = "OutputPath",
                 InstrumentName = "InstrumentName"
             };
         }

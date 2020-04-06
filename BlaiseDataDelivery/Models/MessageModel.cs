@@ -10,7 +10,5 @@ namespace BlaiseDataDelivery.Models
         public string InstrumentName { get; set; }
 
         public string SourceFilePath { get; set; }
-
-        public string OutputFilePath { get; set; }
     }
 }

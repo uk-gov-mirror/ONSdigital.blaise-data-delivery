@@ -26,8 +26,7 @@ namespace BlaiseDataDelivery.Mappers
                 HostName = GetValue("source_hostname", messageDictionary),
                 InstrumentName = GetValue("source_instrument", messageDictionary),
                 ServerPark = GetValue("source_server_park", messageDictionary),
-                SourceFilePath = GetValue("source_file", messageDictionary),
-                OutputFilePath = GetValue("output_filepath", messageDictionary)
+                SourceFilePath = GetValue("source_file", messageDictionary)
             };
         }
 
