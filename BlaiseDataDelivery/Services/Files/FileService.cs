@@ -28,9 +28,9 @@ namespace BlaiseDataDelivery.Services.Files
             _zipService.CreateZipFile(files, filePath);
         }
 
-        public void DeleteFile(string zipFile)
+        public void DeleteFile(string filePath)
         {
-            throw new NotImplementedException();
+            _directoryService.DeleteFile(filePath);
         }
 
         public void DeleteFiles(IEnumerable<string> files)

@@ -137,7 +137,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _fileServiceMock.Verify(v => v.EncryptFiles(It.IsAny<IEnumerable<string>>()), Times.Never);
             _fileServiceMock.Verify(v => v.CreateZipFile(It.IsAny<IEnumerable<string>>(), It.IsAny<string>()), Times.Never);
             _fileServiceMock.Verify(v => v.UploadFileToBucket(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-            _fileServiceMock.Verify(v => v.DeleteFile(It.IsAny<string>()), Times.Once);
+            _fileServiceMock.Verify(v => v.DeleteFile(It.IsAny<string>()), Times.Never);
             _fileServiceMock.Verify(v => v.DeleteFiles(It.IsAny<IEnumerable<string>>()), Times.Never);
         }
 

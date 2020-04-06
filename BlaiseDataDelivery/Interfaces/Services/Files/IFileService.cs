@@ -9,7 +9,7 @@ namespace BlaiseDataDelivery.Interfaces.Services.Files
         IEnumerable<string> GetFiles(string path, string filePattern);
 
         void UploadFileToBucket(string zipFilePath, string bucketName);
-        void DeleteFiles(IEnumerable<string> filesToProcess);
-        void DeleteFile(string zipFile);
+        void DeleteFiles(IEnumerable<string> files);
+        void DeleteFile(string filePath);
     }
 }
