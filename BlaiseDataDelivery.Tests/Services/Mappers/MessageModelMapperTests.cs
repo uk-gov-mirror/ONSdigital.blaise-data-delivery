@@ -59,9 +59,7 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
 
             Dictionary<string, string> messageDictionary = new Dictionary<string, string>
             {
-                {"source_hostname", "hostname" },
                 {"source_instrument", "OPN2004A" },
-                {"source_server_park", "LocalDevelopment" },
                 {"source_file", "D:\\Temp\\OPN" }
             };
 
@@ -71,22 +69,18 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
             var result = _sut.MapToMessageModel(message);
 
             //assert
-            Assert.AreEqual("hostname", result.HostName);
             Assert.AreEqual("OPN2004A", result.InstrumentName);
-            Assert.AreEqual("LocalDevelopment", result.ServerPark);
             Assert.AreEqual("D:\\Temp\\OPN", result.SourceFilePath);
         }
 
         [Test]
-        public void Given_A_Host_Name_Is_Not_Provided_When_I_Call_MapToMessageModel_Then_The_Remainder_Of_The_Model_Is_Returned()
+        public void Given_A_Value_Is_Not_Provided_When_I_Call_MapToMessageModel_Then_The_Remainder_Of_The_Model_Is_Returned()
         {
             //arrange
             var message = "Message";
 
             Dictionary<string, string> messageDictionary = new Dictionary<string, string>
             {
-                {"source_instrument", "OPN2004A" },
-                {"source_server_park", "LocalDevelopment" },
                 {"source_file", "D:\\Temp\\OPN" }
             };
 
@@ -96,10 +90,8 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
             var result = _sut.MapToMessageModel(message);
 
             //assert
-            Assert.IsNull(result.HostName);
+            Assert.IsNull(result.InstrumentName);
 
-            Assert.AreEqual("OPN2004A", result.InstrumentName);
-            Assert.AreEqual("LocalDevelopment", result.ServerPark);
             Assert.AreEqual("D:\\Temp\\OPN", result.SourceFilePath);
         }
 
