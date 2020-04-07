@@ -1,6 +1,6 @@
 # Blaise_Data_Delivery
 
-Blaise Data Delivery is a Windows service for extracting data from a Bliase data set and converting it into SPSS format. The service is triggered by listening for messages on a RabbitMQ queue, the message should contain deails of where to find the source Blaise data set and where to output the SPSS data, see examples below
+Blaise Data Delivery is a Windows service for encrypting data files for a survey and uploading them to a bucket. The service is triggered by listening for messages on a RabbitMQ queue, the message should contain details of where to find the source data files. see examples below
 
 # Setup Development Environment
 
@@ -14,25 +14,9 @@ Build the solution to obtain the necessary references.
 
 ```
 {
-  "source_hostname":"blaise-dev-bsp-tel.uksouth.cloudapp.azure.com"
-  ,"source_server_park":"TEL-DEV"
   ,"source_instrument":"OPN1911a"
-  ,"source_file":""
-  ,"output_filepath":"C:\\Blaise_SPSS_Output\\"
+  ,"source_file":"C:\\Blaise_SPSS_Output\\"
 }                  
-```
-
-
-# Example Message - File Source
-
-```
-{
-  "source_hostname":""
-  ,"source_server_park":""
-  ,"source_instrument":""
-  ,"source_file":"C:\\Blaise_Final_Data\\OPN1911A.bdix"
-  ,"output_filepath":"C:\\Blaise_SPSS_Output\\"
-}                    
 ```
 
 # Installing the Service
@@ -60,6 +44,4 @@ Build the solution to obtain the necessary references.
 
 ### To run this locally
 
-1. Have the blaise db -> put file in C:\aSurvey\opn-jsn-b5\OPN2001A.bdix
-2. Clone repo
-3. Download PSPP and install it in C:\Apps\PSPP -> This is just so you can open the SPS file in SPSS. 
+
