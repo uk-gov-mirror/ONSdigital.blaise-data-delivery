@@ -104,6 +104,37 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_HandleMessage_Is_Called_Then_The_Files_Are_Encrypted_Before_Being_Zipped()
+        {
+            //arrange
+            var filesToProcess = new List<string>
+            {
+                "File1",
+                "File2"
+            };
+
+            _fileServiceMock = new Mock<IFileService>(MockBehavior.Strict);
+            var seq = new MockSequence();
+
+            _fileServiceMock.InSequence(seq).Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(filesToProcess);
+            _fileServiceMock.InSequence(seq).Setup(f => f.EncryptFiles(It.IsAny<IEnumerable<string>>()));
+            _fileServiceMock.InSequence(seq).Setup(f => f.CreateZipFile(It.IsAny<IEnumerable<string>>(), It.IsAny<string>()));
+            _fileServiceMock.InSequence(seq).Setup(f => f.UploadFileToBucket(It.IsAny<string>(), It.IsAny<string>()));
+            _fileServiceMock.InSequence(seq).Setup(f => f.DeleteFile(It.IsAny<string>()));
+            _fileServiceMock.InSequence(seq).Setup(f => f.DeleteFiles(It.IsAny<IEnumerable<string>>()));
+
+            var sut = new DataDeliveryMessageHandler(
+                _loggerMock.Object, _configurationMock.Object, _mapperMock.Object, _fileServiceMock.Object);
+
+            //act
+            var result = sut.HandleMessage(_messageType, _message);
+
+            //assert
+            _fileServiceMock.Verify(v => v.EncryptFiles(filesToProcess));
+            _fileServiceMock.Verify(v => v.CreateZipFile(filesToProcess, It.IsAny<string>()));
+        }
+
+        [Test]
         public void Given_No_Files_Available_To_Process_When_HandleMessage_Is_Called_Then_True_Is_Returned()
         {
             //arrange
