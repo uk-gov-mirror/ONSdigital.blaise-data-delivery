@@ -5,6 +5,7 @@ using Blaise.Queue.Contracts.Interfaces.MessageHandlers;
 using Blaise.Queue.Contracts.Models;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Services.Queue;
+using log4net;
 using Moq;
 using NUnit.Framework;
 
@@ -12,6 +13,7 @@ namespace BlaiseDataDelivery.Tests.Services.Queue
 {
     public class SubscriptionServiceTests
     {
+        private Mock<ILog> _loggerMock;
         private Mock<IConfigurationProvider> _configurationProviderMock;
         private Mock<IFluentQueueProvider> _fluentQueueProviderMock;
         private Mock<IFluentRegisterQueue> _fluentQueueRegisterMock;
@@ -32,6 +34,8 @@ namespace BlaiseDataDelivery.Tests.Services.Queue
         [SetUp]
         public void SetUpTests()
         {
+            _loggerMock = new Mock<ILog>();
+
             _configurationProviderMock = new Mock<IConfigurationProvider>();
             _configurationProviderMock.Setup(c => c.GetQueueConnectionConfigurationModel()).Returns(_configurationModel);
             _configurationProviderMock.Setup(c => c.ExchangeName).Returns(_exchangeName);
@@ -44,7 +48,7 @@ namespace BlaiseDataDelivery.Tests.Services.Queue
 
             _messageHandlerMock = new Mock<IMessageHandlerCallback>();
 
-            _sut = new SubscriptionService(_configurationProviderMock.Object, _fluentQueueProviderMock.Object, _messageHandlerMock.Object);
+            _sut = new SubscriptionService(_loggerMock.Object, _configurationProviderMock.Object, _fluentQueueProviderMock.Object, _messageHandlerMock.Object);
         }
 
         [Test]
