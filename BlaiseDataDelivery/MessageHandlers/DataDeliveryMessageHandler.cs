@@ -2,7 +2,6 @@
 using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services.Files;
-using BlaiseDataDelivery.Models;
 using log4net;
 using System;
 using System.Linq;
@@ -45,19 +44,15 @@ namespace BlaiseDataDelivery.MessageHandlers
                     return true;
                 }
 
-                //encrypt files
-                _fileService.EncryptFiles(filesToProcess);
-
-                //create zip file from the encrypted files
-                var zipFile = GenerateZipFileNameAndPath(messageModel);
-                _fileService.CreateZipFile(filesToProcess, zipFile);
+                //create encrypted zip file 
+                var encryptedZipFile = _fileService.CreateEncryptedZipFile(filesToProcess, messageModel);
 
                 //upload the zip to bucket
-                _fileService.UploadFileToBucket(zipFile, _configuration.BucketName);
+                _fileService.UploadFileToBucket(encryptedZipFile, _configuration.BucketName);
 
                 //clean up files
-                _fileService.DeleteFile(zipFile);
-                _fileService.DeleteFiles(filesToProcess);
+               _fileService.DeleteFile(encryptedZipFile);
+               _fileService.DeleteFiles(filesToProcess);
 
             }
             catch(Exception ex)
@@ -66,14 +61,6 @@ namespace BlaiseDataDelivery.MessageHandlers
             }
 
             return true;
-        }
-
-        private string GenerateZipFileNameAndPath(MessageModel messageModel)
-        {
-            var dateTime = DateTime.Now;
-
-            //generate a file name in the agreed format
-            return $"{messageModel.SourceFilePath}\\dd_{messageModel.InstrumentName}_{dateTime:ddmmyy}_{dateTime:hhmmss}.zip";
         }
     }
 }

@@ -2,6 +2,7 @@
 using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Services.Json;
 using BlaiseDataDelivery.Models;
+using System;
 using System.Collections.Generic;
 
 namespace BlaiseDataDelivery.Mappers
@@ -35,7 +36,7 @@ namespace BlaiseDataDelivery.Mappers
                 return messageDictionary[key];
             };
 
-            return null;
+            throw new ArgumentException($"Expected value for '{key}' in the message");
         }
     }
 }

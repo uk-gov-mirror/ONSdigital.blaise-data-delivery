@@ -30,6 +30,14 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
             //arrange
             var message = "Message";
 
+            Dictionary<string, string> messageDictionary = new Dictionary<string, string>
+            {
+                {"source_instrument", "OPN2004A" },
+                {"source_file", "D:\\Temp\\OPN" }
+            };
+
+            _serializerMock.Setup(s => s.DeserializeJsonMessage<Dictionary<string, string>>(It.IsAny<string>())).Returns(messageDictionary);
+
             //act
             var result = _sut.MapToMessageModel(message);
 
@@ -43,6 +51,14 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         {
             //arrange
             var message = "Message";
+
+            Dictionary<string, string> messageDictionary = new Dictionary<string, string>
+            {
+                {"source_instrument", "OPN2004A" },
+                {"source_file", "D:\\Temp\\OPN" }
+            };
+
+            _serializerMock.Setup(s => s.DeserializeJsonMessage<Dictionary<string, string>>(It.IsAny<string>())).Returns(messageDictionary);
 
             //act
             var result = _sut.MapToMessageModel(message);
@@ -74,36 +90,53 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         }
 
         [Test]
-        public void Given_A_Value_Is_Not_Provided_When_I_Call_MapToMessageModel_Then_The_Remainder_Of_The_Model_Is_Returned()
+        public void Given_A_Value_Is_Not_Provided_For_Source_File_When_I_Call_MapToMessageModel_Then_An_ArgumentException_Is_thrown()
         {
             //arrange
+            var errorMessage = $"Expected value for 'source_file' in the message";
             var message = "Message";
 
             Dictionary<string, string> messageDictionary = new Dictionary<string, string>
             {
-                {"source_file", "D:\\Temp\\OPN" }
+                {"source_instrument", "OPN2004A" },
             };
 
             _serializerMock.Setup(s => s.DeserializeJsonMessage<Dictionary<string, string>>(It.IsAny<string>())).Returns(messageDictionary);
 
-            //act
-            var result = _sut.MapToMessageModel(message);
+            //act && assert
+            var result = Assert.Throws<ArgumentException>(() => _sut.MapToMessageModel(message));
+            Assert.AreEqual(errorMessage, result.Message);
+        }
 
-            //assert
-            Assert.IsNull(result.InstrumentName);
+        [Test]
+        public void Given_A_Value_Is_Not_Provided_For_Source_Instrument_When_I_Call_MapToMessageModel_Then_An_ArgumentException_Is_thrown()
+        {
+            //arrange
+            var errorMessage = $"Expected value for 'source_instrument' in the message";
+            var message = "Message";
 
-            Assert.AreEqual("D:\\Temp\\OPN", result.SourceFilePath);
+            Dictionary<string, string> messageDictionary = new Dictionary<string, string>
+            {
+                { "source_file", "D:\\Temp\\OPN" }
+            };
+
+            _serializerMock.Setup(s => s.DeserializeJsonMessage<Dictionary<string, string>>(It.IsAny<string>())).Returns(messageDictionary);
+
+            //act && assert
+            var result = Assert.Throws<ArgumentException>(() => _sut.MapToMessageModel(message));
+            Assert.AreEqual(errorMessage, result.Message);
         }
 
         [Test]
         public void Given_A_Null_Message_WhenI_Call_MapToMessageModel_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var errorMessage = $"The argument 'serialisedMessage' must be supplied";
+            var paramNamessage = $"serialisedMessage";
             string message = null;
 
             //act && assert
             var result = Assert.Throws<ArgumentNullException>(() => _sut.MapToMessageModel(message));
+            Assert.AreEqual(paramNamessage, result.ParamName);
         }
 
         [Test]

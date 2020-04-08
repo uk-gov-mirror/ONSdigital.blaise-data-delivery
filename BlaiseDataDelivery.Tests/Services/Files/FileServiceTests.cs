@@ -1,4 +1,5 @@
 ﻿using BlaiseDataDelivery.Interfaces.Services.Files;
+using BlaiseDataDelivery.Models;
 using BlaiseDataDelivery.Services.Files;
 using Moq;
 using NUnit.Framework;
@@ -9,7 +10,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
 {
     public class FileServiceTests
     {
-        private Mock<IFileDirectoryService> _fileSystemServiceMock;
+        private Mock<IFileDirectoryService> _fileDirectoryMock;
         private Mock<IFileEncryptionService> _encryptionServiceMock;
         private Mock<IFileZipService> _zipServiceMock;
         private Mock<IFileCloudStorageService> _storageServiceMock;
@@ -19,15 +20,15 @@ namespace BlaiseDataDelivery.Tests.Services.Files
         [SetUp]
         public void SetUpTests()
         {
-            _fileSystemServiceMock = new Mock<IFileDirectoryService>();
-            _fileSystemServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IEnumerable<string>>);
+            _fileDirectoryMock = new Mock<IFileDirectoryService>();
+            _fileDirectoryMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IEnumerable<string>>);
 
             _encryptionServiceMock = new Mock<IFileEncryptionService>();
             _zipServiceMock = new Mock<IFileZipService>();
             _storageServiceMock = new Mock<IFileCloudStorageService>();
 
             _sut = new FileService(
-                _fileSystemServiceMock.Object, _encryptionServiceMock.Object, _zipServiceMock.Object, _storageServiceMock.Object);
+                _fileDirectoryMock.Object, _encryptionServiceMock.Object, _zipServiceMock.Object, _storageServiceMock.Object);
         }
 
         [Test]
@@ -41,7 +42,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
             _sut.GetFiles(path, filePattern);
 
             //assert
-            _fileSystemServiceMock.Verify(v => v.GetFiles(path, filePattern), Times.Once);
+            _fileDirectoryMock.Verify(v => v.GetFiles(path, filePattern), Times.Once);
         }
 
         [Test]
@@ -53,7 +54,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
             var files = new List<string> { "File1", "File2" };
 
 
-            _fileSystemServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(files);
+            _fileDirectoryMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(files);
 
             //act
             var result = _sut.GetFiles(path, filePattern);
@@ -64,20 +65,53 @@ namespace BlaiseDataDelivery.Tests.Services.Files
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_CreateZipFile_Then_The_Correct_Method_Is_Called()
+        public void Given_Valid_Arguments_When_I_Call_CreateEncryptedZipFiles_Then_I_Get_The_Path_Of_The_Encrypted_Zip_Back()
         {
             //arrange
             var files = new List<string> { "File1", "File2" };
-            var path = "temp";
+            var messageModel = new MessageModel
+            {
+                SourceFilePath = "SourcePath",
+                InstrumentName = "InstrumentName"
+            };
 
+            var encryptedZipPath = string.Empty;
 
             _zipServiceMock.Setup(f => f.CreateZipFile(It.IsAny<IEnumerable<string>>(), It.IsAny<string>()));
+            _encryptionServiceMock.Setup(e => e.EncryptFile(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((input, output) => encryptedZipPath = output);
 
             //act
-            _sut.CreateZipFile(files, path);
+            var result =_sut.CreateEncryptedZipFile(files, messageModel);
 
             //assert
-            _zipServiceMock.Verify(v => v.CreateZipFile(files, path), Times.Once);
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<string>(result);
+            Assert.AreEqual(encryptedZipPath, result);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CreateEncryptedZipFiles_Then_The_Correct_Methods_Are_Called()
+        {
+            //arrange
+            var files = new List<string> { "File1", "File2" };
+            var messageModel = new MessageModel { 
+                SourceFilePath = "SourcePath",
+                InstrumentName = "InstrumentName"
+            };
+
+            var tempZipPath = string.Empty;
+            var encryptedZipPath = string.Empty;
+
+            _zipServiceMock.Setup(f => f.CreateZipFile(It.IsAny<IEnumerable<string>>(), It.IsAny<string>())).Callback<IEnumerable<string>, string>((input, output) => tempZipPath = output);
+            _encryptionServiceMock.Setup(e => e.EncryptFile(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((input, output) => encryptedZipPath = output);
+
+            //act
+            _sut.CreateEncryptedZipFile(files, messageModel);
+
+            //assert
+            _zipServiceMock.Verify(v => v.CreateZipFile(files, tempZipPath), Times.Once);
+            _encryptionServiceMock.Verify(v => v.EncryptFile(tempZipPath, encryptedZipPath), Times.Once);
+            _fileDirectoryMock.Verify(v => v.DeleteFile(tempZipPath), Times.Once);
         }
 
         [Test]
@@ -103,7 +137,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
             //arrange
             var files = new List<string> { "File1", "File2" };
 
-            _fileSystemServiceMock.Setup(f => f.DeleteFile(It.IsAny<string>()));
+            _fileDirectoryMock.Setup(f => f.DeleteFile(It.IsAny<string>()));
 
             //act
             _sut.DeleteFiles(files);
@@ -111,7 +145,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
             //assert
             foreach (var file in files)
             {
-                _fileSystemServiceMock.Verify(v => v.DeleteFile(file), Times.Once);
+                _fileDirectoryMock.Verify(v => v.DeleteFile(file), Times.Once);
             }
         }
 
@@ -121,13 +155,32 @@ namespace BlaiseDataDelivery.Tests.Services.Files
             //arrange
             var file = "File1";
 
-            _fileSystemServiceMock.Setup(f => f.DeleteFile(It.IsAny<string>()));
+            _fileDirectoryMock.Setup(f => f.DeleteFile(It.IsAny<string>()));
 
             //act
             _sut.DeleteFile(file);
 
             //assert
-            _fileSystemServiceMock.Verify(v => v.DeleteFile(file), Times.Once);
+            _fileDirectoryMock.Verify(v => v.DeleteFile(file), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GenerateUniqueFileName_Then_I_Get_The_Expected_Format_Back()
+        {
+            //arrange
+            var expectedFileName = "dd_OPN2004A_084020_034000";
+
+            var instrumentName = "OPN2004A";
+            var dateTime = DateTime.ParseExact("2020-04-08 15:40:00,000", "yyyy-MM-dd HH:mm:ss,fff",
+                                       System.Globalization.CultureInfo.InvariantCulture);
+
+            //act
+            var result = _sut.GenerateUniqueFileName(instrumentName, dateTime);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<string>(result);
+            Assert.AreEqual(expectedFileName, result);
         }
     }
 }

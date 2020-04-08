@@ -1,4 +1,6 @@
-﻿using BlaiseDataDelivery.Interfaces.Services.Files;
+﻿using BlaiseDataDelivery.Helpers;
+using BlaiseDataDelivery.Interfaces.Services.Files;
+using BlaiseDataDelivery.Models;
 using System;
 using System.Collections.Generic;
 
@@ -23,9 +25,19 @@ namespace BlaiseDataDelivery.Services.Files
             _cloudStorageService = cloudStorageService;
         }
 
-        public void CreateZipFile(IEnumerable<string> files, string filePath)
+        public string CreateEncryptedZipFile(IEnumerable<string> files, MessageModel messageModel)
         {
-            _zipService.CreateZipFile(files, filePath);
+            var uniqueFileName = GenerateUniqueFileName(messageModel.InstrumentName, DateTime.Now);
+            
+            var tempZipFilePath = $"{messageModel.SourceFilePath}\\{uniqueFileName}.unencrypted.zip";
+            _zipService.CreateZipFile(files, tempZipFilePath);
+            
+            var encryptedZipFilePath = $"{messageModel.SourceFilePath}\\{uniqueFileName}.zip";
+            _encryptionService.EncryptFile(tempZipFilePath, encryptedZipFilePath);
+
+            DeleteFile(tempZipFilePath);
+
+            return encryptedZipFilePath;
         }
 
         public void DeleteFile(string filePath)
@@ -40,10 +52,6 @@ namespace BlaiseDataDelivery.Services.Files
                 _directoryService.DeleteFile(file);
             }
         }
-        public void EncryptFiles(IEnumerable<string> files)
-        {
-            return;
-        }
 
         public IEnumerable<string> GetFiles(string path, string filePattern)
         {
@@ -53,6 +61,12 @@ namespace BlaiseDataDelivery.Services.Files
         public void UploadFileToBucket(string zipFilePath, string bucketName)
         {
             _cloudStorageService.UploadFileToBucket(zipFilePath, bucketName);
+        }
+
+        public string GenerateUniqueFileName(string instrumentName, DateTime dateTime)
+        {
+            //generate a file name in the agreed format
+            return $"dd_{instrumentName}_{dateTime:ddmmyy}_{dateTime:hhmmss}";
         }
     }
 }
