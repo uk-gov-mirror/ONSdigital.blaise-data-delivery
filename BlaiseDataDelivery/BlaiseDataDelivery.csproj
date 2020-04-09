@@ -172,9 +172,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="RsaKey.pub">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="PublicKeys\dev-key.gpg" />
+    <None Include="PublicKeys\local-key.gpg" />
+    <None Include="PublicKeys\preprod-key.gpg" />
+    <None Include="PublicKeys\prod-key.gpg" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

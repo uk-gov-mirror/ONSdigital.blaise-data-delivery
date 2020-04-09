@@ -1,4 +1,4 @@
-﻿using Blaise.Queue.Contracts.Enums;
+﻿
 using Blaise.Queue.Contracts.Models;
 
 namespace BlaiseDataDelivery.Interfaces.Providers
@@ -16,6 +16,8 @@ namespace BlaiseDataDelivery.Interfaces.Providers
         string BucketName { get; }
 
         string CloudStorageKey { get; }
+
+        string EncryptionKey { get; }
 
         ConnectionConfigurationModel GetQueueConnectionConfigurationModel();
 

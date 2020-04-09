@@ -1,5 +1,6 @@
 ﻿
 using BlaiseDataDelivery.Helpers;
+using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services.Files;
 using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Bcpg.OpenPgp;
@@ -11,14 +12,19 @@ namespace BlaiseDataDelivery.Services.Files
 {
     public class FileEncryptionService : IFileEncryptionService
     {
-        private const string PublicKeyName = "RsaKey.pub";
+        private readonly IConfigurationProvider _configuration;
+
+        public FileEncryptionService(IConfigurationProvider configuration)
+        {
+            _configuration = configuration;
+        }
 
         public void EncryptFile(string inputFilePath, string outputFilePath)
         {
             inputFilePath.ThrowExceptionIfNullOrEmpty("inputFilePath");
             outputFilePath.ThrowExceptionIfNullOrEmpty("outputFilePath");
 
-            var publicKeyPath = Path.GetFullPath(PublicKeyName);
+            var publicKeyPath = Path.GetFullPath(_configuration.EncryptionKey);
             var publicKey = ReadPublicKey(publicKeyPath);
 
             EncryptFile(inputFilePath, outputFilePath, publicKey);
@@ -63,14 +69,14 @@ namespace BlaiseDataDelivery.Services.Files
             PgpPublicKeyRingBundle pgpPub = new PgpPublicKeyRingBundle(keyFileStream);
 
             foreach (PgpPublicKeyRing keyRing in pgpPub.GetKeyRings())
-            foreach (PgpPublicKey key in keyRing.GetPublicKeys())
-            {
-                if (key.IsEncryptionKey)
+                foreach (PgpPublicKey key in keyRing.GetPublicKeys())
                 {
-                    keyFileStream.Close();
-                    return key;
+                    if (key.IsEncryptionKey)
+                    {
+                        keyFileStream.Close();
+                        return key;
+                    }
                 }
-            }
 
             throw new ArgumentException("Can't find encryption key in key ring of the public key held at '{publicKeyFilePath}'");
         }
