@@ -172,10 +172,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="PublicKeys\dev-key.gpg" />
-    <None Include="PublicKeys\local-key.gpg" />
-    <None Include="PublicKeys\preprod-key.gpg" />
-    <None Include="PublicKeys\prod-key.gpg" />
+    <None Include="PublicKeys\dev-key.gpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="PublicKeys\local-key.gpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="PublicKeys\preprod-key.gpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="PublicKeys\prod-key.gpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
