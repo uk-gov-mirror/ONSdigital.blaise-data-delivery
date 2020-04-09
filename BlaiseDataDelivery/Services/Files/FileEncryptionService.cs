@@ -33,22 +33,18 @@ namespace BlaiseDataDelivery.Services.Files
         {
             using (MemoryStream outputMemoryStream = new MemoryStream())
             {
-                PgpCompressedDataGenerator compressionDataGenerator = new PgpCompressedDataGenerator(CompressionAlgorithmTag.Zip);
-                PgpUtilities.WriteFileToLiteralData(
-                    compressionDataGenerator.Open(outputMemoryStream), PgpLiteralData.Binary, new FileInfo(filePath));
+                PgpCompressedDataGenerator compressedData = new PgpCompressedDataGenerator(CompressionAlgorithmTag.Zip);
+                PgpUtilities.WriteFileToLiteralData(compressedData.Open(outputMemoryStream), PgpLiteralData.Binary, new FileInfo(filePath));
+                compressedData.Close();
 
-                compressionDataGenerator.Close();
+                var bytes = outputMemoryStream.ToArray();
 
-                byte[] bytes = outputMemoryStream.ToArray();
+                var encryptedData = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, true, new SecureRandom());
+                encryptedData.AddMethod(publicKey);
 
-                PgpEncryptedDataGenerator encryptedDataGenerator = 
-                    new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, true, new SecureRandom());
-
-                encryptedDataGenerator.AddMethod(publicKey);
-
-                Stream encryptedOutputStream = encryptedDataGenerator.Open(outputStream, bytes.Length);
-                encryptedOutputStream.Write(bytes, 0, bytes.Length);
-                encryptedOutputStream.Close();
+                var encryptedStream = encryptedData.Open(outputStream, bytes.Length);
+                encryptedStream.Write(bytes, 0, bytes.Length);
+                encryptedStream.Close();
             }
         }
 
@@ -60,18 +56,16 @@ namespace BlaiseDataDelivery.Services.Files
             PgpPublicKeyRingBundle pgpPub = new PgpPublicKeyRingBundle(keyFileStream);
 
             foreach (PgpPublicKeyRing keyRing in pgpPub.GetKeyRings())
+            foreach (PgpPublicKey key in keyRing.GetPublicKeys())
             {
-                foreach (PgpPublicKey key in keyRing.GetPublicKeys())
+                if (key.IsEncryptionKey)
                 {
-                    if (key.IsEncryptionKey)
-                    {
-                        keyFileStream.Close();
-                        return key;
-                    }
+                    keyFileStream.Close();
+                    return key;
                 }
             }
 
-            throw new ArgumentException("Can't find encryption key in key ring.");
+            throw new ArgumentException("Can't find encryption key in key ring of the public key held at '{publicKeyFilePath}'");
         }
     }
 }
