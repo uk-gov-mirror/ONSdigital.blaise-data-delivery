@@ -29,10 +29,10 @@ namespace BlaiseDataDelivery.Services.Files
         {
             var uniqueFileName = GenerateUniqueFileName(messageModel.InstrumentName, DateTime.Now);
             
-            var tempZipFilePath = $"{messageModel.SourceFilePath}\\{uniqueFileName}.unencrypted.zip";
+            var tempZipFilePath = $"{messageModel.SourceFilePath}\\Processed\\{uniqueFileName}.unencrypted.zip";
             _zipService.CreateZipFile(files, tempZipFilePath);
             
-            var encryptedZipFilePath = $"{messageModel.SourceFilePath}\\{uniqueFileName}.zip";
+            var encryptedZipFilePath = $"{messageModel.SourceFilePath}\\Processed\\{uniqueFileName}.zip";
             _encryptionService.EncryptFile(tempZipFilePath, encryptedZipFilePath);
 
             DeleteFile(tempZipFilePath);

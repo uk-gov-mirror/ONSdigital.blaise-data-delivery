@@ -1,4 +1,5 @@
 ﻿
+using BlaiseDataDelivery.Helpers;
 using BlaiseDataDelivery.Interfaces.Services.Files;
 using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Bcpg.OpenPgp;
@@ -14,6 +15,9 @@ namespace BlaiseDataDelivery.Services.Files
 
         public void EncryptFile(string inputFilePath, string outputFilePath)
         {
+            inputFilePath.ThrowExceptionIfNullOrEmpty("inputFilePath");
+            outputFilePath.ThrowExceptionIfNullOrEmpty("outputFilePath");
+
             var publicKeyPath = Path.GetFullPath(PublicKeyName);
             var publicKey = ReadPublicKey(publicKeyPath);
 
@@ -22,6 +26,9 @@ namespace BlaiseDataDelivery.Services.Files
 
         private void EncryptFile(string inputFilePath, string outputFilePath, PgpPublicKey publicKey)
         {
+            //create any folders that may not exist
+            Directory.CreateDirectory(Path.GetDirectoryName(outputFilePath));
+
             using (var fileStream = new FileStream(outputFilePath, FileMode.OpenOrCreate))
             using (var streamWriter = new StreamWriter(fileStream))
             {

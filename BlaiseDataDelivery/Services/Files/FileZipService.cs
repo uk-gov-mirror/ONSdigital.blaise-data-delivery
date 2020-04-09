@@ -18,7 +18,10 @@ namespace BlaiseDataDelivery.Services.Files
                 throw new ArgumentException($"No files provided");
             }
 
-            filePath.ThrowExceptionIfNullOrEmpty("path");
+            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+
+            //create any folders that may not exist
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
             using (var fileStream = new FileStream(filePath, FileMode.OpenOrCreate))
             using (var streamWriter = new StreamWriter(fileStream))
