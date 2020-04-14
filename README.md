@@ -4,9 +4,9 @@ Blaise Data Delivery is a Windows service for encrypting data files for a survey
 
 # Setup Development Environment
 
-Clone the git respository to your IDE of choice. Visual Studio 2019 is recomended.
+Clone the git repository to your IDE of choice. Visual Studio 2019 is recommended.
 
-Populate the key values in the App.config file accordingly. **Never committ App.config with key values.**
+Populate the key values in the app.config file accordingly. **Never commit app.config with key values.**
 
 Build the solution to obtain the necessary references.
 
