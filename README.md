@@ -14,7 +14,7 @@ Build the solution to obtain the necessary references.
 
 ```
 {
-  ,"source_instrument":"OPN1911a"
+  "source_instrument":"OPN1911a"
   ,"source_file":"C:\\Blaise_SPSS_Output\\"
 }                  
 ```
