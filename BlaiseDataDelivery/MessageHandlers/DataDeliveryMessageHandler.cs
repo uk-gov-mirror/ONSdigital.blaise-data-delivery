@@ -1,14 +1,14 @@
-﻿using Blaise.Queue.Contracts.Interfaces.MessageHandlers;
-using BlaiseDataDelivery.Interfaces.Mappers;
+﻿using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services.Files;
 using log4net;
 using System;
 using System.Linq;
+using Blaise.Nuget.PubSub.Contracts.Interfaces;
 
 namespace BlaiseDataDelivery.MessageHandlers
 {
-    public class DataDeliveryMessageHandler : IMessageHandlerCallback
+    public class DataDeliveryMessageHandler : IMessageHandler
     {
         private readonly ILog _logger;
         private readonly IConfigurationProvider _configuration;
@@ -27,7 +27,7 @@ namespace BlaiseDataDelivery.MessageHandlers
             _fileService = fileService;
         }
 
-        public bool HandleMessage(string messageType, string message)
+        public bool HandleMessage(string message)
         {            
             try
             {
@@ -35,7 +35,7 @@ namespace BlaiseDataDelivery.MessageHandlers
                 var messageModel = _mapper.MapToMessageModel(message);
 
                 //get a list of available files for data delivery
-                var filesToProcess = _fileService.GetFiles(messageModel.SourceFilePath, _configuration.FilePattern);
+                var filesToProcess = _fileService.GetFiles(messageModel.SourceFilePath, _configuration.FilePattern).ToList();
 
                 //no files available - an error must have occured
                 if(!filesToProcess.Any())
@@ -57,7 +57,7 @@ namespace BlaiseDataDelivery.MessageHandlers
             }
             catch(Exception ex)
             {
-                _logger.Error($"An exception occured in processing messge {message} - {ex.Message}");
+                _logger.Error($"An exception occured in processing message {message} - {ex.Message}");
             }
 
             return true;

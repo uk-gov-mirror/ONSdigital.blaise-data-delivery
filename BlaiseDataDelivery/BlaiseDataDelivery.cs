@@ -1,7 +1,4 @@
-﻿using Blaise.Queue.Api;
-using Blaise.Queue.Contracts.Interfaces;
-using Blaise.Queue.Contracts.Interfaces.MessageHandlers;
-using BlaiseDataDelivery.Interfaces.Mappers;
+﻿using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services;
 using BlaiseDataDelivery.Interfaces.Services.Files;
@@ -16,6 +13,7 @@ using BlaiseDataDelivery.Services.Json;
 using BlaiseDataDelivery.Services.Queue;
 using log4net;
 using System.ServiceProcess;
+using Blaise.Nuget.PubSub.Contracts.Interfaces;
 using Unity;
 
 namespace BlaiseDataDelivery
@@ -23,62 +21,63 @@ namespace BlaiseDataDelivery
     partial class BlaiseDataDelivery : ServiceBase
     {
         // Instantiate logger.
-        private static readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IUnityContainer _unityContainer;
-        private readonly IInitialiseDeliveryService _dataDeliveryService;
+        private readonly IInitialiseService _dataDeliveryService;
 
         public BlaiseDataDelivery()
         {
             InitializeComponent();
 
             //IOC container
-            _unityContainer = new UnityContainer();
+            IUnityContainer unityContainer = new UnityContainer();
 
             //register dependencies
-            _unityContainer.RegisterSingleton<IFluentQueueProvider, FluentQueueProvider>();
-            _unityContainer.RegisterFactory<ILog>(f => LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType));
-            _unityContainer.RegisterType<IConfigurationProvider, ConfigurationProvider>();
+            unityContainer.RegisterSingleton<IFluentQueueApi, IFluentQueueApi>();
+            unityContainer.RegisterFactory<ILog>(f => LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType));
+            unityContainer.RegisterType<IConfigurationProvider, ConfigurationProvider>();
 
-            _unityContainer.RegisterType<ISubscriptionService, SubscriptionService>();
+            unityContainer.RegisterType<IQueueService, QueueService>();
 
-            _unityContainer.RegisterType<ISerializerService, SerializerService>();
-            _unityContainer.RegisterType<IMessageModelMapper, MessageModelMapper>();
+            unityContainer.RegisterType<ISerializerService, SerializerService>();
+            unityContainer.RegisterType<IMessageModelMapper, MessageModelMapper>();
 
-            _unityContainer.RegisterType<IFileService, FileService>();
-            _unityContainer.RegisterType<IFileDirectoryService, FileDirectoryService>();
-            _unityContainer.RegisterType<IFileEncryptionService, FileEncryptionService>();
-            _unityContainer.RegisterType<IFileZipService, FileZipService>();
+            unityContainer.RegisterType<IFileService, FileService>();
+            unityContainer.RegisterType<IFileDirectoryService, FileDirectoryService>();
+            unityContainer.RegisterType<IFileEncryptionService, FileEncryptionService>();
+            unityContainer.RegisterType<IFileZipService, FileZipService>();
 
             // If running in Debug, get the credentials file that has access to bucket and place it in a directory of your choice. 
             // Update the credFilePath variable with the full path to the file.
 #if (DEBUG)
-            _unityContainer.RegisterType<IStorageClientProvider, LocalStorageClientProvider>();
+            unityContainer.RegisterType<IStorageClientProvider, LocalStorageClientProvider>();
 #else
             // When running in Release, the service will be running as compute account which will have access to all buckets.
-            _unityContainer.RegisterType<IStorageClientProvider, StorageClientProvider>();
+            unityContainer.RegisterType<IStorageClientProvider, StorageClientProvider>();
 #endif
 
-            _unityContainer.RegisterType<IFileCloudStorageService, FileCloudStorageService>();
+            unityContainer.RegisterType<IFileCloudStorageService, FileCloudStorageService>();
 
             //main service classes
-            _unityContainer.RegisterType<IInitialiseDeliveryService, InitialiseDeliveryService>();
-            _unityContainer.RegisterType<IMessageHandlerCallback, DataDeliveryMessageHandler>();
+            unityContainer.RegisterType<IInitialiseService, InitialiseService>();
+            unityContainer.RegisterType<IMessageHandler, DataDeliveryMessageHandler>();
 
             //resolve all dependencies as DataDeliveryService class is the main service entry point
-            _dataDeliveryService = _unityContainer.Resolve<IInitialiseDeliveryService>();
+            _dataDeliveryService = unityContainer.Resolve<IInitialiseService>();
         }
 
         protected override void OnStart(string[] args)
         {
-            _dataDeliveryService.SetupSubscription();
-            _logger.Info("Blaise data delivery service has started");
+            Logger.Info("Start - data delivery service started.");
+            _dataDeliveryService.Start();
+            Logger.Info("End - data delivery service started.");
         }
 
         protected override void OnStop()
         {
-            _dataDeliveryService.CancelSubscription();
-            _logger.Info("Blaise data delivery service has stopped");
+            Logger.Info("Start - data delivery service stopped.");
+            _dataDeliveryService.Stop();
+            Logger.Info("Stop - data delivery service stopped.");
         }
 
         public void OnDebug()

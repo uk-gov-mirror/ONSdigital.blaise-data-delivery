@@ -16,11 +16,11 @@ namespace BlaiseDataDelivery.Mappers
             _serializerService = serializerService;
         }
 
-        public MessageModel MapToMessageModel(string serialisedMessage)
+        public MessageModel MapToMessageModel(string message)
         {
-            serialisedMessage.ThrowExceptionIfNullOrEmpty("serialisedMessage");
+            message.ThrowExceptionIfNullOrEmpty("message");
 
-            var messageDictionary = _serializerService.DeserializeJsonMessage<Dictionary<string, string>>(serialisedMessage);
+            var messageDictionary = _serializerService.DeserializeJsonMessage<Dictionary<string, string>>(message);
 
             return new MessageModel
             {
@@ -29,12 +29,12 @@ namespace BlaiseDataDelivery.Mappers
             };
         }
 
-        private string GetValue(string key, Dictionary<string, string> messageDictionary)
+        private string GetValue(string key, IReadOnlyDictionary<string, string> messageDictionary)
         {
             if (messageDictionary.ContainsKey(key))
             {
                 return messageDictionary[key];
-            };
+            }
 
             throw new ArgumentException($"Expected value for '{key}' in the message");
         }

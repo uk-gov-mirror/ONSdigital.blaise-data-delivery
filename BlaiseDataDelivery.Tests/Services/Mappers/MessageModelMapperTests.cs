@@ -28,9 +28,9 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         public void Given_Valid_Arguments_When_I_Call_MapToMessageModel_Then_A_MessageModel_Is_Returned()
         {
             //arrange
-            var message = "Message";
+            const string message = "Message";
 
-            Dictionary<string, string> messageDictionary = new Dictionary<string, string>
+            var messageDictionary = new Dictionary<string, string>
             {
                 {"source_instrument", "OPN2004A" },
                 {"source_file", "D:\\Temp\\OPN" }
@@ -61,7 +61,7 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
             _serializerMock.Setup(s => s.DeserializeJsonMessage<Dictionary<string, string>>(It.IsAny<string>())).Returns(messageDictionary);
 
             //act
-            var result = _sut.MapToMessageModel(message);
+            _sut.MapToMessageModel(message);
 
             //assert
             _serializerMock.Verify(v => v.DeserializeJsonMessage<Dictionary<string, string>>(message));
@@ -71,9 +71,9 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         public void Given_Valid_Arguments_When_I_Call_MapToMessageModel_Then_A_MessageModel_With_The_Correct_Data_Is_Returned()
         {
             //arrange
-            var message = "Message";
+            const string message = "Message";
 
-            Dictionary<string, string> messageDictionary = new Dictionary<string, string>
+            var messageDictionary = new Dictionary<string, string>
             {
                 {"source_instrument", "OPN2004A" },
                 {"source_file", "D:\\Temp\\OPN" }
@@ -93,10 +93,10 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         public void Given_A_Value_Is_Not_Provided_For_Source_File_When_I_Call_MapToMessageModel_Then_An_ArgumentException_Is_thrown()
         {
             //arrange
-            var errorMessage = $"Expected value for 'source_file' in the message";
-            var message = "Message";
+            const string errorMessage = "Expected value for 'source_file' in the message";
+            const string message = "Message";
 
-            Dictionary<string, string> messageDictionary = new Dictionary<string, string>
+            var messageDictionary = new Dictionary<string, string>
             {
                 {"source_instrument", "OPN2004A" },
             };
@@ -112,10 +112,10 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         public void Given_A_Value_Is_Not_Provided_For_Source_Instrument_When_I_Call_MapToMessageModel_Then_An_ArgumentException_Is_thrown()
         {
             //arrange
-            var errorMessage = $"Expected value for 'source_instrument' in the message";
-            var message = "Message";
+            const string errorMessage = "Expected value for 'source_instrument' in the message";
+            const string message = "Message";
 
-            Dictionary<string, string> messageDictionary = new Dictionary<string, string>
+            var messageDictionary = new Dictionary<string, string>
             {
                 { "source_file", "D:\\Temp\\OPN" }
             };
@@ -131,20 +131,19 @@ namespace BlaiseDataDelivery.Tests.Services.Mappers
         public void Given_A_Null_Message_WhenI_Call_MapToMessageModel_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var paramNamessage = $"serialisedMessage";
-            string message = null;
+            const string paramName = "message";
 
             //act && assert
-            var result = Assert.Throws<ArgumentNullException>(() => _sut.MapToMessageModel(message));
-            Assert.AreEqual(paramNamessage, result.ParamName);
+            var result = Assert.Throws<ArgumentNullException>(() => _sut.MapToMessageModel(null));
+            Assert.AreEqual(paramName, result.ParamName);
         }
 
         [Test]
         public void Given_An_Empty_Message_WhenI_Call_MapToMessageModel_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
-            string message = string.Empty;
-            var errorMessage = $"A value for the argument 'serialisedMessage' must be supplied";
+            var message = string.Empty;
+            const string errorMessage = "A value for the argument 'message' must be supplied";
 
             //act && assert
             var result = Assert.Throws<ArgumentException>(() => _sut.MapToMessageModel(message));

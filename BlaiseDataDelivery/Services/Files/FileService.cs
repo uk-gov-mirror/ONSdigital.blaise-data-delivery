@@ -1,5 +1,4 @@
-﻿using BlaiseDataDelivery.Helpers;
-using BlaiseDataDelivery.Interfaces.Services.Files;
+﻿using BlaiseDataDelivery.Interfaces.Services.Files;
 using BlaiseDataDelivery.Models;
 using System;
 using System.Collections.Generic;
@@ -25,7 +24,7 @@ namespace BlaiseDataDelivery.Services.Files
             _cloudStorageService = cloudStorageService;
         }
 
-        public string CreateEncryptedZipFile(IEnumerable<string> files, MessageModel messageModel)
+        public string CreateEncryptedZipFile(IList<string> files, MessageModel messageModel)
         {
             var uniqueFileName = GenerateUniqueFileName(messageModel.InstrumentName, DateTime.Now);
             

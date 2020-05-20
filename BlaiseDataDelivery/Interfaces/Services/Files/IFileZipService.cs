@@ -5,6 +5,6 @@ namespace BlaiseDataDelivery.Interfaces.Services.Files
 {
     public interface IFileZipService
     {
-        void CreateZipFile(IEnumerable<string> files, string filePath);
+        void CreateZipFile(IList<string> files, string filePath);
     }
 }

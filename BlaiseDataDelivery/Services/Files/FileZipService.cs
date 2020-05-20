@@ -11,11 +11,11 @@ namespace BlaiseDataDelivery.Services.Files
 {
     public class FileZipService : IFileZipService
     {
-        public void CreateZipFile(IEnumerable<string> files, string filePath)
+        public void CreateZipFile(IList<string> files, string filePath)
         {
             if (!files.Any())
             {
-                throw new ArgumentException($"No files provided");
+                throw new ArgumentException("No files provided");
             }
 
             filePath.ThrowExceptionIfNullOrEmpty("filePath");
