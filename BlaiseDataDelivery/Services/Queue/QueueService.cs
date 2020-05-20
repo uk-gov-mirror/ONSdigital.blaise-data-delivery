@@ -8,24 +8,21 @@ namespace BlaiseDataDelivery.Services.Queue
     {
         private readonly IConfigurationProvider _configurationProvider;
         private readonly IFluentQueueApi _queueProvider;
-        private readonly IMessageHandler _messageHandler;
 
         public QueueService(
             IConfigurationProvider configurationProvider,
-            IFluentQueueApi queueProvider,
-            IMessageHandler messageHandler)
+            IFluentQueueApi queueProvider)
         {
             _configurationProvider = configurationProvider;
             _queueProvider = queueProvider;
-            _messageHandler = messageHandler;
         }
 
-        public void Subscribe()
+        public void Subscribe(IMessageHandler messageHandler)
         {
             _queueProvider
                 .ForProject(_configurationProvider.ProjectId)
                 .ForSubscription(_configurationProvider.SubscriptionId)
-                .StartConsuming(_messageHandler);
+                .StartConsuming(messageHandler);
         }
 
         public void CancelAllSubscriptions()

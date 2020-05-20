@@ -1,4 +1,5 @@
-﻿using BlaiseDataDelivery.Interfaces.Services.Queue;
+﻿using Blaise.Nuget.PubSub.Contracts.Interfaces;
+using BlaiseDataDelivery.Interfaces.Services.Queue;
 using BlaiseDataDelivery.Services;
 using log4net;
 using Moq;
@@ -10,6 +11,7 @@ namespace BlaiseDataDelivery.Tests.Services
     {
         private Mock<ILog> _loggerMock;
         private Mock<IQueueService> _subscriptionMock;
+        private Mock<IMessageHandler> _messageHandlerMock;
 
         private InitialiseService _sut;
 
@@ -18,8 +20,12 @@ namespace BlaiseDataDelivery.Tests.Services
         {
             _loggerMock = new Mock<ILog>();
             _subscriptionMock = new Mock<IQueueService>();
+            _messageHandlerMock = new Mock<IMessageHandler>();
 
-            _sut = new InitialiseService(_loggerMock.Object, _subscriptionMock.Object);
+            _sut = new InitialiseService(
+                _loggerMock.Object, 
+                _subscriptionMock.Object, 
+                _messageHandlerMock.Object);
         }
 
         [Test]
@@ -29,7 +35,7 @@ namespace BlaiseDataDelivery.Tests.Services
             _sut.Start();
 
             //assert
-            _subscriptionMock.Verify(v => v.Subscribe(), Times.Once);
+            _subscriptionMock.Verify(v => v.Subscribe(_messageHandlerMock.Object), Times.Once);
         }
 
         [Test]

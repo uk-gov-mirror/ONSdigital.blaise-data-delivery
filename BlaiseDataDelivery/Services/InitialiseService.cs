@@ -1,4 +1,5 @@
 ﻿
+using Blaise.Nuget.PubSub.Contracts.Interfaces;
 using BlaiseDataDelivery.Interfaces.Services;
 using BlaiseDataDelivery.Interfaces.Services.Queue;
 using log4net;
@@ -9,19 +10,22 @@ namespace BlaiseDataDelivery.Services
     {
         private readonly ILog _logger;
         private readonly IQueueService _queueService;
-       
+        private readonly IMessageHandler _messageHandler;
+
         public InitialiseService(
             ILog logger,
-            IQueueService queueService)
+            IQueueService queueService, 
+            IMessageHandler messageHandler)
         {
             _logger = logger;
             _queueService = queueService;
+            _messageHandler = messageHandler;
         }
 
         public void Start()
         {
             _logger.Info("Subscribing to topic");
-            _queueService.Subscribe();
+            _queueService.Subscribe(_messageHandler);
             _logger.Info("Subscription setup");
 
         }

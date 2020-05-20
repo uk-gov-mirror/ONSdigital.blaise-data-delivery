@@ -37,8 +37,7 @@ namespace BlaiseDataDelivery.Tests.Services.Queue
 
             _sut = new QueueService(
                 _configurationProviderMock.Object, 
-                _queueProviderMock.Object,
-                _messageHandlerMock.Object);
+                _queueProviderMock.Object);
         }
 
         [Test]
@@ -50,7 +49,7 @@ namespace BlaiseDataDelivery.Tests.Services.Queue
             _queueProviderMock.Setup(q => q.StartConsuming(It.IsAny<IMessageHandler>()));
 
             //act
-            _sut.Subscribe();
+            _sut.Subscribe(_messageHandlerMock.Object);
 
             //assert
             _queueProviderMock.Verify(v => v.ForProject(_projectId), Times.Once);
