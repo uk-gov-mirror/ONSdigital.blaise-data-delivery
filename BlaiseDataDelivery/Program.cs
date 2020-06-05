@@ -1,4 +1,5 @@
 ﻿
+using System.ServiceProcess;
 using log4net;
 
 namespace BlaiseDataDelivery
@@ -16,7 +17,7 @@ namespace BlaiseDataDelivery
             var dataDeliveryService = new BlaiseDataDelivery();
             dataDeliveryService.OnDebug();
 #else
-            _logger.Info("Blaise data delivery service starting in RELEASE mode.");
+            Logger.Info("Blaise data delivery service starting in RELEASE mode.");
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
