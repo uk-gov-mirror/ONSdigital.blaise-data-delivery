@@ -1,4 +1,6 @@
-﻿using BlaiseDataDelivery.Interfaces.Mappers;
+﻿using System;
+using System.Configuration;
+using BlaiseDataDelivery.Interfaces.Mappers;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services;
 using BlaiseDataDelivery.Interfaces.Services.Files;
@@ -13,6 +15,7 @@ using BlaiseDataDelivery.Services.Json;
 using BlaiseDataDelivery.Services.Queue;
 using log4net;
 using System.ServiceProcess;
+using Blaise.Nuget.PubSub.Api;
 using Blaise.Nuget.PubSub.Contracts.Interfaces;
 using Unity;
 
@@ -30,10 +33,10 @@ namespace BlaiseDataDelivery
             InitializeComponent();
 
             //IOC container
-            IUnityContainer unityContainer = new UnityContainer();
+            IUnityContainer unityContainer = new UnityContainer().EnableDiagnostic();
 
             //register dependencies
-            unityContainer.RegisterSingleton<IFluentQueueApi, IFluentQueueApi>();
+            unityContainer.RegisterSingleton<IFluentQueueApi, FluentQueueApi>();
             unityContainer.RegisterFactory<ILog>(f => LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType));
             unityContainer.RegisterType<IConfigurationProvider, ConfigurationProvider>();
 
@@ -51,6 +54,9 @@ namespace BlaiseDataDelivery
             // Update the credFilePath variable with the full path to the file.
 #if (DEBUG)
             unityContainer.RegisterType<IStorageClientProvider, LocalStorageClientProvider>();
+            var credentialKey = ConfigurationManager.AppSettings["GOOGLE_APPLICATION_CREDENTIALS"];
+
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialKey);
 #else
             // When running in Release, the service will be running as compute account which will have access to all buckets.
             unityContainer.RegisterType<IStorageClientProvider, StorageClientProvider>();
