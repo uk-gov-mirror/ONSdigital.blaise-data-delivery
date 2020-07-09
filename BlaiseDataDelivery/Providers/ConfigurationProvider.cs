@@ -1,4 +1,5 @@
-﻿using BlaiseDataDelivery.Interfaces.Providers;
+﻿using System;
+using BlaiseDataDelivery.Interfaces.Providers;
 using System.Configuration;
 
 namespace BlaiseDataDelivery.Providers
@@ -7,7 +8,11 @@ namespace BlaiseDataDelivery.Providers
     {
         public string ProjectId => ConfigurationManager.AppSettings["ProjectId"];
 
+        public string SubscriptionTopicId => ConfigurationManager.AppSettings["SubscriptionTopicId"];
+
         public string SubscriptionId => ConfigurationManager.AppSettings["SubscriptionId"];
+
+        public string VmName => Environment.MachineName;
 
         public string FilePattern => ConfigurationManager.AppSettings["FilePattern"];
 

@@ -5,7 +5,11 @@ namespace BlaiseDataDelivery.Interfaces.Providers
     {
         string ProjectId { get; }
 
+        string SubscriptionTopicId { get; }
+
         string SubscriptionId { get; }
+
+        string VmName { get; }
 
         string FilePattern { get; }
 

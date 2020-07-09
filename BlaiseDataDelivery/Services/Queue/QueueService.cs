@@ -1,34 +1,58 @@
-﻿using Blaise.Nuget.PubSub.Contracts.Interfaces;
+﻿using System;
+using Blaise.Nuget.PubSub.Contracts.Interfaces;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Interfaces.Services.Queue;
+using log4net;
 
 namespace BlaiseDataDelivery.Services.Queue
 {
     public class QueueService : IQueueService
     {
+        private readonly ILog _logger;
         private readonly IConfigurationProvider _configurationProvider;
-        private readonly IFluentQueueApi _queueProvider;
+        private readonly IFluentQueueApi _queueApi;
+        private readonly string _subscriptionId;
 
         public QueueService(
+            ILog logger,
             IConfigurationProvider configurationProvider,
-            IFluentQueueApi queueProvider)
+            IFluentQueueApi queueApi)
         {
+            _logger = logger;
             _configurationProvider = configurationProvider;
-            _queueProvider = queueProvider;
+            _queueApi = queueApi;
+
+            _subscriptionId = $"{_configurationProvider.SubscriptionId}-{_configurationProvider.VmName}";
         }
 
         public void Subscribe(IMessageHandler messageHandler)
         {
-            _queueProvider
-                .ForProject(_configurationProvider.ProjectId)
-                .ForSubscription(_configurationProvider.SubscriptionId)
+
+            _queueApi
+                .WithProject(_configurationProvider.ProjectId)
+                .WithTopic(_configurationProvider.SubscriptionTopicId)
+                .CreateSubscription(_subscriptionId)
                 .StartConsuming(messageHandler);
+
+            _logger.Info($"Subscription setup to '{_subscriptionId}' for project '{_configurationProvider.ProjectId}'");
         }
 
         public void CancelAllSubscriptions()
         {
-            _queueProvider
-                .StopConsuming();
+            try
+            {
+                _queueApi
+                    .StopConsuming();
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Could not stop consuming subscription because '{e.Message}' and inner exception{e.InnerException}");
+                throw;
+            }
+
+
+            _logger.Info($"Stopped consuming Subscription to '{_subscriptionId}' for project '{_configurationProvider.ProjectId}'");
         }
     }
 }

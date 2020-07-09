@@ -1,6 +1,7 @@
 ﻿using Blaise.Nuget.PubSub.Contracts.Interfaces;
 using BlaiseDataDelivery.Interfaces.Providers;
 using BlaiseDataDelivery.Services.Queue;
+using log4net;
 using Moq;
 using NUnit.Framework;
 
@@ -8,53 +9,64 @@ namespace BlaiseDataDelivery.Tests.Services.Queue
 {
     public class QueueServiceTests
     {
+        private Mock<ILog> _loggerMock;
         private Mock<IConfigurationProvider> _configurationProviderMock;
-        private Mock<IFluentQueueApi> _queueProviderMock;
         private Mock<IMessageHandler> _messageHandlerMock;
+        private Mock<IFluentQueueApi> _queueProviderMock;
 
         private readonly string _projectId;
+        private readonly string _subscriptionTopicId;
         private readonly string _subscriptionId;
+        private readonly string _vmName;
 
         private QueueService _sut;
 
         public QueueServiceTests()
         {
             _projectId = "ProjectId";
+            _subscriptionTopicId = "subscriptionTopicId";
             _subscriptionId = "SubscriptionId";
+            _vmName = "VmName";
         }
 
         [SetUp]
         public void SetUpTests()
         {
+            _loggerMock = new Mock<ILog>();
 
             _configurationProviderMock = new Mock<IConfigurationProvider>();
             _configurationProviderMock.Setup(c => c.ProjectId).Returns(_projectId);
             _configurationProviderMock.Setup(c => c.SubscriptionId).Returns(_subscriptionId);
-
-            _queueProviderMock = new Mock<IFluentQueueApi>();
+            _configurationProviderMock.Setup(c => c.SubscriptionTopicId).Returns(_subscriptionTopicId);
+            _configurationProviderMock.Setup(c => c.VmName).Returns(_vmName);
 
             _messageHandlerMock = new Mock<IMessageHandler>();
 
+            _queueProviderMock = new Mock<IFluentQueueApi>();
+
             _sut = new QueueService(
-                _configurationProviderMock.Object, 
+                _loggerMock.Object,
+                _configurationProviderMock.Object,
                 _queueProviderMock.Object);
         }
 
         [Test]
-        public void Given_I_Call_Subscribe_Then_The_Correct_Call_Is_Made_And_Subscribes_To_The_Appropriate_Queues()
+        public void Given_I_Call_Subscribe_Then_The_Correct_Calls_Are_Made_And_Subscribes_To_The_Appropriate_Queues()
         {
             //arrange
-            _queueProviderMock.Setup(q => q.ForProject(It.IsAny<string>())).Returns(_queueProviderMock.Object);
-            _queueProviderMock.Setup(q => q.ForSubscription(It.IsAny<string>())).Returns(_queueProviderMock.Object);
-            _queueProviderMock.Setup(q => q.StartConsuming(It.IsAny<IMessageHandler>()));
+            _queueProviderMock.Setup(q => q.WithProject(It.IsAny<string>())).Returns(_queueProviderMock.Object);
+            _queueProviderMock.Setup(q => q.WithTopic(It.IsAny<string>())).Returns(_queueProviderMock.Object);
+            _queueProviderMock.Setup(q => q.CreateSubscription(It.IsAny<string>(), It.IsAny<int>())).Returns(_queueProviderMock.Object);
+            _queueProviderMock.Setup(q => q.StartConsuming(It.IsAny<IMessageHandler>(), It.IsAny<bool>()));
 
             //act
             _sut.Subscribe(_messageHandlerMock.Object);
 
             //assert
-            _queueProviderMock.Verify(v => v.ForProject(_projectId), Times.Once);
-            _queueProviderMock.Verify(v => v.ForSubscription(_subscriptionId), Times.Once);
-            _queueProviderMock.Verify(v => v.StartConsuming(_messageHandlerMock.Object), Times.Once);
+            _queueProviderMock.Verify(v => v.WithProject(_projectId), Times.Once);
+            _queueProviderMock.Verify(v => v.WithTopic(_subscriptionTopicId), Times.Once);
+            _queueProviderMock.Verify(v => v.CreateSubscription($"{_subscriptionId}-{_vmName}", It.IsAny<int>()), Times.Once);
+            _queueProviderMock.Verify(v => v.StartConsuming(_messageHandlerMock.Object, It.IsAny<bool>()), Times.Once);
         }
 
         [Test]
