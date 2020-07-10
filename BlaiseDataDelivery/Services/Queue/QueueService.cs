@@ -47,7 +47,7 @@ namespace BlaiseDataDelivery.Services.Queue
             }
             catch (Exception e)
             {
-                _logger.Error($"Could not stop consuming subscription because '{e.Message}' and inner exception{e.InnerException}");
+                _logger.Error($"Could not stop consuming subscription because '{e.Message}'");
                 throw;
             }
 
