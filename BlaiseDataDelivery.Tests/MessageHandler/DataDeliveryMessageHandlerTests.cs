@@ -18,7 +18,6 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
         private Mock<IMessageModelMapper> _mapperMock;
         private Mock<IFileService> _fileServiceMock;
 
-        private readonly string _messageType;
         private readonly string _message;
         private readonly MessageModel _messageModel;
 
@@ -26,7 +25,6 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
 
         public DataDeliveryMessageHandlerTests()
         {
-            _messageType = "MessageType";
             _message = "Message";
 
             _messageModel = new MessageModel
@@ -48,7 +46,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
 
             _fileServiceMock = new Mock<IFileService>();
             _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IEnumerable<string>>());
-            _fileServiceMock.Setup(f => f.CreateEncryptedZipFile(It.IsAny<IEnumerable<string>>(), It.IsAny<MessageModel>()));
+            _fileServiceMock.Setup(f => f.CreateEncryptedZipFile(It.IsAny<IList<string>>(), It.IsAny<MessageModel>()));
             _fileServiceMock.Setup(f => f.UploadFileToBucket(It.IsAny<string>(), It.IsAny<string>()));
             _fileServiceMock.Setup(f => f.DeleteFile(It.IsAny<string>()));
             _fileServiceMock.Setup(f => f.DeleteFiles(It.IsAny<IEnumerable<string>>()));
@@ -61,7 +59,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
         public void Given_Valid_Arguments_When_HandleMessage_Is_Called_Then_True_Is_Returned()
         {
             //act
-            var result = _sut.HandleMessage(_messageType, _message);
+            var result = _sut.HandleMessage(_message);
 
             //assert
             Assert.IsNotNull(result);
@@ -81,24 +79,24 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             };
 
             var dateTime = DateTime.Now;
-            var encryptedZipfilePath = $"SourcePath\\dd_InstrumentName_{dateTime:ddmmyy}_{dateTime:hhmmss}.zip";
+            var encryptedZipFilePath = $"SourcePath\\dd_InstrumentName_{dateTime:ddmmyy}_{dateTime:hhmmss}.zip";
 
             _configurationMock.Setup(c => c.FilePattern).Returns(filePattern);
             _configurationMock.Setup(c => c.BucketName).Returns(bucketName);
 
             _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(filesToProcess);
-            _fileServiceMock.Setup(f => f.CreateEncryptedZipFile(It.IsAny<IEnumerable<string>>(), It.IsAny<MessageModel>())).Returns(encryptedZipfilePath);
+            _fileServiceMock.Setup(f => f.CreateEncryptedZipFile(It.IsAny<IList<string>>(), It.IsAny<MessageModel>())).Returns(encryptedZipFilePath);
 
             //act
-            var result = _sut.HandleMessage(_messageType, _message);
+            _sut.HandleMessage(_message);
 
             //assert
             _mapperMock.Verify(v => v.MapToMessageModel(_message), Times.Once);
 
             _fileServiceMock.Verify(v => v.GetFiles(_messageModel.SourceFilePath, filePattern));
             _fileServiceMock.Verify(v => v.CreateEncryptedZipFile(filesToProcess, _messageModel), Times.Once);
-            _fileServiceMock.Verify(v => v.UploadFileToBucket(encryptedZipfilePath, bucketName), Times.Once);
-            _fileServiceMock.Verify(v => v.DeleteFile(encryptedZipfilePath), Times.Once);
+            _fileServiceMock.Verify(v => v.UploadFileToBucket(encryptedZipFilePath, bucketName), Times.Once);
+            _fileServiceMock.Verify(v => v.DeleteFile(encryptedZipFilePath), Times.Once);
             _fileServiceMock.Verify(v => v.DeleteFiles(filesToProcess), Times.Once);
         }
 
@@ -109,7 +107,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(new List<string>());
 
             //act
-            var result = _sut.HandleMessage(_messageType, _message);
+            var result = _sut.HandleMessage(_message);
 
             //assert
             Assert.IsNotNull(result);
@@ -126,13 +124,13 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(new List<string>());
 
             //act
-            var result = _sut.HandleMessage(_messageType, _message);
+            _sut.HandleMessage(_message);
 
             //assert
             _mapperMock.Verify(v => v.MapToMessageModel(_message), Times.Once);
 
             _fileServiceMock.Verify(v => v.GetFiles(_messageModel.SourceFilePath, filePattern));
-            _fileServiceMock.Verify(v => v.CreateEncryptedZipFile(It.IsAny<IEnumerable<string>>(), It.IsAny<MessageModel>()), Times.Never);
+            _fileServiceMock.Verify(v => v.CreateEncryptedZipFile(It.IsAny<IList<string>>(), It.IsAny<MessageModel>()), Times.Never);
             _fileServiceMock.Verify(v => v.UploadFileToBucket(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _fileServiceMock.Verify(v => v.DeleteFile(It.IsAny<string>()), Times.Never);
             _fileServiceMock.Verify(v => v.DeleteFiles(It.IsAny<IEnumerable<string>>()), Times.Never);
@@ -145,7 +143,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception());
 
             //act
-            var result = _sut.HandleMessage(_messageType, _message);
+            var result = _sut.HandleMessage(_message);
 
             //assert
             Assert.IsNotNull(result);
@@ -159,7 +157,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception());
 
             //act && assert
-            Assert.DoesNotThrow(() => _sut.HandleMessage(_messageType, _message));
+            Assert.DoesNotThrow(() => _sut.HandleMessage(_message));
         }
     }
 }

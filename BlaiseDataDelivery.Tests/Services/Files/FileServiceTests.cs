@@ -77,7 +77,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
 
             var encryptedZipPath = string.Empty;
 
-            _zipServiceMock.Setup(f => f.CreateZipFile(It.IsAny<IEnumerable<string>>(), It.IsAny<string>()));
+            _zipServiceMock.Setup(f => f.CreateZipFile(It.IsAny<IList<string>>(), It.IsAny<string>()));
             _encryptionServiceMock.Setup(e => e.EncryptFile(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((input, output) => encryptedZipPath = output);
 
             //act
@@ -102,7 +102,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
             var tempZipPath = string.Empty;
             var encryptedZipPath = string.Empty;
 
-            _zipServiceMock.Setup(f => f.CreateZipFile(It.IsAny<IEnumerable<string>>(), It.IsAny<string>())).Callback<IEnumerable<string>, string>((input, output) => tempZipPath = output);
+            _zipServiceMock.Setup(f => f.CreateZipFile(It.IsAny<IList<string>>(), It.IsAny<string>())).Callback<IEnumerable<string>, string>((input, output) => tempZipPath = output);
             _encryptionServiceMock.Setup(e => e.EncryptFile(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((input, output) => encryptedZipPath = output);
 
             //act

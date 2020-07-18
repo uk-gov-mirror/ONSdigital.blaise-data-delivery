@@ -27,11 +27,11 @@ namespace BlaiseDataDelivery.Services.Files
             return files.Select(f => f.FullName);
         }
 
-        public void MoveFiles(IEnumerable<string> files, string destinationFilePath)
+        public void MoveFiles(IList<string> files, string destinationFilePath)
         {
             if (!files.Any())
             {
-                throw new ArgumentException($"No files provided");
+                throw new ArgumentException("No files provided");
             }
 
             destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
@@ -43,13 +43,13 @@ namespace BlaiseDataDelivery.Services.Files
             }
         }
 
-        private DirectoryInfo GetDirectory(string path)
+        private static DirectoryInfo GetDirectory(string path)
         {
             var directory = new DirectoryInfo(path);
 
             if (!directory.Exists)
             {
-                throw new DirectoryNotFoundException($"The dirctory '{path}' was not found");
+                throw new DirectoryNotFoundException($"The directory '{path}' was not found");
             }
 
             return directory;

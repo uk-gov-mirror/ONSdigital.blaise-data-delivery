@@ -5,9 +5,9 @@ namespace BlaiseDataDelivery.Services.Json
 {
     public class SerializerService : ISerializerService
     {
-        public T DeserializeJsonMessage<T>(string serialisedJsonMessage)
+        public T DeserializeJsonMessage<T>(string message)
         {
-            return JsonConvert.DeserializeObject<T>(serialisedJsonMessage);
+            return JsonConvert.DeserializeObject<T>(message);
         }
     }
 }

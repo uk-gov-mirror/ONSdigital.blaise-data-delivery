@@ -1,15 +1,15 @@
 ﻿
-using Blaise.Queue.Contracts.Models;
-
 namespace BlaiseDataDelivery.Interfaces.Providers
 {
     public interface IConfigurationProvider
     {
-        string ExchangeName { get; }
+        string ProjectId { get; }
 
-        string DataDeliveryQueueName { get; }
+        string SubscriptionTopicId { get; }
 
-        string DataDeliveryRoutingKey { get; }
+        string SubscriptionId { get; }
+
+        string VmName { get; }
 
         string FilePattern { get; }
 
@@ -18,11 +18,5 @@ namespace BlaiseDataDelivery.Interfaces.Providers
         string CloudStorageKey { get; }
 
         string EncryptionKey { get; }
-
-        ConnectionConfigurationModel GetQueueConnectionConfigurationModel();
-
-        QueueConfigurationModel GetQueueConfigurationModel();
-
-        ExchangeConfigurationModel GetExchangeConfigurationModel();
     }
 }

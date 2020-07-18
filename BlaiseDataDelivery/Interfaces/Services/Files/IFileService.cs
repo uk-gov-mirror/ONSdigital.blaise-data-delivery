@@ -5,7 +5,7 @@ namespace BlaiseDataDelivery.Interfaces.Services.Files
 {
     public interface IFileService
     {
-        string CreateEncryptedZipFile(IEnumerable<string> files, MessageModel messageModel);
+        string CreateEncryptedZipFile(IList<string> files, MessageModel messageModel);
 
         IEnumerable<string> GetFiles(string path, string filePattern);
 
