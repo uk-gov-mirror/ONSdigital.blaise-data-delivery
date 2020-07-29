@@ -1,6 +1,7 @@
 ﻿
 using System.ServiceProcess;
 using log4net;
+using System.ServiceProcess;
 
 namespace BlaiseDataDelivery
 {
