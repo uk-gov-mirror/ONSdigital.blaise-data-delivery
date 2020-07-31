@@ -21,5 +21,7 @@ namespace BlaiseDataDelivery.Providers
         public string CloudStorageKey => ConfigurationManager.AppSettings["CloudStorageKey"];
 
         public string EncryptionKey => ConfigurationManager.AppSettings["EncryptionKey"];
+
+        public string DeadletterTopicId => ConfigurationManager.AppSettings["DeadletterTopicId"];
     }
 }

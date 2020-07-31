@@ -18,5 +18,7 @@ namespace BlaiseDataDelivery.Interfaces.Providers
         string CloudStorageKey { get; }
 
         string EncryptionKey { get; }
+
+        string DeadletterTopicId { get; }
     }
 }
