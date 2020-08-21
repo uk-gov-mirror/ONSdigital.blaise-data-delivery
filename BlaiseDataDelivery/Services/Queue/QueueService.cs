@@ -32,7 +32,7 @@ namespace BlaiseDataDelivery.Services.Queue
                 .WithProject(_configurationProvider.ProjectId)
                 .WithTopic(_configurationProvider.SubscriptionTopicId)
                 .CreateSubscription(_subscriptionId)
-                .WithExponentialBackOff()
+                .WithExponentialBackOff(60)
                 .WithDeadLetter(_configurationProvider.DeadletterTopicId)
                 .StartConsuming(messageHandler, true);
 

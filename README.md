@@ -1,6 +1,7 @@
 # Blaise_Data_Delivery
 
-Blaise Data Delivery is a Windows service for encrypting data files for a survey and uploading them to a bucket. The service is triggered by listening for messages on a RabbitMQ queue, the message should contain details of where to find the source data files. see examples below
+Blaise Data Delivery is a Windows service for encrypting data files for a survey and uploading them to a bucket. The service is triggered by listening for messages on the 'data-delivery-topic' topic in PubSub in GCP.
+the message should contain details of where to find the source data files. see examples below
 
 # Setup Development Environment
 
