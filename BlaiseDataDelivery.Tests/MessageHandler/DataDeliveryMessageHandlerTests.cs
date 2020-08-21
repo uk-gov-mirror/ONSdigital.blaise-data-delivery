@@ -30,7 +30,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _messageModel = new MessageModel
             {
                 SourceFilePath = "SourcePath",
-                InstrumentName = "InstrumentName"
+                InstrumentName = "InstrumentName",
             };
         }
 
@@ -40,12 +40,13 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
             _loggerMock = new Mock<ILog>();
 
             _configurationMock = new Mock<IConfigurationProvider>();
+            _configurationMock.Setup(c => c.FilePattern).Returns("");
 
             _mapperMock = new Mock<IMessageModelMapper>();
             _mapperMock.Setup(m => m.MapToMessageModel(_message)).Returns(_messageModel);
 
             _fileServiceMock = new Mock<IFileService>();
-            _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IEnumerable<string>>());
+            _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(new List<string>());
             _fileServiceMock.Setup(f => f.CreateEncryptedZipFile(It.IsAny<IList<string>>(), It.IsAny<MessageModel>()));
             _fileServiceMock.Setup(f => f.UploadFileToBucket(It.IsAny<string>(), It.IsAny<string>()));
             _fileServiceMock.Setup(f => f.DeleteFile(It.IsAny<string>()));
@@ -63,7 +64,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
 
             //assert
             Assert.IsNotNull(result);
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         [Test]
@@ -111,7 +112,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
 
             //assert
             Assert.IsNotNull(result);
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         [Test]
@@ -137,7 +138,7 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
         }
 
         [Test]
-        public void Given_An_Exception_Occurs_During_Processing_When_HandleMessage_Is_Called_Then_The_Exception_Is_Not_Bubbled_Up()
+        public void Given_An_Exception_Occurs_During_Processing_When_HandleMessage_Is_Called_Then_False_Is_Returned()
         {
             //arrange
             _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception());
@@ -147,11 +148,11 @@ namespace BlaiseDataDelivery.Tests.MessageHandler
 
             //assert
             Assert.IsNotNull(result);
-            Assert.True(result);
+            Assert.IsFalse(result);
         }
 
         [Test]
-        public void Given_An_Exception_Occurs_During_Processing_When_HandleMessage_Is_Called_Then_True_Is_Returned()
+        public void Given_An_Exception_Occurs_During_Processing_When_HandleMessage_Is_Called_Then_The_Exception_Is_Not_Bubbled_Up()
         {
             //arrange
             _fileServiceMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception());
