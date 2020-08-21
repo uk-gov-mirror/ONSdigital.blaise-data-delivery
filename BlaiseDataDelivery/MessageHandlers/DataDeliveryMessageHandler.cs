@@ -44,23 +44,29 @@ namespace BlaiseDataDelivery.MessageHandlers
                     return true;
                 }
 
+                _logger.Info($"Found '{filesToProcess.Count}' files that are available to process in the path '{messageModel.SourceFilePath}' for the file pattern '{_configuration.FilePattern}'");
+
                 //create encrypted zip file 
                 var encryptedZipFile = _fileService.CreateEncryptedZipFile(filesToProcess, messageModel);
+                _logger.Info($"Encrypted files into the zip file '{encryptedZipFile}'");
 
                 //upload the zip to bucket
                 _fileService.UploadFileToBucket(encryptedZipFile, _configuration.BucketName);
+                _logger.Info($"Uploaded the zip file '{encryptedZipFile}' to the bucket '{_configuration.BucketName}'");
 
                 //clean up files
-               _fileService.DeleteFile(encryptedZipFile);
+                _fileService.DeleteFile(encryptedZipFile);
                _fileService.DeleteFiles(filesToProcess);
+               _logger.Info($"Cleaned up the source and temporary files");
 
+                return true;
             }
             catch(Exception ex)
             {
                 _logger.Error($"An exception occured in processing message {message} - {ex.Message}");
-            }
 
-            return true;
+                return false;
+            }
         }
     }
 }
