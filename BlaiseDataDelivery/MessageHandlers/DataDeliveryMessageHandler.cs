@@ -35,7 +35,7 @@ namespace BlaiseDataDelivery.MessageHandlers
                 var messageModel = _mapper.MapToMessageModel(message);
 
                 //get a list of available files for data delivery
-                var filesToProcess = _fileService.GetFiles(messageModel.SourceFilePath, _configuration.FilePattern).ToList();
+                var filesToProcess = _fileService.GetFiles(messageModel.SourceFilePath, messageModel.InstrumentName, _configuration.FilePattern).ToList();
 
                 //no files available - an error must have occured
                 if(!filesToProcess.Any())

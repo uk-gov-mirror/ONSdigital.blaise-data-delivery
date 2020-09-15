@@ -36,13 +36,14 @@ namespace BlaiseDataDelivery.Tests.Services.Files
         {
             //arrange
             var path = "temp";
+            var instrumentName = "OPN2004";
             var filePattern = "*.*";
 
             //act
-            _sut.GetFiles(path, filePattern);
+            _sut.GetFiles(path, instrumentName, filePattern);
 
             //assert
-            _fileDirectoryMock.Verify(v => v.GetFiles(path, filePattern), Times.Once);
+            _fileDirectoryMock.Verify(v => v.GetFiles(path, $"{instrumentName}{filePattern}"), Times.Once);
         }
 
         [Test]
@@ -50,6 +51,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
         {
             //arrange
             var path = "temp";
+            var instrumentName = "OPN2004";
             var filePattern = "*.*";
             var files = new List<string> { "File1", "File2" };
 
@@ -57,7 +59,7 @@ namespace BlaiseDataDelivery.Tests.Services.Files
             _fileDirectoryMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(files);
 
             //act
-            var result = _sut.GetFiles(path, filePattern);
+            var result = _sut.GetFiles(path, instrumentName, filePattern);
 
             //assert
             Assert.NotNull(result);

@@ -52,9 +52,9 @@ namespace BlaiseDataDelivery.Services.Files
             }
         }
 
-        public IEnumerable<string> GetFiles(string path, string filePattern)
+        public IEnumerable<string> GetFiles(string path, string instrumentName, string filePattern)
         {
-            return _directoryService.GetFiles(path, filePattern);
+            return _directoryService.GetFiles(path, $"{instrumentName}{filePattern}");
         }
 
         public void UploadFileToBucket(string zipFilePath, string bucketName)

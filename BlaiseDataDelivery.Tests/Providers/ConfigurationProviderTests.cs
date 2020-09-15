@@ -60,5 +60,44 @@ namespace BlaiseDataDelivery.Tests.Providers
             //assert
             Assert.AreEqual("DeadletterTopicIdTest", result);
         }
+
+        [Test]
+        public void Given_I_Call_FilePattern_I_Get_The_Correct_Value_Back()
+        {
+            //arrange
+            var configurationProvider = new ConfigurationProvider();
+
+            //act
+            var result = configurationProvider.FilePattern;
+
+            //assert
+            Assert.AreEqual("FilePatternTest", result);
+        }
+
+        [Test]
+        public void Given_I_Call_BucketName_I_Get_The_Correct_Value_Back()
+        {
+            //arrange
+            var configurationProvider = new ConfigurationProvider();
+
+            //act
+            var result = configurationProvider.BucketName;
+
+            //assert
+            Assert.AreEqual("BucketNameTest", result);
+        }
+
+        [Test]
+        public void Given_I_Call_EncryptionKey_I_Get_The_Correct_Value_Back()
+        {
+            //arrange
+            var configurationProvider = new ConfigurationProvider();
+
+            //act
+            var result = configurationProvider.EncryptionKey;
+
+            //assert
+            Assert.AreEqual("EncryptionKeyTest", result);
+        }
     }
 }
