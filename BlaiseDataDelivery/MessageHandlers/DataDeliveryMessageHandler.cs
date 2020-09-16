@@ -35,7 +35,7 @@ namespace BlaiseDataDelivery.MessageHandlers
                 var messageModel = _mapper.MapToMessageModel(message);
 
                 //get a list of available files for data delivery
-                var filesToProcess = _fileService.GetFiles(messageModel.SourceFilePath, _configuration.FilePattern).ToList();
+                var filesToProcess = _fileService.GetFiles(messageModel.SourceFilePath, messageModel.InstrumentName, _configuration.FilePattern).ToList();
 
                 //no files available - an error must have occured
                 if(!filesToProcess.Any())
@@ -56,7 +56,7 @@ namespace BlaiseDataDelivery.MessageHandlers
 
                 //clean up files
                 _fileService.DeleteFile(encryptedZipFile);
-               _fileService.DeleteFiles(filesToProcess);
+
                _logger.Info($"Cleaned up the source and temporary files");
 
                 return true;
