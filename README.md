@@ -16,7 +16,7 @@ Build the solution to obtain the necessary references.
 ```
 {
   "source_instrument":"OPN1911a"
-  ,"source_file":"C:\\Blaise_SPSS_Output\\"
+  ,"source_file":"C:\\Blaise_Final_Data\\"
 }                  
 ```
 
@@ -58,5 +58,3 @@ the service will just drop out as pubsub works off a streaming pull mechanism on
     - Start the service
 
 ### To run this locally
-
-
