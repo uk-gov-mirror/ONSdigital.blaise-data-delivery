@@ -7,9 +7,10 @@ pat_token = os.getenv("pat_token")
 env_name = os.getenv("env_name")
 var_group_name = os.getenv("var_group_name")
 
-def getStatus():
+
+def getStatus(pipeline_id):
     request = requests.get(
-        f"https://dev.azure.com/blaise-gcp/csharp/_apis/pipelines/46/runs/{pipelines_run_id}?api-version=6.0-preview.1",
+        f"https://dev.azure.com/blaise-gcp/csharp/_apis/pipelines/46/runs/{pipeline_id}?api-version=6.0-preview.1",
         auth=("", pat_token),
         headers={"content-type": "application/json"},
     )
@@ -37,7 +38,7 @@ def dataDelivery(data, context):
 
     wait_for_success = True
     while wait_for_success:
-        state, result = getStatus()
+        state, result = getStatus(pipelines_run_id)
         if "completed" in state:
             print(f"Result of pipeline is {result}")
             print(f"Result: {result}")
@@ -52,3 +53,4 @@ def dataDelivery(data, context):
         time.sleep(30)
 
     print("Result returned")
+    
