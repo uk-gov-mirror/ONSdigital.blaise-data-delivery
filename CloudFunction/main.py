@@ -21,7 +21,7 @@ def getStatus():
 
     return last_run["state"], run_result
 
-def dataDelivery():
+def dataDelivery(data, context):
     variables = {"VarGroup": var_group_name, "Environment": env_name}
     data = {"templateParameters": variables}
     request = requests.post(
