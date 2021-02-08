@@ -1,0 +1,36 @@
+parameters:
+  - name : VarGroup
+    displayName: Variable Group
+  - name: Environment
+    displayName: Environment to use
+
+trigger:
+- none
+
+variables:
+ - group: ${{ parameters.VarGroup }}
+ - name: ServerParkName
+   value: gusty
+ - name: SurveyType
+   value: OPN
+ - name: PackageExtension
+   value: zip
+
+stages:
+ - stage: DataDelivery
+   displayName: DataDelivery
+   variables:
+      ENV_RESTAPI_URL : http://localhost:90
+   jobs:
+     - deployment: DeliveryData
+       environment: ${{ parameters.Environment }}.RESTAPI
+       strategy:
+        runOnce:
+          deploy: 
+           steps:
+             - checkout: self
+           
+             - task: PowerShell@2
+               displayName: Deliver Instruments
+               inputs:
+                 filePath: '$(Agent.BuildDirectory)/s/scripts/DeliverInstruments.ps1'
