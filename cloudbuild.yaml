@@ -3,7 +3,7 @@ steps:
   args:
   - functions
   - deploy
-  - data-delivery
+  - dataDelivery
   - --source=CloudFunction
   - --region=$_REGION 
   - --runtime=python37
