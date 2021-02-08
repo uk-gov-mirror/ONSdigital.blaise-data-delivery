@@ -3,7 +3,7 @@ steps:
   args:
   - functions
   - deploy
-  - [data-delivery]
+  - data-delivery
   - --source=./CloudFunction/AzureDevopsTrigger.py
   - --region=$_REGION 
   - --runtime=python37
