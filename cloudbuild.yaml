@@ -4,7 +4,7 @@ steps:
   - functions
   - deploy
   - data-delivery
-  - --source=./CloudFunction/AzureDevopsTrigger.py
+  - --source=CloudFunction/AzureDevopsTrigger.py
   - --region=$_REGION 
   - --runtime=python37
   - --trigger-event=google.pubsub.topic.publish
