@@ -2,9 +2,9 @@ import requests
 import json
 import os
 
-pat_token = os.getenv("AZDO_PERSONAL_ACCESS_TOKEN")
-env_name = os.getenv("AZURE_AGENT_ENVNAME")
-var_group_name = os.getenv("PROJECT_ID")
+pat_token = os.getenv("pat_token")
+env_name = os.getenv("env_name")
+var_group_name = os.getenv("var_group_name")
 
 def getStatus():
     request = requests.get(
