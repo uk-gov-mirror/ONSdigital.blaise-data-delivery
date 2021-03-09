@@ -9,7 +9,7 @@ If ([string]::IsNullOrEmpty($instrumentName)) {
 }
 
 If (-not (Test-Path "$instrumentName.$env:PackageExtension")) {
-    throw [System.IO.FileNotFoundException] "$instrumentPackage file not found"
+    throw [System.IO.FileNotFoundException] "$instrumentName.$env:PackageExtension file not found"
 }
 
 # Cannot extract from a zip archive without a .ZIP extension
@@ -44,5 +44,6 @@ Remove-Item $manipulaPackage
 # Remove the temporary files
 Remove-Item $tempPath -Recurse
 
+# Rename the file back to the original package name
 Rename-Item -Path $instrumentPackage -NewName "$instrumentName.$env:PackageExtension"
 
