@@ -23,19 +23,19 @@ Expand-Archive $instrumentPackage -DestinationPath $tempPath
 
 # Download manipula package from CGP bucket
 $manipulaPackage = "SpssPackage.zip"
-gsutil cp gs://ons-blaise-v2-dev-nifi/$manipulaPackage $manipulaPackage  
+gsutil cp gs://$env:ENV_BLAISE_NIFI_BUCKET/$manipulaPackage $manipulaPackage  
 
 # Extract the manipula package into the temporary folder
 Expand-Archive $manipulaPackage -DestinationPath $tempPath
 
 # Generate SPS file
-& .\scripts\$tempPath\Manipula.exe "scripts\$tempPath\GenerateStatisticalScript.msux" -K:meta="$instrumentName.bmix" -H:"" -L:"" -N:oScript="$instrumentName,iFNames=,iData=$instrumentName.bdix" -P:"SPSS;;;;;;$instrumentName.asc;;;2;;64;;Y" | Out-Null
+& .\$tempPath\Manipula.exe "$tempPath\GenerateStatisticalScript.msux" -K:meta="$instrumentName.bmix" -H:"" -L:"" -N:oScript="$instrumentName,iFNames=,iData=$instrumentName.bdix" -P:"SPSS;;;;;;$instrumentName.asc;;;2;;64;;Y" | Out-Null
 
 # Generate .ASC file
-& .\scripts\$tempPath\Manipula.exe "scripts\$tempPath\ExportData_$instrumentName.msux" -A:True | Out-Null
+& .\$tempPath\Manipula.exe "$tempPath\ExportData_$instrumentName.msux" -A:True | Out-Null
 
 # Add the SPS, ASC & FPS files to the instrument package
-Compress-Archive -Path "scripts\$tempPath\*.sps","scripts\$tempPath\*.asc","scripts\$tempPath\*.fps" -Update -DestinationPath $instrumentPackage
+Compress-Archive -Path $tempPath\*.sps,$tempPath\*.asc,$tempPath\*.fps -Update -DestinationPath $instrumentPackage
 
 # Remove the manipula package
 Remove-Item $manipulaPackage
