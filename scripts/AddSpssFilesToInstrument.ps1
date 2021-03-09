@@ -13,8 +13,7 @@ If (-not (Test-Path "$instrumentName.$env:PackageExtension")) {
 }
 
 # Cannot extract from a zip archive without a .ZIP extension
-$instrumentPackage = "$instrumentName.zip" 
-Rename-Item -Path "$instrumentName.$env:PackageExtension" -NewName $instrumentPackage 
+$instrumentPackage = "$instrumentName.$env:PackageExtension"
 
 # Create temporary folder to extract the package
 $tempPath = [guid]::NewGuid()
@@ -44,6 +43,4 @@ Remove-Item $manipulaPackage
 # Remove the temporary files
 Remove-Item $tempPath -Recurse
 
-# Rename the file back to the original package name
-Rename-Item -Path $instrumentPackage -NewName "$instrumentName.$env:PackageExtension"
 
