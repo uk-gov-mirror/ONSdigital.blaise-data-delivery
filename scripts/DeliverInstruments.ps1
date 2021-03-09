@@ -29,7 +29,7 @@ foreach ($instrument in $instruments)
     Write-Host "Downloaded instrument '$($fileName)'"
 
     # Generate and add SPSS files
-    & .\AddSpssFilesToInstrument.ps1 "$($instrument.name)"
+    & .\scripts\AddSpssFilesToInstrument.ps1 "$($instrument.name)"
     Write-Host "Added SPSS files to instrument"
 
     # Upload instrument package to NIFI
