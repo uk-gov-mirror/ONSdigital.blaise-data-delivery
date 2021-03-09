@@ -29,10 +29,10 @@ gsutil cp gs://ons-blaise-v2-dev-nifi/$manipulaPackage $manipulaPackage
 Expand-Archive $manipulaPackage -DestinationPath $tempPath
 
 # Generate SPS file
-& .\scripts\$tempPath\Manipula.exe "$tempPath\GenerateStatisticalScript.msux" -K:meta="$instrumentName.bmix" -H:"" -L:"" -N:oScript="$instrumentName,iFNames=,iData=$instrumentName.bdix" -P:"SPSS;;;;;;$instrumentName.asc;;;2;;64;;Y" | Out-Null
+& .\scripts\$tempPath\Manipula.exe "scripts\$tempPath\GenerateStatisticalScript.msux" -K:meta="$instrumentName.bmix" -H:"" -L:"" -N:oScript="$instrumentName,iFNames=,iData=$instrumentName.bdix" -P:"SPSS;;;;;;$instrumentName.asc;;;2;;64;;Y" | Out-Null
 
 # Generate .ASC file
-& .\scripts\$tempPath\Manipula.exe "$tempPath\ExportData_$instrumentName.msux" -A:True | Out-Null
+& .\scripts\$tempPath\Manipula.exe "scripts\$tempPath\ExportData_$instrumentName.msux" -A:True | Out-Null
 
 # Add the SPS, ASC & FPS files to the instrument package
 Compress-Archive -Path "scripts\$tempPath\*.sps","scripts\$tempPath\*.asc","scripts\$tempPath\*.fps" -Update -DestinationPath $instrumentPackage
