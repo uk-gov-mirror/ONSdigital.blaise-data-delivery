@@ -2,24 +2,47 @@
 # SPSS file script
 ###############################
 
-param([string]$instrumentPackage)
+param([string]$instrumentName)
 
-If ([string]::IsNullOrEmpty($instrumentPackage)) {
-    throw [System.IO.ArgumentException] "No instrument package argument provided"
+If ([string]::IsNullOrEmpty($instrumentName)) {
+    throw [System.IO.ArgumentException] "No instrument name argument provided"
 }
 
-If (-not (Test-Path $instrumentPackage)) {
+If (-not (Test-Path "$instrumentName.$env:PackageExtension")) {
     throw [System.IO.FileNotFoundException] "$instrumentPackage file not found"
 }
+
+# Cannot extract from a zip archive without a .ZIP extension
+$instrumentPackage = "$instrumentName.zip" 
+Rename-Item -Path "$instrumentName.$env:PackageExtension" -NewName $instrumentPackage 
 
 # Create temporary folder to extract the package
 $tempPath = [guid]::NewGuid()
 
-# Expand the package into the temporary folder
+# Extract the instrument package into the temporary folder
 Expand-Archive $instrumentPackage -DestinationPath $tempPath
 
-# Add the SPSS file to the instrument package
-Compress-Archive -Path $tempPath\*.txt -Update -DestinationPath $instrumentPackage
+# Download manipula package from CGP bucket
+$manipulaPackage = "SpssPackage.zip"
+gsutil cp gs://$env:ENV_BLAISE_NIFI_BUCKET/$manipulaPackage $manipulaPackage  
+
+# Extract the manipula package into the temporary folder
+Expand-Archive $manipulaPackage -DestinationPath $tempPath
+
+# Generate SPS file
+& .\$tempPath\Manipula.exe "$tempPath\GenerateStatisticalScript.msux" -K:meta="$instrumentName.bmix" -H:"" -L:"" -N:oScript="$instrumentName,iFNames=,iData=$instrumentName.bdix" -P:"SPSS;;;;;;$instrumentName.asc;;;2;;64;;Y" | Out-Null
+
+# Generate .ASC file
+& .\$tempPath\Manipula.exe "$tempPath\ExportData_$instrumentName.msux" -A:True | Out-Null
+
+# Add the SPS, ASC & FPS files to the instrument package
+Compress-Archive -Path $tempPath\*.sps,$tempPath\*.asc,$tempPath\*.fps -Update -DestinationPath $instrumentPackage
+
+# Remove the manipula package
+Remove-Item $manipulaPackage
 
 # Remove the temporary files
 Remove-Item $tempPath -Recurse
+
+Rename-Item -Path $instrumentPackage -NewName "$instrumentName.$env:PackageExtension"
+
