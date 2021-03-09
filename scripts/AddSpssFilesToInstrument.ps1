@@ -44,5 +44,6 @@ Remove-Item $manipulaPackage
 # Remove the temporary files
 Remove-Item $tempPath -Recurse
 
+# Rename the file back to the original package name
 Rename-Item -Path $instrumentPackage -NewName "$instrumentName.$env:PackageExtension"
 
