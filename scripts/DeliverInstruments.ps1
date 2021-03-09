@@ -22,7 +22,7 @@ foreach ($instrument in $instruments)
     
     # Build data delivery filename for the instrument
     $currentDateTime = (Get-Date)
-    $fileName = "$instrumentName.$env:PackageExtension"
+    $fileName = "$($instrument.name).$env:PackageExtension"
 
     # Download instrument packagegit pu
     wget $InstrumentDataUri -outfile $fileName 
@@ -34,7 +34,7 @@ foreach ($instrument in $instruments)
 
     # Generate DD filename
     $dataDeliveryFileName = "dd_$($instrument.name)_$($currentDateTime.ToString("ddMMyyyy"))_$($currentDateTime.ToString("HHmmss")).$env:PackageExtension";
-    Rename-Item -Path $fileName -NewName "$dataDeliveryFileName"
+    Rename-Item -Path $fileName -NewName $dataDeliveryFileName
     Write-Host "Renamed instrument to '$($dataDeliveryFileName)'"
 
     # Upload instrument package to NIFI
