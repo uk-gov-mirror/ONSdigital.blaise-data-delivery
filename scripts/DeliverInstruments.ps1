@@ -28,6 +28,10 @@ foreach ($instrument in $instruments)
     wget $InstrumentDataUri -outfile $fileName 
     Write-Host "Downloaded instrument '$($fileName)'"
 
+    # Generate and add SPSS files
+    & ".\AddSpssFilesToInstrument.ps1" "$instrument.name"
+    Write-Host "Added SPSS files to instrument"
+
     # Upload instrument package to NIFI
     gsutil cp $fileName gs://$env:ENV_BLAISE_NIFI_BUCKET
     Write-Host "Pushed instrument '$($fileName)' to the NIFI bucket"
