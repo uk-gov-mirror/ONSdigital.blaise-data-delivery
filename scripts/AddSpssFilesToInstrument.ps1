@@ -35,7 +35,7 @@ Expand-Archive $manipulaPackage -DestinationPath $tempPath
 & .\$tempPath\Manipula.exe "$tempPath\ExportData_$instrumentName.msux" -A:True | Out-Null
 
 # Add the SPS, ASC & FPS files to the instrument package
-Compress-Archive -Path $tempPath\*.sps,$tempPath\*.asc,$tempPath\*.fps -Update -DestinationPath $instrumentPackage
+Compress-Archive -Path "$tempPath\*.sps","$tempPath\*.asc","$tempPath\*.fps" -Update -DestinationPath $instrumentPackage
 
 # Remove the manipula package
 Remove-Item $manipulaPackage
