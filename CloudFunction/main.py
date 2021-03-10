@@ -24,15 +24,15 @@ def getStatus(pipeline_id):
 
 def dataDelivery(data, context):
     request = requests.post(
-    f"https://dev.azure.com/blaise-gcp/csharp/_apis/pipelines/46/runs?api-version=6.0-preview.1",
-    auth=("", pat_token),
-    json={
-        "resources": {
-            "repositories": {"self": {"refName": f"refs/heads/{git_branch}"}}
+        f"https://dev.azure.com/blaise-gcp/csharp/_apis/pipelines/46/runs?api-version=6.0-preview.1",
+        auth=("", pat_token),
+        json={
+            "resources": {
+                "repositories": {"self": {"refName": f"refs/heads/{git_branch}"}}
+            },
+            "templateParameters": {"VarGroup": var_group_name, "Environment": env_name},
         },
-        "templateParameters": {"VarGroup": var_group_name, "Environment": env_name},
-    },
-)
+    )
 
     pipeline_runs = json.loads(request.text)
     print(pipeline_runs)
