@@ -10,7 +10,7 @@ git_branch = os.getenv("git_branch", "main")
 
 def getStatus(pipeline_id):
     request = requests.get(
-        f"https://dev.azure.com/blaise-gcp/csharp/_apis/pipelines/{pipeline_id}/runs/{pipeline_id}?api-version=6.0-preview.1",
+        f"https://dev.azure.com/blaise-gcp/csharp/_apis/pipelines/46/runs/{pipeline_id}?api-version=6.0-preview.1",
         auth=("", pat_token),
         headers={"content-type": "application/json"},
     )
@@ -24,7 +24,7 @@ def getStatus(pipeline_id):
 
 def dataDelivery(data, context):
     request = requests.post(
-    f"https://dev.azure.com/blaise-gcp/csharp/_apis/pipelines/{pipeline_id}/runs?api-version=6.0-preview.1",
+    f"https://dev.azure.com/blaise-gcp/csharp/_apis/pipelines/46/runs?api-version=6.0-preview.1",
     auth=("", pat_token),
     json={
         "resources": {
