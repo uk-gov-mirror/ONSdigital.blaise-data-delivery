@@ -23,7 +23,10 @@ stages:
       ENV_RESTAPI_URL : http://localhost:90
    jobs:
      - deployment: DeliveryData
-       environment: ${{ parameters.Environment }}.RESTAPI
+       environment:
+          name: ${{parameters.Environment}}
+          resourceType: virtualMachine
+          tags: restapi
        strategy:
         runOnce:
           deploy: 
