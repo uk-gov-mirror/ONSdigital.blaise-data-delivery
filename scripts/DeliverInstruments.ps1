@@ -43,7 +43,7 @@ try {
          
             # Upload instrument package to NIFI
             gsutil cp $dataDeliveryFileName gs://$env:ENV_BLAISE_NIFI_BUCKET
-            LogInfo("Pushed instrument '$dataDeliveryFileName' to the NIFI bucket")
+            LogInfo("Pushed instrument '$dataDeliveryFileName' to the NIFI bucket '$($env:ENV_BLAISE_NIFI_BUCKET)'")
 
             # remove local instrument package
             Remove-Item $dataDeliveryFileName
