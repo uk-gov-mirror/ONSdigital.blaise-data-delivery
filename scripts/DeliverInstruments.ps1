@@ -46,12 +46,12 @@ try {
             # remove local instrument package
             Remove-Item $dataDeliveryFileName
         }
-        catch{
+        catch {
             Write-Host $_.ScriptStackTrace
         }
     }
 }
-catch{
+catch {
     Write-Host $_.ScriptStackTrace
     exit 1
 }
