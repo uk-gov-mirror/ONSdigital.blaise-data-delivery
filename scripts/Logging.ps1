@@ -37,6 +37,6 @@ function CreateSourceIfNotExists {
 
     if(-Not [System.Diagnostics.EventLog]::SourceExists($dataSource))
     {
-        New-EventLog -LogName Application -Source dataSource
+        New-EventLog -LogName Application -Source $dataSource
     }
 }
