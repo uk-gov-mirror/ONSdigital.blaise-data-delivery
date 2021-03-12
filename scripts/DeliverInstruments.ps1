@@ -3,6 +3,8 @@
 ###############################
 
 try {
+    . "$PSScriptRoot\Logging.ps1"
+
     # If a serverpark is specified then limit the call to that server park
     $catiInstrumentsUri = if([string]::IsNullOrEmpty($env:ServerParkName)) {"$env:ENV_RESTAPI_URL/api/v1/cati/instruments"} 
                         else {"$env:ENV_RESTAPI_URL/api/v1/cati/serverparks/$($env:ServerParkName)/instruments"}
@@ -12,8 +14,7 @@ try {
 
     # No active instruments found in CATI
     If ($instruments.Count -eq 0) {
-        Write-Host "No active instruments found for delivery"
-        Write-EventLog -LogName "Application" -Source "DataDelivery" -EntryType Warning -Message "Data Delivery: No active instruments found for delivery"
+        LogWarning("No active instruments found for delivery")
     }
 
     # Deliver the instrument package with data for each active instrument
@@ -28,37 +29,31 @@ try {
 
             # Download instrument packagegit pu
             Invoke-WebRequest $InstrumentDataUri -outfile $fileName 
-            Write-Host "Downloaded instrument '$fileName'"
-            Write-EventLog -LogName "Application" -Source "DataDelivery" -EntryType Information -Message "Data Delivery: Downloaded instrument '$fileName'"
+            LogInfo("Downloaded instrument '$fileName'")
 
             # Generate and add SPSS files
             & .\scripts\AddSpssFilesToInstrument.ps1 "$($instrument.name)" | Out-Null
-            Write-Host "Added SPSS files to instrument"
-            Write-EventLog -LogName "Application" -Source "DataDelivery" -EntryType Information -Message "Data Delivery: Added SPSS files to instrument package '$fileName'"
+            LogInfo("Added SPSS files to instrument")
 
             # Generate DD filename
             $currentDateTime = (Get-Date)
             $dataDeliveryFileName = "dd_$($instrument.name)_$($currentDateTime.ToString("ddMMyyyy"))_$($currentDateTime.ToString("HHmmss")).$env:PackageExtension";
             Rename-Item -Path $fileName -NewName $dataDeliveryFileName
-            Write-Host "Renamed instrument to '$dataDeliveryFileName'"
-            Write-EventLog -LogName "Application" -Source "DataDelivery" -EntryType Information -Message "Data Delivery: Renamed instrument package to '$dataDeliveryFileName'"
-
+            LogInfo("Renamed instrument to '$dataDeliveryFileName'")
+         
             # Upload instrument package to NIFI
             gsutil cp $dataDeliveryFileName gs://$env:ENV_BLAISE_NIFI_BUCKET
-            Write-Host "Pushed instrument '$dataDeliveryFileName' to the NIFI bucket"
-            Write-EventLog -LogName "Application" -Source "DataDelivery" -EntryType Information -Message "Data Delivery: Pushed instrument '$dataDeliveryFileName' to the NIFI bucket"
-            
+            LogInfo("Pushed instrument '$dataDeliveryFileName' to the NIFI bucket")
+
             # remove local instrument package
             Remove-Item $dataDeliveryFileName
         }
         catch {
-            Write-Host $_.ScriptStackTrace
-            Write-EventLog -LogName "Application" -Source "DataDelivery" -EntryType Error -Message "Data Delivery: $_.ScriptStackTrace"
+            LogError($_.ScriptStackTrace)
         }
     }
 }
 catch {
-    Write-Host $_.ScriptStackTrace
-    Write-EventLog -LogName "Application" -Source "DataDelivery" -EntryType Error -Message "Data Delivery: $_.ScriptStackTrace"
+    LogError($_.ScriptStackTrace)
     exit 1
 }
