@@ -29,7 +29,7 @@ function AddSpssFilesToInstrumentPackage {
 
     # Generate SPS file
     & cmd.exe /c $tempPath\Manipula.exe "$tempPath\GenerateStatisticalScript.msux" -K:meta="$instrumentName.bmix" -H:"" -L:"" -N:oScript="$instrumentName,iFNames=,iData=$instrumentName.bdix" -P:"SPSS;;;;;;$instrumentName.asc;;;2;;64;;Y" -Q:True | Out-Null
-    LogInfo("Generated the .SPS file")
+    LogInfo("Generated the .SPS & .FPS files")
 
     # Generate .ASC file
     & cmd.exe /c $tempPath\Manipula.exe "$tempPath\ExportData_$instrumentName.msux" -A:True -Q:True | Out-Null
