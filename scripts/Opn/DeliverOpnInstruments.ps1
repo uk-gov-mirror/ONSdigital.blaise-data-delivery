@@ -33,7 +33,7 @@ try {
             if($instrument.DeliverData -eq $false)
             {
                 CreateDataDeliveryStatus -fileName $deliveryFileName -state "inactive" -batchStamp $batchStamp
-                break
+                continue
             }
 
             # Set data delivery status to started
