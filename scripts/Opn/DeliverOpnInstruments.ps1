@@ -27,14 +27,14 @@ try {
     {
         try {
             
-            if($instrument.DeliverData -eq $false)
-            {
-                CreateDataDeliveryStatus -fileName $instrument.name -state "inactive" -batchStamp $batchStamp
-                break
-            }
-            
             # Generate unique data delivery filename for the instrument
             $deliveryFileName = GenerateDeliveryFilename -prefix "dd" -instrumentName $instrument.name
+            
+            if($instrument.DeliverData -eq $false)
+            {
+                CreateDataDeliveryStatus -fileName $deliveryFileName -state "inactive" -batchStamp $batchStamp
+                break
+            }
 
             # Set data delivery status to started
             CreateDataDeliveryStatus -fileName $deliveryFileName -state "started" -batchStamp $batchStamp
