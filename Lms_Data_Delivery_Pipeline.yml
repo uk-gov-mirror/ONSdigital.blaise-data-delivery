@@ -39,7 +39,7 @@ stages:
                - checkout: self
 
                - task: PowerShell@2
-                 displayName: Clean up temp folders
+                 displayName: Create temp folders
                  inputs:
                   targetType: 'inline'
                   script: |
