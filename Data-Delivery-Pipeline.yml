@@ -19,7 +19,7 @@ variables:
  - name: PackageExtension
    value: zip
  - name: TempPath
-   value: c:\blaise\temp\datadelivery
+   value: c:\blaise\temp\datadelivery\opn
 
 stages:
  - stage: DataDelivery
