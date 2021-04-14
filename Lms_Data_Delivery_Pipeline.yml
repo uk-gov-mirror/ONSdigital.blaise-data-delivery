@@ -33,19 +33,19 @@ stages:
           resourceType: virtualMachine
           tags: restapi
         strategy:
-        runOnce:
-          deploy: 
-            steps:
-              - checkout: self
+          runOnce:
+            deploy: 
+              steps:
+                - checkout: self
 
-              - task: PowerShell@2
-                displayName: Deliver LMS Instruments
-                inputs:
-                  filePath: '$(Agent.BuildDirectory)/s/scripts/lms/DeliverLmsInstruments.ps1'
+                - task: PowerShell@2
+                  displayName: Deliver LMS Instruments
+                  inputs:
+                    filePath: '$(Agent.BuildDirectory)/s/scripts/lms/DeliverLmsInstruments.ps1'
 
-              - task: PowerShell@2
-                displayName: Clean up temp folders
-                inputs:
-                targetType: 'inline'
-                script: |
-                  Remove-Item -Recurse -Force $env:TempPath
+                - task: PowerShell@2
+                  displayName: Clean up temp folders
+                  inputs:
+                  targetType: 'inline'
+                  script: |
+                    Remove-Item -Recurse -Force $env:TempPath
