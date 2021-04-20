@@ -45,13 +45,13 @@ stages:
              - task: PowerShell@2
                displayName: Download SPSS Manipula Package
                inputs:
-                targetType: 'inline'
-                script: |
-                  Write-Host "Login to GCP"
-                      gcloud auth activate-service-account $env:ENV_SHARED_SERVICE_ACCOUNT --key-file=$(gcpkey.secureFilePath)
-                      
-                      Write-Host "Downloading instrument"
-                      gsutil cp gs://$env:ENV_SHARED_BUCKET/SpssPackage.zip $env:TempPath\SpssPackage.zip
+                  targetType: 'inline'
+                  script: |
+                    Write-Host "Login to GCP"
+                        gcloud auth activate-service-account $env:ENV_SHARED_SERVICE_ACCOUNT --key-file=$(gcpkey.secureFilePath)
+                        
+                        Write-Host "Downloading instrument"
+                        gsutil cp gs://$env:ENV_SHARED_BUCKET/Manipula.zip $env:TempPath\Manipula.zip
 
                         Write-Host "GCP Login with compute service account"
                         gcloud auth login $env:ENV_VM_SERVICEACCOUNT
