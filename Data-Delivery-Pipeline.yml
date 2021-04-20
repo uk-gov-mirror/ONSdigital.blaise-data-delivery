@@ -25,12 +25,12 @@ stages:
  - stage: DataDelivery
    displayName: Opn Data Delivery
    jobs:
-     - deployment: OpnDeliveryData
-       environment:
+    - deployment: OpnDeliveryData
+      environment:
           name: ${{parameters.Environment}}
           resourceType: virtualMachine
           tags: restapitests
-       strategy:
+      strategy:
         runOnce:
           deploy: 
            steps:
