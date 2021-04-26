@@ -26,12 +26,13 @@ function AddXMLFileForDeliveryPackage{
     $deliveryFolder = CreateANewFolder -folderPath $processingFolder -folderName $deliveryFolderName
 
     try {
-        # Generate XML file
-        & cmd.exe /c $processingFolder\Manipula.exe "$processingFolder\GenerateXML.msux" -A:True -Q:True -K:OPXMeta="$processingFolder/$instrumentName.bmix" -I:$processingFolder/$instrumentName.bdbx -O:$deliveryFolder/$instrumentName.xml
+        # Generate XML file, Export function no longer works in Blaise 5 
+        & cmd.exe /c $processingFolder/MetaViewer.exe -F:$processingFolder/$instrumentName.bmix -Export
+        Copy-Item -Path "$processingFolder/$($instrumentName)_meta.xml" -Destination $deliveryFolder/$instrumentName.xml
         LogInfo("Generated .XML File for $deliveryZip")
     }
     catch {
-        LogWarning("Generating XML Failed: $_.Exception.Message")
+        LogWarning("Generating XML Failed: $($_.Exception.Message)")
     }
     try {
         AddFolderToZip -folder $deliveryFolder -zipFilePath $deliveryZip
