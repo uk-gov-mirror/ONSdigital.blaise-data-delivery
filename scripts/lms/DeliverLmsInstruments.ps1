@@ -10,6 +10,7 @@
 . "$PSScriptRoot\..\functions\xmlFunctions.ps1"
 . "$PSScriptRoot\..\functions\JsonFunctions.ps1"
 . "$PSScriptRoot\..\functions\ManipulaFunctions.ps1"
+. "$PSScriptRoot\..\functions\SpssFunctions.ps1"
 
 try {
     # Retrieve a list of active instruments in CATI for a particular survey type I.E OPN
