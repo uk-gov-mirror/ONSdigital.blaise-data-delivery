@@ -35,7 +35,7 @@ function CreateDataDeliveryStatus {
         Invoke-RestMethod -UseBasicParsing $url -ContentType "application/json" -Method POST -Body $body -Headers @{ 'Authorization' = "Bearer $idToken" }
     }
     catch {
-        LogError("Creating Data Delivery Status failed: $($_.ScriptStackTrace) StatusCode: $($_.Exception.Response.StatusCode.value__) StatusDescription: $($_.Exception.Response.StatusDescription)")
+        LogError("Creating Data Delivery Status failed: $($_.Exception.Message) at: $($_.ScriptStackTrace) $($_.ScriptStackTrace) StatusCode: $($_.Exception.Response.StatusCode.value__) StatusDescription: $($_.Exception.Response.StatusDescription)")
     }
 }
 
@@ -63,7 +63,7 @@ function UpdateDataDeliveryStatus {
         Invoke-RestMethod -UseBasicParsing $url -ContentType "application/json" -Method PATCH -Body $body -Headers @{ 'Authorization' = "Bearer $idToken" }
     }
     catch {
-        LogError("Creating Data Delivery Status failed: $($_.ScriptStackTrace) StatusCode: $($_.Exception.Response.StatusCode.value__) StatusDescription: $($_.Exception.Response.StatusDescription)")
+        LogError("Creating Data Delivery Status failed: $($_.Exception.Message) at: $($_.ScriptStackTrace) StatusCode: $($_.Exception.Response.StatusCode.value__) StatusDescription: $($_.Exception.Response.StatusDescription)")
     }
 }
 
@@ -97,6 +97,6 @@ function ErrorDataDeliveryStatus {
         Invoke-RestMethod -UseBasicParsing $url -ContentType "application/json" -Method PATCH -Body $body -Headers @{ 'Authorization' = "Bearer $idToken" }
     }
     catch {
-        LogError("Creating Data Delivery Status failed: $($_.ScriptStackTrace) StatusCode: $($_.Exception.Response.StatusCode.value__) StatusDescription: $($_.Exception.Response.StatusDescription)")
+        LogError("Creating Data Delivery Status failed: $($_.Exception.Message) at: $($_.ScriptStackTrace) StatusCode: $($_.Exception.Response.StatusCode.value__) StatusDescription: $($_.Exception.Response.StatusDescription)")
     }
 }
