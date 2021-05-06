@@ -10,15 +10,15 @@ function AddSpssFilesToDeliveryPackage {
     )
 
     If (-not (Test-Path $processingFolder)) {
-        throw [System.IO.FileNotFoundException] "$processingFolder file not found"
+        throw "$processingFolder file not found"
     }
     
     If (-not (Test-Path $deliveryZip)) {
-        throw [System.IO.FileNotFoundException] "$deliveryZip file not found"
+        throw "$deliveryZip file not found"
     }
 
     If ([string]::IsNullOrEmpty($instrumentName)) {
-        throw [System.IO.ArgumentException] "No instrument name argument provided"
+        throw "No instrument name argument provided"
     }
 
     # Copy Manipula spss files to the processing folder

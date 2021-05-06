@@ -35,13 +35,13 @@ function DownloadInstrumentPackage {
     )
     
     If ([string]::IsNullOrEmpty($serverParkName)) {
-        throw [System.IO.ArgumentException] "No server park name provided" }
+        throw "No server park name provided" }
 
     If ([string]::IsNullOrEmpty($instrumentName)) {
-        throw [System.IO.ArgumentException] "No instrument name provided" }
+        throw "No instrument name provided" }
 
     If ([string]::IsNullOrEmpty($fileName)) {
-        throw [System.IO.ArgumentException] "No file name provided" }
+        throw "No file name provided" }
 
     # Build uri to retrive instrument package file with data
     $InstrumentDataUri = "$restApiBaseUrl/api/v1/serverparks/$serverParkName/instruments/$instrumentName/data"    

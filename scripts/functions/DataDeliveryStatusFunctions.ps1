@@ -12,15 +12,15 @@ function CreateDataDeliveryStatus {
     )
     try {
         If ([string]::IsNullOrEmpty($fileName)) {
-            throw [System.IO.ArgumentException] "No file name name provided"
+            throw "No file name name provided"
         }
 
         If ([string]::IsNullOrEmpty($batchStamp)) {
-            throw [System.IO.ArgumentException] "No batch stamp name provided"
+            throw "No batch stamp name provided"
         }
 
         If ([string]::IsNullOrEmpty($state)) {
-            throw [System.IO.ArgumentException] "No state name provided"
+            throw "No state name provided"
         }
 
         $DDSBaseUrl = "$env:ENV_DDS_URL/v1/state"
@@ -46,11 +46,11 @@ function UpdateDataDeliveryStatus {
     )
     try {
         If ([string]::IsNullOrEmpty($fileName)) {
-            throw [System.IO.ArgumentException] "No file name name provided"
+            throw "No file name name provided"
         }
 
         If ([string]::IsNullOrEmpty($state)) {
-            throw [System.IO.ArgumentException] "No state name provided"
+            throw "No state name provided"
         }
 
         $DDSBaseUrl = "$env:ENV_DDS_URL/v1/state"
@@ -75,15 +75,15 @@ function ErrorDataDeliveryStatus {
     )
     try {
         If ([string]::IsNullOrEmpty($fileName)) {
-            throw [System.IO.ArgumentException] "No file name name provided"
+            throw "No file name name provided"
         }
 
         If ([string]::IsNullOrEmpty($state)) {
-            throw [System.IO.ArgumentException] "No state name provided"
+            throw "No state name provided"
         }
 
         If ([string]::IsNullOrEmpty($batchStamp)) {
-            throw [System.IO.ArgumentException] "No batch stamp name provided"
+            throw "No batch stamp name provided"
         }
 
         $DDSBaseUrl = "$env:ENV_DDS_URL/v1/state"

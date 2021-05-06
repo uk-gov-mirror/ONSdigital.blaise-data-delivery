@@ -7,13 +7,13 @@ function AddManipulaToProcessingFolder {
     )
 
     If (-not (Test-Path $manipulaPackage)) {
-        throw [System.IO.FileNotFoundException] "$manipulaPackage not found" }
+        throw "$manipulaPackage not found" }
 
     If (-not (Test-Path $processingFolder)) {
-        throw [System.IO.FileNotFoundException] "$processingFolder not found" }
+        throw "$processingFolder not found" }
 
     If (-not (Test-Path $deliveryFile)) {
-        throw [System.IO.FileNotFoundException] "$deliveryFile not found" }
+        throw "$deliveryFile not found" }
         
     # Extract Manipula files to the processing folder
     ExtractZipFile -zipFilePath $manipulaPackage -destinationPath $processingFolder

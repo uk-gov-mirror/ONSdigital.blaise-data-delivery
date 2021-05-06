@@ -9,13 +9,13 @@ function AddXMLFileForDeliveryPackage{
     )
 
     If (-not (Test-Path $processingFolder)) {
-        throw [System.IO.FileNotFoundException] "$processingFolder not found" }
+        throw "$processingFolder not found" }
 
     If (-not (Test-Path $deliveryZip)) {
-        throw [System.IO.FileNotFoundException] "$deliveryZip not found" }
+        throw "$deliveryZip not found" }
 
     If ([string]::IsNullOrEmpty($instrumentName)) {
-        throw [System.IO.ArgumentException] "No instrument name provided" }
+        throw "No instrument name provided" }
 
     # Copy Manipula xml files to the processing folder
     Copy-Item -Path "$PSScriptRoot\..\manipula\xml\GenerateXML.msux" -Destination $processingFolder

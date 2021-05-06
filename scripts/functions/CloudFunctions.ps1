@@ -7,11 +7,11 @@ function UploadFileToBucket {
     )
 
     If (-not (Test-Path $filePath)) {
-        throw [System.IO.FileNotFoundException] "$filePath not found"
+        throw "$filePath not found"
     }
 
     If ([string]::IsNullOrEmpty($bucketName)) {
-        throw [System.IO.ArgumentException] "No bucket name provided" }
+        throw "No bucket name provided" }
 
     LogInfo("Copying '$filePath' to '$bucketName'")
     gsutil cp $filePath gs://$bucketName
