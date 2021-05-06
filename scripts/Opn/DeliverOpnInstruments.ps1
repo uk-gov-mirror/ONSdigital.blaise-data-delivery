@@ -11,7 +11,6 @@
 . "$PSScriptRoot\..\functions\ManipulaFunctions.ps1"
 
 try {
-    $PSVersionTable
     # Retrieve a list of active instruments in CATI for a particular survey type I.E OPN
     $instruments = GetListOfInstrumentsBySurveyType
 
@@ -25,7 +24,7 @@ try {
     $batchStamp = GenerateBatchFileName
 
     # Deliver the instrument package with data for each active instrument
-    $instruments | ForEach-Object -Parallel
+    $instruments | ForEach-Object -ThrottleLimit 3 -Parallel 
     {
         try {
             
@@ -66,8 +65,8 @@ try {
             LogError("Error occured: $($_.Exception.Message) at: $($_.ScriptStackTrace)")
             ErrorDataDeliveryStatus -fileName $deliveryFileName -state "errored" -error_info "An error has occured in delivering $deliveryFileName"
         }
-    }-ThrottleLimit 3
-}
+    } 
+} 
 catch {
     LogError("Error occured: $($_.Exception.Message) at: $($_.ScriptStackTrace)")
     exit 1

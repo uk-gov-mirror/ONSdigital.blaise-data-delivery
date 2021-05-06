@@ -26,7 +26,7 @@ try {
     $batchStamp = GenerateBatchFileName
 
     # Deliver the instrument package with data for each active instrument
-    $instruments | ForEach-Object -Parallel -ThrottleLimit 3
+    $instruments | ForEach-Object -ThrottleLimit 3 -Parallel 
     {
         try {          
             # Generate unique data delivery filename for the instrument
