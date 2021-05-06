@@ -5,10 +5,6 @@
 . "$PSScriptRoot\..\functions\LoggingFunctions.ps1"
 . "$PSScriptRoot\..\functions\FileFunctions.ps1"
 . "$PSScriptRoot\..\functions\RestApiFunctions.ps1"
-. "$PSScriptRoot\..\functions\CloudFunctions.ps1"
-. "$PSScriptRoot\..\functions\SpssFunctions.ps1"
-. "$PSScriptRoot\..\functions\DataDeliveryStatusFunctions.ps1"
-. "$PSScriptRoot\..\functions\ManipulaFunctions.ps1"
 
 try {
     # Retrieve a list of active instruments in CATI for a particular survey type I.E OPN
@@ -25,8 +21,17 @@ try {
 
     # Deliver the instrument package with data for each active instrument
     $instruments | ForEach-Object -ThrottleLimit 3 -Parallel {
-        try {
-            
+        try {          
+            . "$using:PSScriptRoot\..\functions\LoggingFunctions.ps1"
+            . "$using:PSScriptRoot\..\functions\FileFunctions.ps1"
+            . "$using:PSScriptRoot\..\functions\DataDeliveryStatusFunctions.ps1"           
+            . "$using:PSScriptRoot\..\functions\RestApiFunctions.ps1"
+            . "$using:PSScriptRoot\..\functions\CloudFunctions.ps1"
+            . "$using:PSScriptRoot\..\functions\SpssFunctions.ps1"
+            . "$using:PSScriptRoot\..\functions\xmlFunctions.ps1"
+            . "$using:PSScriptRoot\..\functions\JsonFunctions.ps1"
+            . "$using:PSScriptRoot\..\functions\ManipulaFunctions.ps1"
+
             # Generate unique data delivery filename for the instrument
             $deliveryFileName = GenerateDeliveryFilename -prefix "dd" -instrumentName $_.name
             
