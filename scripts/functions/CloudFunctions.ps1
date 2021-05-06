@@ -14,6 +14,5 @@ function UploadFileToBucket {
         throw "No bucket name provided" }
 
     LogInfo("Copying '$filePath' to '$bucketName'")
-    gsutil cp $filePath gs://$bucketName
-    LogInfo("Pushed instrument '$filePath' to the NIFI bucket '$bucketName'")        
+    gsutil cp $filePath gs://$bucketName   
 }
