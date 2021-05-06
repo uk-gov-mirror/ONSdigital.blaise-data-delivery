@@ -11,6 +11,7 @@
 . "$PSScriptRoot\..\functions\ManipulaFunctions.ps1"
 
 try {
+    $PSVersionTable
     # Retrieve a list of active instruments in CATI for a particular survey type I.E OPN
     $instruments = GetListOfInstrumentsBySurveyType
 
