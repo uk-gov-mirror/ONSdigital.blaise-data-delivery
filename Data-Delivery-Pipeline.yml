@@ -62,6 +62,7 @@ stages:
              - task: PowerShell@2
                displayName: Deliver OPN Instruments
                inputs:
+                pwsh: true
                 filePath: '$(Agent.BuildDirectory)/s/scripts/opn/DeliverOpnInstruments.ps1'
 
              - task: PowerShell@2

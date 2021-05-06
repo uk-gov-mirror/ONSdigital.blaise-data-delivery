@@ -26,13 +26,13 @@ try {
     $batchStamp = GenerateBatchFileName
 
     # Deliver the instrument package with data for each active instrument
-    foreach ($instrument in $instruments)
+    $instruments | ForEach-Object -Parallel -ThrottleLimit 3
     {
         try {          
             # Generate unique data delivery filename for the instrument
-            $deliveryFileName = GenerateDeliveryFilename -prefix "dd" -instrumentName $instrument.name
+            $deliveryFileName = GenerateDeliveryFilename -prefix "dd" -instrumentName $_.name
             
-            if($instrument.DeliverData -eq $false)
+            if($_.DeliverData -eq $false)
             {
                 CreateDataDeliveryStatus -fileName $deliveryFileName -state "inactive" -batchStamp $batchStamp
                 continue
@@ -45,10 +45,10 @@ try {
             $deliveryFile = "$env:TempPath\$deliveryFileName"
 
             # Download instrument package
-            DownloadInstrumentPackage -serverParkName $instrument.serverParkName -instrumentName $instrument.name -fileName $deliveryFile
+            DownloadInstrumentPackage -serverParkName $_.serverParkName -instrumentName $_.name -fileName $deliveryFile
 
             # Create a temporary folder for processing instruments
-            $processingFolder = CreateANewFolder -folderPath $env:TempPath -folderName "$($instrument.name)_$(Get-Date -format "ddMMyyyy")_$(Get-Date -format "HHmmss")"
+            $processingFolder = CreateANewFolder -folderPath $env:TempPath -folderName "$($_.name)_$(Get-Date -format "ddMMyyyy")_$(Get-Date -format "HHmmss")"
             
             #Gets the folder name of the processing folder
             $processingSubFolderName = GetFolderNameFromAPath -folderPath $processingFolder
@@ -60,13 +60,13 @@ try {
             AddManipulaToProcessingFolder -processingFolder $processingFolder -deliveryFile $deliveryFile
 
             # Generate and add SPSS files
-            AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -instrumentName $instrument.name -subFolder $processingSubFolder
+            AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -instrumentName $_.name -subFolder $processingSubFolder
 
             #Generate XML Files
-            AddXMLFileForDeliveryPackage -processingFolder $processingFolder -deliveryZip $deliveryFile -instrumentName $instrument.name -subFolder $processingSubFolder
+            AddXMLFileForDeliveryPackage -processingFolder $processingFolder -deliveryZip $deliveryFile -instrumentName $_.name -subFolder $processingSubFolder
 
             #Generate Json Files
-            AddJSONFileForDeliveryPackage -processingFolder $processingFolder -deliveryZip $deliveryFile -instrumentName $instrument.name -subFolder $processingSubFolder
+            AddJSONFileForDeliveryPackage -processingFolder $processingFolder -deliveryZip $deliveryFile -instrumentName $_.name -subFolder $processingSubFolder
 
             # Upload instrument package to NIFI
             UploadFileToBucket -filePath $deliveryFile -bucketName $env:ENV_BLAISE_NIFI_BUCKET

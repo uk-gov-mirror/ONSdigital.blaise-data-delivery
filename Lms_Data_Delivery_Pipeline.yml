@@ -69,6 +69,7 @@ stages:
                - task: PowerShell@2
                  displayName: Deliver LMS Instruments
                  inputs:
+                  pwsh: true
                   filePath: '$(Agent.BuildDirectory)/s/scripts/lms/DeliverLmsInstruments.ps1'
 
                - task: PowerShell@2
