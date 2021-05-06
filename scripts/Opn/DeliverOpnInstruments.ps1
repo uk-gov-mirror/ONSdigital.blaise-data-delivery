@@ -25,7 +25,7 @@ try {
     $batchStamp = GenerateBatchFileName
 
     # Deliver the instrument package with data for each active instrument
-    $instruments | ForEach-Object -Parallel -ThrottleLimit 3
+    $instruments | ForEach-Object -Parallel
     {
         try {
             
@@ -66,7 +66,7 @@ try {
             LogError("Error occured: $($_.Exception.Message) at: $($_.ScriptStackTrace)")
             ErrorDataDeliveryStatus -fileName $deliveryFileName -state "errored" -error_info "An error has occured in delivering $deliveryFileName"
         }
-    }
+    }-ThrottleLimit 3
 }
 catch {
     LogError("Error occured: $($_.Exception.Message) at: $($_.ScriptStackTrace)")
