@@ -13,6 +13,7 @@ function UploadFileToBucket {
     If ([string]::IsNullOrEmpty($bucketName)) {
         throw [System.IO.ArgumentException] "No bucket name provided" }
 
+    LogInfo("Copying '$filePath' to '$bucketName'")
     gsutil cp $filePath gs://$bucketName
     LogInfo("Pushed instrument '$filePath' to the NIFI bucket '$bucketName'")        
 }

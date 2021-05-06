@@ -37,12 +37,12 @@ try {
             
             if($_.DeliverData -eq $false)
             {
-                CreateDataDeliveryStatus -fileName $deliveryFileName -state "inactive" -batchStamp $batchStamp
+                CreateDataDeliveryStatus -fileName $deliveryFileName -batchStamp $batchStamp -state "inactive"
                 continue
             }
 
             # Set data delivery status to started
-            CreateDataDeliveryStatus -fileName $deliveryFileName -state "started" -batchStamp $batchStamp
+            CreateDataDeliveryStatus -fileName $deliveryFileName -batchStamp $batchStamp -state "started"
 
             # Generate full file path for instrument
             $deliveryFile = "$env:TempPath\$deliveryFileName"
