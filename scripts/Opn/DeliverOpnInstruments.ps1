@@ -20,7 +20,7 @@ try {
     $batchStamp = GenerateBatchFileName
 
     # Deliver the instrument package with data for each active instrument
-    $instruments | ForEach-Object -ThrottleLimit 3 -Parallel {
+    $instruments | ForEach-Object -ThrottleLimit 1 -Parallel {
         try {          
             . "$using:PSScriptRoot\..\functions\LoggingFunctions.ps1"
             . "$using:PSScriptRoot\..\functions\FileFunctions.ps1"
