@@ -30,6 +30,7 @@ try {
             . "$using:PSScriptRoot\..\functions\SpssFunctions.ps1"
             . "$using:PSScriptRoot\..\functions\xmlFunctions.ps1"
             . "$using:PSScriptRoot\..\functions\JsonFunctions.ps1"
+            . "$using:PSScriptRoot\..\functions\AsciiFunctions.ps1"
             . "$using:PSScriptRoot\..\functions\ManipulaFunctions.ps1"
 
             # Generate unique data delivery filename for the instrument
@@ -58,6 +59,9 @@ try {
 
             # Generate and add SPSS files
             AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -instrumentName $_.name 
+
+            # Generate and add Ascii files
+            AddAsciiFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -instrumentName $_.name 
         
             # Upload instrument package to NIFI
             UploadFileToBucket -filePath $deliveryFile -bucketName $env:ENV_BLAISE_NIFI_BUCKET
