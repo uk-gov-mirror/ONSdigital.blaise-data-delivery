@@ -3,7 +3,8 @@
 function UploadFileToBucket {
     param (
         [string] $filePath,
-        [string] $bucketName
+        [string] $bucketName,
+        [string] $deliveryFileName
     )
 
     If (-not (Test-Path $filePath)) {
@@ -13,6 +14,9 @@ function UploadFileToBucket {
     If ([string]::IsNullOrEmpty($bucketName)) {
         throw "No bucket name provided" }
 
+    If ([string]::IsNullOrEmpty($deliveryFileName)) {
+        throw "No delivery zip has been provided" }
+
     LogInfo("Copying '$filePath' to '$bucketName'")
-    gsutil cp $filePath gs://$bucketName   
+    gsutil cp $filePath gs://$bucketName/$deliveryFileName
 }
