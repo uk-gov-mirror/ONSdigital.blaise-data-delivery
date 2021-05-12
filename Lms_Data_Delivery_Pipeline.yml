@@ -23,7 +23,7 @@ variables:
 
 stages:
  - stage: DataDelivery
-   displayName: Opn Data Delivery
+   displayName: Lms Data Delivery
    jobs:
     - deployment: LmsDeliveryData
       environment:
