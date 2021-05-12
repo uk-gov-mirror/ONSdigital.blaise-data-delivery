@@ -1,57 +1,64 @@
 ﻿. "$PSScriptRoot\LoggingFunctions.ps1"
 . "$PSScriptRoot\FileFunctions.ps1"
+. "$PSScriptRoot\CloudFunctions.ps1"
 
 function AddSpssFilesToDeliveryPackage {
     param(
         [string] $processingFolder,
         [string] $deliveryZip,
         [string] $instrumentName,
-        [string] $subFolder
+        [string] $subFolder,
+        [string] $dqsBucket,
+        [string] $tempPath
     )
 
     If (-not (Test-Path $processingFolder)) {
-        throw [System.IO.FileNotFoundException] "$processingFolder file not found"
+        throw "$processingFolder file not found"
     }
-    
+
     If (-not (Test-Path $deliveryZip)) {
-        throw [System.IO.FileNotFoundException] "$deliveryZip file not found"
+        throw "$deliveryZip file not found"
     }
 
     If ([string]::IsNullOrEmpty($instrumentName)) {
-        throw [System.IO.ArgumentException] "No instrument name argument provided"
+        throw "No instrument name argument provided"
     }
 
-    # Copy Manipula spss files to the processing folder
-    Copy-Item -Path "$PSScriptRoot\..\manipula\spss\*" -Destination $processingFolder
+    if (-not (Test-Path "$processingFolder\spss")) {
+        # Copy Manipula spss files to the processing folder
+        Copy-Item -Path "$PSScriptRoot\..\manipula\spss\*" -Destination $processingFolder
 
-    # Generate SPS file
-    try {
-        & cmd.exe /c $processingFolder\Manipula.exe "$processingFolder\GenerateStatisticalScript.msux" -K:meta="$instrumentName.bmix" -H:"" -L:"" -N:oScript="$instrumentName,iFNames=,iData=$instrumentName.bdix" -P:"SPSS;;;;;;$instrumentName.asc;;;2;;64;;Y" -Q:True
-        LogInfo("Generated the .SPS file")
-    }
-    catch {
-        LogWarning("Generating SPS and FPS Failed for $instrumentName : $($_.Exception.Message)")
-    }
-
-    # Generate .ASC file
-    try {
-        & cmd.exe /c $processingFolder\Manipula.exe "$processingFolder\ExportData_$instrumentName.msux" -A:True -Q:True -O
-        LogInfo("Generated the .ASC file")
-    }
-    catch {
-        LogWarning("Generating ASCII Failed for $instrumentName : $($_.Exception.Message)")
-    }
-
-    if ([string]::IsNullOrEmpty($subFolder))
-    {      
-        # Add the SPS, ASC & FPS files to the instrument package
-        AddFilesToZip -pathTo7zip $env:TempPath -files "$processingFolder\*.sps","$processingFolder\*.asc","$processingFolder\*.fps" -zipFilePath $deliveryZip
-        LogInfo("Added .SPS, .ASC, .Fps Files to $deliveryZip")
+        # Generate SPS file
+        try {
+            & cmd.exe /c $processingFolder\Manipula.exe "$processingFolder\GenerateStatisticalScript.msux" -K:meta="$instrumentName.bmix" -H:"" -L:"" -N:oScript="$instrumentName,iFNames=,iData=$instrumentName.bdix" -P:"SPSS;;;;;;$instrumentName.asc;;;2;;64;;Y" -Q:True
+            LogInfo("Generated the .SPSS file")
+            #create an sps folder
+            CreateANewFolder -folderPath $processingFolder -folderName "spss"
+            #copying the files needed to create an Ascii file
+            Copy-Item -Path "$processingFolder\*.sps" -Destination "$processingFolder/spss"
+            #adding the above files to the delivery zip
+            AddFolderToZip -pathTo7zip $tempPath -folder "$processingFolder/spss" -zipFilePath $deliveryZip
+            #uploading the delivery file back to the dqs bucket with the
+            UploadFileToBucket -filePath $deliveryZip -bucketName $dqsBucket -deliveryFileName "$($instrumentName).bpkg"
+        }
+        catch {
+            LogWarning("Generating SPS and FPS Failed for $instrumentName : $($_.Exception.Message)")
+            Get-Error
+        }
     }
     else {
-        Copy-Item -Path "$processingFolder\*.sps","$processingFolder\*.asc","$processingFolder\*.fps" -Destination $subFolder
+        Copy-Item -Path "$processingFolder/spss/*" -Destination $processingFolder -verbose
+    }
 
-        AddFolderToZip -pathTo7zip $env:TempPath -folder $subFolder -zipFilePath $deliveryZip  
+    if ([string]::IsNullOrEmpty($subFolder)) {
+        # Add the SPS, ASC & FPS files to the instrument package
+        AddFilesToZip -pathTo7zip $tempPath -files "$processingFolder\*.sps" -zipFilePath $deliveryZip
+        LogInfo("Added .SPS Files to $deliveryZip")
+    }
+    else {
+        Copy-Item -Path "$processingFolder\*.sps" -Destination $subFolder
+
+        AddFolderToZip -pathTo7zip $tempPath -folder $subFolder -zipFilePath $deliveryZip
         LogInfo("Added '$subFolder' to '$deliveryZip'")
     }
 }
