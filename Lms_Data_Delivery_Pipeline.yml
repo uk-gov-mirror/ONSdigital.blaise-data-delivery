@@ -81,6 +81,7 @@ stages:
 
                - task: PowerShell@2
                  displayName: Deliver LMS Instruments
+                 timeoutInMinutes: 0
                  inputs:
                   filePath: '$(Agent.BuildDirectory)/s/scripts/lms/DeliverLmsInstruments.ps1'
                   pwsh: true
