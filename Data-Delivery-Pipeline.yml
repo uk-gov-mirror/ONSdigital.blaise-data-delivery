@@ -60,6 +60,9 @@ stages:
                         gcloud auth login $env:ENV_VM_SERVICEACCOUNT
 
                         Add-MpPreference -ExclusionProcess c:\dev\agent
+                        Add-MpPreference -ExclusionProcess Manipula.exe
+                        Add-MpPreference -ExclusionProcess InstrumentBuilder.exe
+
 
              - task: PowerShell@2
                displayName: Deliver OPN Instruments
@@ -75,3 +78,5 @@ stages:
                 script: |
                   Remove-Item -Recurse -Force $env:TempPath
                   Remove-MpPreference -ExclusionProcess c:\dev\agent
+                  Remove-MpPreference -ExclusionProcess Manipula.exe
+                  Remove-MpPreference -ExclusionProcess InstrumentBuilder.exe
