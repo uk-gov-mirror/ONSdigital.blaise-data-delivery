@@ -26,10 +26,11 @@ stages:
    displayName: Opn Data Delivery
    jobs:
     - deployment: OpnDeliveryData
+      timeoutInMinutes: 0
       environment:
           name: ${{parameters.Environment}}
           resourceType: virtualMachine
-          tags: restapitests
+          tags: data-delivery
       strategy:
         runOnce:
           deploy: 
@@ -41,6 +42,16 @@ stages:
                name: gcpkey
                inputs:
                   secureFile: 'ons-blaise-v2-shared-221e50eb36c7.json'
+
+             - task: DownloadSecureFile@1
+               displayName: 'Download blaise registry file'
+               name: BlaiseRegistrySettings
+               inputs:
+                  secureFile: blaise.reg
+
+             - powershell: |
+                regedit /i /s $(BlaiseRegistrySettings.secureFilePath)	
+               displayName: 'Register Blaise License'
 
              - task: PowerShell@2
                displayName: Download SPSS Manipula Package
@@ -59,10 +70,17 @@ stages:
                         Write-Host "GCP Login with compute service account"
                         gcloud auth login $env:ENV_VM_SERVICEACCOUNT
 
+                        Add-MpPreference -ExclusionProcess c:\dev\agent
+                        Add-MpPreference -ExclusionProcess Manipula.exe
+                        Add-MpPreference -ExclusionProcess InstrumentBuilder.exe
+
+
              - task: PowerShell@2
                displayName: Deliver OPN Instruments
                inputs:
                 filePath: '$(Agent.BuildDirectory)/s/scripts/opn/DeliverOpnInstruments.ps1'
+                pwsh: true
+                failOnStderr: false
 
              - task: PowerShell@2
                displayName: Clean up temp folders
@@ -70,3 +88,6 @@ stages:
                 targetType: 'inline'
                 script: |
                   Remove-Item -Recurse -Force $env:TempPath
+                  Remove-MpPreference -ExclusionProcess c:\dev\agent
+                  Remove-MpPreference -ExclusionProcess Manipula.exe
+                  Remove-MpPreference -ExclusionProcess InstrumentBuilder.exe
