@@ -15,7 +15,7 @@ variables:
   - name: ServerParkName
     value: gusty
   - name: SurveyType
-    value: LMS
+    value: LM
   - name: PackageExtension
     value: zip
   - name: TempPath
