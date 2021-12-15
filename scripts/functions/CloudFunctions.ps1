@@ -48,8 +48,8 @@ function DownloadFileFromBucket {
         throw "No bucket name provided"
     }
 
-    If (-not (Test-Path $filePath)) {
-        throw "$filePath not found"
+    If ([string]::IsNullOrEmpty($filePath)) {
+        throw "No file path provided"
     }
 
     LogInfo("Downloading '$instrumentFileName' from '$bucketName' to '$bucketName'")
