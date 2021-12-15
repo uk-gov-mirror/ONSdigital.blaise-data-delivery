@@ -27,8 +27,6 @@ try {
     $serverParkName = $env:ServerParkName
     LogInfo("Server park name: $ServerParkName")
 
-    BLAISE_SERVERPARK
-
     # Retrieve a list of active instruments in CATI for a particular survey type I.E OPN
     $instruments = GetListOfInstrumentsBySurveyType -restApiBaseUrl $restAPIUrl -surveyType $surveyType
 
