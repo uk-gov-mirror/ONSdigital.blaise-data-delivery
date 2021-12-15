@@ -48,7 +48,7 @@ try {
         $process = GetProcess -instrument $_ -sync $using:sync
 
         try {
-            . "$using:dqsBucketPSScriptRoot\..\functions\LoggingFunctions.ps1"
+            . "$using:PSScriptRoot\..\functions\LoggingFunctions.ps1"
             . "$using:PSScriptRoot\..\functions\FileFunctions.ps1"
             . "$using:PSScriptRoot\..\functions\DataDeliveryStatusFunctions.ps1"
             . "$using:PSScriptRoot\..\functions\RestApiFunctions.ps1"
