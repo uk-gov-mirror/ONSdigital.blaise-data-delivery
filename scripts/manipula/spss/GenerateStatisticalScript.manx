@@ -1398,7 +1398,7 @@ ENDPROCEDURE
 //  ENDDO  
 //  WriteLineToASCII('AsciiData.WRITE')
 //  toASCIIOut.CLOSE
-//  Rslt:=  RUN('"'+BlaiseSystemPath+'\QuestionnaireBuilder.exe" -F:"' + pPath+'\\'+pMan + '" -DP:"'+pPath+'"', HIDE, WAIT )
+//  Rslt:=  RUN('"'+BlaiseSystemPath+'\InstrumentBuilder.exe" -F:"' + pPath+'\\'+pMan + '" -DP:"'+pPath+'"', HIDE, WAIT )
 //ENDPROCEDURE
 
 PROCEDURE WriteManipulaProject
@@ -1499,7 +1499,7 @@ INSTRUCTIONS
     WriteLineToASCII('  CHARACTERSET = ANSI')
   ENDIF
   oASCII.CLOSE
-  Rslt:=  RUN('"'+BlaiseSystemPath+'QuestionnaireBuilder.exe" -F:"' + pPath+pMan + '" -DP:"'+ExtractFilePath(pBMI)+'"', HIDE, WAIT )
+  Rslt:=  RUN('"'+BlaiseSystemPath+'InstrumentBuilder.exe" -F:"' + pPath+pMan + '" -DP:"'+ExtractFilePath(pBMI)+'"', HIDE, WAIT )
   WriteManipulaProject(pPath,pMan)
   WriteCmdFileToStartExport(pPath,pMan)
 ENDPROCEDURE
@@ -1546,7 +1546,7 @@ INSTRUCTIONS
   ENDIF
   WriteLineToASCII('             )')
   oASCII.CLOSE
-  Rslt:=  RUN('"'+BlaiseSystemPath+'QuestionnaireBuilder.exe" -F:"' + pMan + '"', HIDE, WAIT )
+  Rslt:=  RUN('"'+BlaiseSystemPath+'InstrumentBuilder.exe" -F:"' + pMan + '"', HIDE, WAIT )
   GenerateandPrepareBlaxForSelection  
   WriteManipulaProject(ExtractFilePath(pMAN),ExtractFileName(pMan))
   WriteCmdFileToStartExport(ExtractFilePath(pMAN),ExtractFileName(pMan))
@@ -1658,7 +1658,7 @@ INSTRUCTIONS
   ENDDO
   WriteLineToASCII('ENDMODEL')
   oASCII.CLOSE
-  Rslt:=  RUN('"'+BlaiseSystemPath+'QuestionnaireBuilder.exe" -F:"' + aBlax + '" -P:- -L:-', HIDE, WAIT )
+  Rslt:=  RUN('"'+BlaiseSystemPath+'InstrumentBuilder.exe" -F:"' + aBlax + '" -P:- -L:-', HIDE, WAIT )
   WriteDatamodelProject(ExtractFilePath(ScriptName),'ExportSelectedData_'+ReplaceExtension(ExtractFileName(DictionaryFileName),'')+'_'+iFNames.FILENAME+'.blax')
 ENDPROCEDURE
 
