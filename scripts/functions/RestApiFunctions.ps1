@@ -7,7 +7,7 @@ function GetListOfQuestionnairesBySurveyType {
         [string] $serverParkName
     )
 
-    $questionnairesUri = "$restApiBaseUrl/api/v1/serverparks/$($serverParkName)/questionnaires"
+    $questionnairesUri = "$restApiBaseUrl/api/v2/serverparks/$($serverParkName)/questionnaires"
     $allQuestionnaires = Invoke-RestMethod -Method Get -Uri $questionnairesUri
 
     LogInfo("Calling $questionnairesUri to get list of questionnaires")
