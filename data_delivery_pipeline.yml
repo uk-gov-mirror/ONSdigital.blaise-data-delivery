@@ -73,7 +73,7 @@ stages:
                     New-Item -ItemType Directory -Force -Path $env:TempPath
                     Add-MpPreference -ExclusionProcess c:\dev\agent
                     Add-MpPreference -ExclusionProcess Manipula.exe
-                    Add-MpPreference -ExclusionProcess QuestionnaireBuilder.exe
+                    Add-MpPreference -ExclusionProcess InstrumentBuilder.exe
 
                - task: PowerShell@2
                  displayName: Deliver Questionnaires
@@ -89,4 +89,4 @@ stages:
                     Remove-Item -Recurse -Force $env:TempPath
                     Remove-MpPreference -ExclusionProcess c:\dev\agent
                     Remove-MpPreference -ExclusionProcess Manipula.exe
-                    Remove-MpPreference -ExclusionProcess QuestionnaireBuilder.exe
+                    Remove-MpPreference -ExclusionProcess InstrumentBuilder.exe
