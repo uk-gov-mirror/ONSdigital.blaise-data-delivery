@@ -1532,7 +1532,7 @@ AUXFIELDS
 INSTRUCTIONS
 {$IFNDEF NOPREPARE}
   DISPLAY('Preparing solution '+[[Data.Datamodel.Name]]+'_AsciiRel.bsol (#Projects='+STR(ProjectCount)+')',HOURGLASS)
-  RunRes:= RUN('"'+ExtractFilePath(PARAMETER(0))+'\InstrumentBuilder.exe" -F:"'+BlaiseSol.PATHNAME+BlaiseSol.FILENAME+'" -FP:+ -P:- -VERBOSE:+ -BP:- -L:-',HIDE,WAIT)
+  RunRes:= RUN('"'+ExtractFilePath(PARAMETER(0))+'\QuestionnaireBuilder.exe" -F:"'+BlaiseSol.PATHNAME+BlaiseSol.FILENAME+'" -FP:+ -P:- -VERBOSE:+ -BP:- -L:-',HIDE,WAIT)
   IF RunRes<>0 or RunResult<>0 THEN 
     CLEARDISPLAY 
     DISPLAY('Error '+STR(RunResult)+' preparing solution', WAIT) 
