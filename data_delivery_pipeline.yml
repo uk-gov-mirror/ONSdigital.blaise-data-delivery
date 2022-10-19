@@ -5,10 +5,6 @@ parameters:
     displayName: Environment to use
   - name: SurveyType
     displayName: Survey type
-  - name: BlaiseLicenseKey
-    displayName: Blaise license key   
-  - name: BlaiseActivationKey
-    displayName: Blaise activation key  
   - name: Questionnaires
     displayName: Questionnaires seperated by commas
     default: ' '
@@ -54,7 +50,7 @@ stages:
                  displayName: Register Blaise via registry
                  inputs:
                   filePath: '$(Agent.BuildDirectory)/s/scripts/BlaiseLicenseKeyRegistryHack.ps1'
-                  arguments: '-BLAISE_LICENSE_KEY ${{parameters.BlaiseLicenseKey}} -BLAISE_ACTIVATION_CODE ${{parameters.BlaiseActivationKey}}'
+                  arguments: '-BLAISE_LICENSE_KEY $env:ENV_BLAISE_LICENSE_KEY -BLAISE_ACTIVATION_CODE $env:ENV_BLAISE_ACTIVATION_CODE'
 
                - task: PowerShell@2
                  displayName: Download Manipula Package
