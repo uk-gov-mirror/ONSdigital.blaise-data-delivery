@@ -50,7 +50,7 @@ stages:
                  displayName: Register Blaise via registry
                  inputs:
                   filePath: '$(Agent.BuildDirectory)/s/scripts/BlaiseLicenseKeyRegistryHack.ps1'
-                  arguments: '-BLAISE_LICENSE_KEY $env:ENV_BLAISE_LICENSE_KEY -BLAISE_ACTIVATION_CODE $env:ENV_BLAISE_ACTIVATION_CODE'
+                  arguments: '-BLAISE_LICENSE_KEY $(ENV_BLAISE_LICENSE_KEY) -BLAISE_ACTIVATION_CODE $(ENV_BLAISE_ACTIVATION_CODE)'
 
                - task: PowerShell@2
                  displayName: Download Manipula Package
