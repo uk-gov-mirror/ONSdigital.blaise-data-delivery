@@ -52,7 +52,7 @@ function DownloadFileFromBucket {
         throw "No file path provided"
     }
 
-    LogInfo("Downloading '$questionnaireFileName' from '$bucketName' to '$bucketName'")
+    LogInfo("Downloading '$questionnaireFileName' from '$bucketName' to '$filePath'")
 
     $output = & cmd /c "gsutil 2>&1" cp gs://$bucketName/$questionnaireFileName $filePath
 
@@ -60,5 +60,5 @@ function DownloadFileFromBucket {
         throw "Failed to download '$questionnaireFileName' from '$bucketName': '$output'"
     }
 
-    LogInfo("Downloaded '$questionnaireFileName' from '$bucketName' to '$bucketName'")
+    LogInfo("Downloaded '$questionnaireFileName' from '$bucketName' to '$filePath'")
 }

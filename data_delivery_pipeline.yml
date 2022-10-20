@@ -46,15 +46,12 @@ stages:
                  inputs:
                       secureFile: 'ons-blaise-v2-shared-221e50eb36c7.json'
           
-               - task: DownloadSecureFile@1
-                 displayName: 'Download blaise registry file'
-                 name: BlaiseRegistrySettings
+               - task: PowerShell@2
+                 displayName: Register Blaise via registry
                  inputs:
-                  secureFile: blaise.reg
+                  filePath: '$(Agent.BuildDirectory)/s/scripts/BlaiseLicenseKeyRegistryHack.ps1'
+                  arguments: '-BLAISE_LICENSE_KEY $(ENV_BLAISE_LICENSE_KEY) -BLAISE_ACTIVATION_CODE $(ENV_BLAISE_ACTIVATION_CODE)'
 
-               - powershell: |
-                  regedit /i /s $(BlaiseRegistrySettings.secureFilePath)	
-                 displayName: 'Register Blaise License'
                - task: PowerShell@2
                  displayName: Download Manipula Package
                  inputs:
