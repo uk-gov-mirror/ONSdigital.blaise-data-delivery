@@ -8,5 +8,5 @@
 
     "createSubFolder" : false,
     "packageExtension" : "zip",
-    "auditTrailData" : false
+    "auditTrailData" : true
 }
