@@ -7,5 +7,6 @@
     },
 
     "createSubFolder" : false,
-    "packageExtension" : "zip"
+    "packageExtension" : "zip",
+    "auditTrailData" : false
 }
