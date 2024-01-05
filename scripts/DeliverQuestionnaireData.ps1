@@ -32,7 +32,7 @@ try {
     if ([string]::IsNullOrWhitespace($questionnaireList)) {
         # No questionnaires provided so retrieve a list of questionnaires for a particular survey type I.E OPN
         $questionnaires = GetListOfQuestionnairesBySurveyType -restApiBaseUrl $restAPIUrl -surveyType $surveyType -serverParkName $serverParkName
-        LogInfo("Retrieved list of questionnaires for survey type '$surveyType': $questionnaires")
+        LogInfo("Retrieved list of questionnaires for survey type '$surveyType': $($questionnaires | select -ExpandProperty name)") 
     }
     else {
         # List of questionnaires provided so retrieve a list of questionnaires specified
