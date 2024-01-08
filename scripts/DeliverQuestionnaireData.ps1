@@ -90,7 +90,8 @@ try {
             DownloadFileFromBucket -questionnaireFileName "$($_.name).bpkg" -bucketName $using:dqsBucket -filePath $deliveryFile
 
             # Populate data
-            $output = C:\BlaiseServices\BlaiseCli\blaise.cli datadelivery -s $using:serverParkName -q $_.name -f $deliveryFile -a $using:config.auditTrailData 2>&1
+            # the use of the parameter '2>&1' redirects output of the cli to the command line and will allow any errors to bubble up
+            C:\BlaiseServices\BlaiseCli\blaise.cli datadelivery -s $using:serverParkName -q $_.name -f $deliveryFile -a $using:config.auditTrailData 2>&1
             
             # Create a temporary folder for processing questionnaires
             $processingFolder = CreateANewFolder -folderPath $using:tempPath -folderName "$($_.name)_$(Get-Date -format "ddMMyyyy")_$(Get-Date -format "HHmmss")"
