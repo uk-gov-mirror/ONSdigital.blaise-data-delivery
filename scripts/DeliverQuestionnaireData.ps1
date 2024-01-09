@@ -8,6 +8,9 @@
 . "$PSScriptRoot\functions\ThreadingFunctions.ps1"
 . "$PSScriptRoot\functions\ConfigFunctions.ps1"
 
+    #Make all errors terminating
+    $ErrorActionPreference = "Stop"
+
 try {
     $ddsUrl = $env:ENV_DDS_URL
     LogInfo("DDS URL: $ddsUrl")
@@ -32,7 +35,7 @@ try {
     if ([string]::IsNullOrWhitespace($questionnaireList)) {
         # No questionnaires provided so retrieve a list of questionnaires for a particular survey type I.E OPN
         $questionnaires = GetListOfQuestionnairesBySurveyType -restApiBaseUrl $restAPIUrl -surveyType $surveyType -serverParkName $serverParkName
-        LogInfo("Retrieved list of questionnaires for survey type '$surveyType': $questionnaires")
+        LogInfo("Retrieved list of questionnaires for survey type '$surveyType': $($questionnaires | select -ExpandProperty name)") 
     }
     else {
         # List of questionnaires provided so retrieve a list of questionnaires specified
@@ -87,8 +90,9 @@ try {
             DownloadFileFromBucket -questionnaireFileName "$($_.name).bpkg" -bucketName $using:dqsBucket -filePath $deliveryFile
 
             # Populate data
-            C:\BlaiseServices\BlaiseCli\blaise.cli datadelivery -s $using:serverParkName -q $_.name -f $deliveryFile -a $using:config.auditTrailData
-
+            # the use of the parameter '2>&1' redirects output of the cli to the command line and will allow any errors to bubble up
+            C:\BlaiseServices\BlaiseCli\blaise.cli datadelivery -s $using:serverParkName -q $_.name -f $deliveryFile -a $using:config.auditTrailData 2>&1
+            
             # Create a temporary folder for processing questionnaires
             $processingFolder = CreateANewFolder -folderPath $using:tempPath -folderName "$($_.name)_$(Get-Date -format "ddMMyyyy")_$(Get-Date -format "HHmmss")"
 
