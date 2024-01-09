@@ -13,7 +13,7 @@ function GetListOfQuestionnairesBySurveyType {
 
 
     # Return a list of questionnaires for a particular survey type I.E OPN
-    return $allQuestionnaires | Where-Object { $_.name.StartsWith($surveyType) }
+    return $allQuestionnaires | Where-Object { $_.name.StartsWith($surveyType) -and $_.status -eq "Active"}
 }
 
 
