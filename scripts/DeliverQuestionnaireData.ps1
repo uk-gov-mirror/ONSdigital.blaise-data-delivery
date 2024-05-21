@@ -36,7 +36,7 @@ try {
         # No questionnaires provided so retrieve a list of questionnaires for a particular survey type I.E OPN
         $questionnaires = GetListOfQuestionnairesBySurveyType -restApiBaseUrl $restAPIUrl -surveyType $surveyType -serverParkName $serverParkName
         $questionnaires = $questionnaires | Where-Object { $_.Name -ne "IPS_ContactInfo" } # Filter out IPS_ContactInfo
-        LogInfo("Retrieved list of questionnaires for survey type '$surveyType': $($questionnaires | select -ExpandProperty name)") 
+        LogInfo("Retrieved list of questionnaires for survey type '$surveyType': $($questionnaires | Select-Object -ExpandProperty name)") 
     }
     else {
         # List of questionnaires provided so retrieve a list of questionnaires specified
@@ -44,7 +44,7 @@ try {
         LogInfo("Received a list of required questionnaires from pipeline '$questionnaire_names'")
         $questionnaires = GetListOfQuestionnairesByNames -restApiBaseUrl $restAPIUrl -serverParkName $serverParkName -questionnaire_names $questionnaire_names
         $questionnaires = $questionnaires | Where-Object { $_.Name -ne "IPS_ContactInfo" } # Filter out IPS_ContactInfo
-        LogInfo("Retrieved list of questionnaires specified $($questionnaires | select -ExpandProperty name)")
+        LogInfo("Retrieved list of questionnaires specified $($questionnaires | Select-Object -ExpandProperty name)")
     }
 
     # No questionnaires found/supplied
@@ -62,7 +62,7 @@ try {
     $sync = CreateQuestionnaireSync -questionnaires $questionnaires
 
     # Deliver the questionnaire package with data for each active questionnaire
-    $questionnaires | ForEach-Object -ThrottleLimit 3 -Parallel {
+    $questionnaires | ForEach-Object -ThrottleLimit $config.throttleLimit -Parallel {
         . "$using:PSScriptRoot\functions\ThreadingFunctions.ps1"
 
         $process = GetProcess -questionnaire $_ -sync $using:sync
@@ -93,7 +93,7 @@ try {
 
             # Populate data
             # the use of the parameter '2>&1' redirects output of the cli to the command line and will allow any errors to bubble up
-            C:\BlaiseServices\BlaiseCli\blaise.cli datadelivery -s $using:serverParkName -q $_.name -f $deliveryFile -a $using:config.auditTrailData 2>&1
+            C:\BlaiseServices\BlaiseCli\blaise.cli datadelivery -s $using:serverParkName -q $_.name -f $deliveryFile -a $using:config.auditTrailData -b $using:config.batchSize 2>&1        
             
             # Create a temporary folder for processing questionnaires
             $processingFolder = CreateANewFolder -folderPath $using:tempPath -folderName "$($_.name)_$(Get-Date -format "ddMMyyyy")_$(Get-Date -format "HHmmss")"
@@ -110,10 +110,12 @@ try {
             }
             else {
                 # This variable will be ignored in the fucntion called if passed - ugh
+                LogInfo("Did not create subfolder for delivery")
                 $processingSubFolder = $NULL
             }
 
             #Add manipula and questionnaire package to processing folder
+            LogInfo("Add manipula")
             AddManipulaToProcessingFolder -manipulaPackage "$using:tempPath/manipula.zip" -processingFolder $processingFolder -deliveryFile $deliveryFile -tempPath $using:tempPath
 
             # Generate and add SPSS files if configured
