@@ -55,6 +55,6 @@ The default configuration delivers the Blaise data along with SPSS and ASCII for
 1. Manipula generates various data formats (CSV, JSON, SPSS, ASCII).
 1. PowerShell zips data and places it in NiFi staging bucket.
 1. Cloud function encrypts the zip and moves it to the NiFi bucket.
-1, Another cloud function publishes zip metadata to Pub/Sub.
+1. Another cloud function publishes zip metadata to Pub/Sub.
 1. NiFi monitors the Pub/Sub topic.
 1. NiFi consumes the message, unzips the data, and delivers it on-premises.
