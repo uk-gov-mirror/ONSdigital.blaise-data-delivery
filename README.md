@@ -19,7 +19,8 @@ Survey configurations are defined in JSON files within the `configurations` fold
     "packageExtension" : "zip",
     "auditTrailData" : true,
     "batchSize" : 0,
-    "throttleLimit" : 3
+    "throttleLimit" : 3,
+    "hasEditMode": false 
 }
 ```
 
