@@ -42,16 +42,26 @@ def deliver_sandbox_dd_files_to_dev(data, context):
 
 def get_environment_suffix(environment):
     parts = environment.split("-")
-    if len(parts) >= 5 and parts[:3] == ["ons", "blaise", "v2", "dev"]:
-        return parts[4]
-    return None
+    return parts[len(parts)-1]
 
 def split_filename(filename):
-    parts = filename.rsplit("_", 2)
-    if len(parts) == 3:
-        prefix = "_".join(parts[:2])
-        suffix = parts[2]  
-        return prefix, suffix
+    print("in func")
+    print(filename)
+    filename = ''.join(filename)
+    if "IPS" not in filename:
+        print("NON-IPS block")
+        parts = filename.rsplit("_", 2)
+        if len(parts) == 3:
+            prefix = "_".join(parts[:2])
+            suffix = parts[2]  
+            return prefix, suffix
+    if "IPS" in filename:
+        print("IPS block")
+        parts = filename.rsplit("_", 1)
+        if len(parts) ==2:
+            prefix = "_".join(parts[:1])
+            suffix = parts[1]  
+            return prefix, suffix
     return None, None
 
 def extract_tla(prefix):
