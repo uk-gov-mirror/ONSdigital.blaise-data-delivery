@@ -24,5 +24,4 @@ jobs:
           poetry install
       - name: Run unittest
         run: |
-          poetry run python -m unittest --cov=./
-          poetry run python -m coverage xml -i
+          poetry run python -m unittest
