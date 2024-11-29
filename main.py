@@ -10,6 +10,7 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
         
         bucket_name = data["bucket"]
         file_name = data["name"]
+        print(file_name)
 
         if("mi" not in file_name and "dd" in file_name):
 
