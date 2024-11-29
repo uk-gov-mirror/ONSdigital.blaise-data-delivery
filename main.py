@@ -7,6 +7,7 @@ setup_logger()
 
 def deliver_sandbox_dd_files_to_dev(data, _context):
 
+    logging.info(f"Sandbox Data Delivery Process triggered:")
     try:
         if(data == None or data == {}):
             raise ValueError("Not a valid request object")
@@ -14,7 +15,7 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
         bucket_name = data["bucket"]
         file_name = data["name"]
 
-        logging.info(f"Sandbox Data Delivery Process triggered:")
+        
         logging.info(f"File received: {file_name}")
 
         if("mi" not in file_name and "dd" in file_name):
