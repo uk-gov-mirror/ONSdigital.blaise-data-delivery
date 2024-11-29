@@ -1,44 +1,46 @@
 from google.cloud import storage
+import logging
 import os
 
-def deliver_sandbox_dd_files_to_dev(data, context):
-     # Extract bucket and file information from the event
-    bucket_name = data["bucket"]
-    file_name = data["name"]
+def deliver_sandbox_dd_files_to_dev(data, _context):
 
-    # Create the storage client
-    storage_client = storage.Client()
+    try:
+        if(data == None or data == {}):
+            raise ValueError("Not a valid request object")
+        
+        bucket_name = data["bucket"]
+        file_name = data["name"]
 
-    # Set the destination bucket name
-    destination_bucket_name = "ons-blaise-v2-dev-nifi"
+        if("mi" not in file_name and "dd" in file_name):
 
+            storage_client = storage.Client()
 
-    # sample file name ons-blaise-v2-dev-ips-nifi/dd_IPS2411A_26112024_060148.zip
-    # Modify the filename - ensure to swap out "loadtest2" with a given string
+            destination_bucket_name = "ons-blaise-v2-dev-nifi"
 
-    env_suffix = get_environment_suffix(bucket_name)
-    filename, fileExtension = os.path.splitext(file_name)  #removes extension only
-    
-    prefix, suffix = split_filename(filename) 
+            env_suffix = get_environment_suffix(bucket_name)
+            filename, fileExtension = os.path.splitext(file_name)  #removes extension only
+            
+            prefix, suffix = split_filename(filename) 
 
-    new_file_name = f"{prefix}_{env_suffix}_{extract_tla(prefix=prefix)}_{suffix}{fileExtension}"
+            new_file_name = f"{prefix}_{env_suffix}_{extract_tla(prefix=prefix)}_{suffix}{fileExtension}"
 
-    print(f"New file name {new_file_name}")
+            print(f"New file name {new_file_name}")
 
-    # Get source and destination bucket objects
-    source_bucket = storage_client.bucket(bucket_name)
-    destination_bucket = storage_client.bucket(destination_bucket_name)
+            # Get source and destination bucket objects
+            source_bucket = storage_client.bucket(bucket_name)
+            destination_bucket = storage_client.bucket(destination_bucket_name)
 
-    # Get the source blob (file)
-    source_blob = source_bucket.blob(file_name)
+            source_blob = source_bucket.blob(file_name)
 
-    # Copy the blob to the destination bucket with the new name
-    new_blob = source_bucket.copy_blob(
-        source_blob, destination_bucket, new_file_name
-    )
+            new_blob = source_bucket.copy_blob(source_blob, destination_bucket, new_file_name)
 
-    print(f"File {file_name} copied to {destination_bucket_name}/{new_file_name}") 
-
+            print(f"File {file_name} copied to {destination_bucket_name}/{new_file_name}") 
+        else:
+            logging.info("Non-dd file received, no data delivery needed")
+            return
+    except Exception as e:
+        logging.error(f"An error occured while trying to run the data-delivery-function. Exception: {e}")
+        return
 
 def get_environment_suffix(environment):
     parts = environment.split("-")
@@ -46,23 +48,15 @@ def get_environment_suffix(environment):
 
 def split_filename(filename):
     filename = ''.join(filename)
-    if "IPS" in filename:
-        parts = filename.rsplit("_",2)
-        if len(parts) == 3:
-            prefix = parts[0]
-            suffix = "_".join(parts[1:])
-            return prefix, suffix
-    else:
-        parts = filename.rsplit("_", 2)
-        if len(parts) == 3:
-            prefix = parts[0]
-            suffix = "_".join(parts[1:])
-            return prefix, suffix
     
+    parts = filename.rsplit("_",2)
+    if len(parts) == 3:
+        prefix = parts[0]
+        suffix = "_".join(parts[1:])
+        return prefix, suffix
     return None, None
 
 def extract_tla(prefix):
+    prefix = ''.join(prefix)
     parts = prefix.split("_")
-    if len(parts) >= 2:
-        return parts[1][:3]
-    return None
+    return parts[1][:3]
