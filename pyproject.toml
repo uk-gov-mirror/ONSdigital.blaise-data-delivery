@@ -2,7 +2,7 @@
 name = "blaise-data-delivery-functions"
 version = "0.1.0"
 description = "A GCP Cloud Function to copy files from sandbox bucket to dev bucket"
-authors = [""]
+authors = ["Sidra <sidra.javed@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
