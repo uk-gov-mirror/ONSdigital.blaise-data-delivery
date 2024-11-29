@@ -10,7 +10,6 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
         
         bucket_name = data["bucket"]
         file_name = data["name"]
-        print(file_name)
 
         if("mi" not in file_name and "dd" in file_name):
 
@@ -43,9 +42,10 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
         logging.error(f"An error occured while trying to run the data-delivery-function. Exception: {e}")
         return
 
-def get_environment_suffix(environment):
-    parts = environment.split("-")
-    return parts[len(parts)-1]
+def get_environment_suffix(bucket_name):
+    parts = bucket_name.split("-")
+    env_suffix = parts[len(parts)-2]
+    return env_suffix
 
 def split_filename(filename):
     filename = ''.join(filename)

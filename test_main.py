@@ -147,11 +147,11 @@ class TestDeliverDataFunction(unittest.TestCase):
         assert received_tla == expected_tla
 
     @parameterized.expand([
-        ("ons-blaise-v2-dev-rr3", "rr3"),
-        ("ons-blaise-v2-dev-sj03", "sj03"),
-        ("ons-blaise-v2-dev-loadtest2", "loadtest2"),
+        ("ons-blaise-v2-dev-rr3-nifi", "rr3"),
+        ("ons-blaise-v2-dev-sj03-nifi", "sj03"),
+        ("ons-blaise-v2-dev-loadtest2-nifi", "loadtest2"),
     ])
-    def test_get_environment_suffix(self, environment, expected_env_suffix):
+    def test_get_environment_suffix(self, bucket_name, expected_env_suffix):
        
-        received_env_suffix = get_environment_suffix(environment)
+        received_env_suffix = get_environment_suffix(bucket_name)
         assert received_env_suffix == expected_env_suffix
