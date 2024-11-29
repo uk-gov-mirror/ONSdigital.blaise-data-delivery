@@ -4,6 +4,7 @@ import os
 
 def deliver_sandbox_dd_files_to_dev(data, _context):
 
+    logger = logging.getLogger()
     try:
         if(data == None or data == {}):
             raise ValueError("Not a valid request object")
@@ -36,10 +37,10 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
 
             print(f"File {file_name} copied to {destination_bucket_name}/{new_file_name}") 
         else:
-            logging.info("Non-dd file received, no data delivery needed")
+            logger.info("Non-dd file received, no data delivery needed")
             return
     except Exception as e:
-        logging.error(f"An error occured while trying to run the data-delivery-function. Exception: {e}")
+        logger.error(f"An error occured while trying to run the data-delivery-function. Exception: {e}")
         return
 
 def get_environment_suffix(bucket_name):
