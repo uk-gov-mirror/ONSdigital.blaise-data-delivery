@@ -45,27 +45,24 @@ def get_environment_suffix(environment):
     return parts[len(parts)-1]
 
 def split_filename(filename):
-    print("in func")
-    print(filename)
     filename = ''.join(filename)
-    if "IPS" not in filename:
-        print("NON-IPS block")
+    if "IPS" in filename:
+        parts = filename.rsplit("_",2)
+        if len(parts) == 3:
+            prefix = parts[0]
+            suffix = "_".join(parts[1:])
+            return prefix, suffix
+    else:
         parts = filename.rsplit("_", 2)
         if len(parts) == 3:
-            prefix = "_".join(parts[:2])
-            suffix = parts[2]  
+            prefix = parts[0]
+            suffix = "_".join(parts[1:])
             return prefix, suffix
-    if "IPS" in filename:
-        print("IPS block")
-        parts = filename.rsplit("_", 1)
-        if len(parts) ==2:
-            prefix = "_".join(parts[:1])
-            suffix = parts[1]  
-            return prefix, suffix
+    
     return None, None
 
 def extract_tla(prefix):
     parts = prefix.split("_")
     if len(parts) >= 2:
-        return parts[1][:3]  # Extract the 'TLA' part
+        return parts[1][:3]
     return None

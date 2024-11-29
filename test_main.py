@@ -98,22 +98,18 @@ class TestDeliverDataFunction(unittest.TestCase):
 
     def test_split_filename(self):
        
-        filename = "dd_FRS2411_AA1_26112024_060148.zip",
+        filename = "dd_FRS2411_AA1_26112024_060148",
         
-
-        # Call the function
         prefix , suffix = split_filename(filename)
-        print(prefix)
-        # Assertions
-        #assert prefix == 'dd_FRS2411_AA1'
+       
+        assert prefix == 'dd_FRS2411_AA1'
+        assert suffix == '26112024_060148'
 
     def test_split_filename_ips(self):
        
-        filename = "dd_IPS4211A_26112024_060148.zip",
+        filename = "dd_IPS4211A_26112024_060148",
         
-
-        # Call the function
         prefix , suffix = split_filename(filename)
-        print(prefix)
-        # Assertions
-        #assert prefix == 'dd_FRS2411_AA1'
+       
+        assert prefix == 'dd_IPS4211A'
+        assert suffix == '26112024_060148'
