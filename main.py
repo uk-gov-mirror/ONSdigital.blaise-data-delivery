@@ -47,8 +47,9 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
             logging.info("Non-dd file received, no data delivery needed")
             return
     except Exception as e:
-        logging.error(f"An error occured while trying to run the data-delivery-function. Exception: {e}")
-        return
+        error = f"An error occured while trying to run the data-delivery-function. Exception: {e}"
+        logging.error(error)
+        return error, 500
 
 def get_environment_suffix(bucket_name):
     parts = bucket_name.split("-")

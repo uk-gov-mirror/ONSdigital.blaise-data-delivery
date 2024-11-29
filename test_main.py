@@ -108,7 +108,10 @@ class TestDeliverDataFunction(unittest.TestCase):
 
         deliver_sandbox_dd_files_to_dev(data, context)
 
-        mock_info.assert_called_once_with("Non-dd file received, no data delivery needed")
+        assert 3 == mock_info.call_count
+        last_logged_message = mock_info.call_args_list[-1][0][0]
+        
+        self.assertEqual(last_logged_message, "Non-dd file received, no data delivery needed")
 
     @patch('main.logging.error')
     def test_deliver_sandbox_dd_files_to_dev_should_raise_exception_for_null_data_trigger(self, mock_error, ):
