@@ -7,8 +7,7 @@ setup_logger()
 
 def deliver_sandbox_dd_files_to_dev(data, _context):
 
-    logging.info(f"Sandbox Data Delivery Process triggered:")
-    print(f"Data received: {data}")
+    logging.info(f"Sandbox Data Delivery Process triggered")
     try:
         if(data == None or data == {}):
             raise ValueError("Not a valid request object")
