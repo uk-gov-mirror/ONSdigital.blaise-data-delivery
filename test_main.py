@@ -1,18 +1,16 @@
-
 import unittest
 from unittest.mock import patch, MagicMock
 from parameterized import parameterized
 
 import os
-from main import deliver_sandbox_dd_files_to_dev, get_environment_suffix, split_filename, extract_tla
+from main import deliver_sandbox_dd_files_to_dev, get_environment_suffix, split_filename
 
 class TestDeliverDataFunction(unittest.TestCase):
    
     @patch("main.storage.Client")  
     @patch("main.get_environment_suffix")  
     @patch("main.split_filename") 
-    @patch("main.extract_tla")
-    def test_deliver_sandbox_dd_files_to_dev_for_IPS_DD_File(self, mock_extract_tla, mock_split_filename, mock_get_environment_suffix, mock_storage_client):
+    def test_deliver_sandbox_dd_files_to_dev_for_IPS_DD_File(self, mock_split_filename, mock_get_environment_suffix, mock_storage_client):
        
         data = {
             "bucket": "ons-blaise-v2-dev-ips-bucketname",
@@ -22,7 +20,6 @@ class TestDeliverDataFunction(unittest.TestCase):
 
         mock_get_environment_suffix.return_value = "ips"
         mock_split_filename.return_value = ("dd_IPS2411A", "26112024_060148")
-        mock_extract_tla.return_value = "IPS"
 
         # Mock storage client and bucket behavior
         mock_client_instance = MagicMock()
@@ -42,22 +39,20 @@ class TestDeliverDataFunction(unittest.TestCase):
         mock_get_environment_suffix.assert_called_once_with("ons-blaise-v2-dev-ips-bucketname")
         filename = os.path.splitext(data["name"])[0]
         mock_split_filename.assert_called_once_with(filename)
-        mock_extract_tla.assert_called_once_with(prefix="dd_IPS2411A")
 
         mock_storage_client.assert_called_once()
         mock_client_instance.bucket.assert_any_call("ons-blaise-v2-dev-ips-bucketname")
 
         mock_source_bucket.blob.assert_called_once_with("dd_IPS2411A_26112024_060148.zip")
         mock_source_bucket.copy_blob.assert_called_once_with(
-            mock_source_blob, mock_destination_bucket, "dd_IPS2411A_ips_IPS_26112024_060148.zip"
+            mock_source_blob, mock_destination_bucket, "dd_IPS2411A_sandbox_ips_26112024_060148.zip"
         )
 
 
     @patch("main.storage.Client")  
     @patch("main.get_environment_suffix")  
     @patch("main.split_filename") 
-    @patch("main.extract_tla")
-    def test_deliver_sandbox_dd_files_to_dev_for_FRS_DD_File(self, mock_extract_tla, mock_split_filename, mock_get_environment_suffix, mock_storage_client):
+    def test_deliver_sandbox_dd_files_to_dev_for_FRS_DD_File(self, mock_split_filename, mock_get_environment_suffix, mock_storage_client):
        
         data = {
             "bucket": "ons-blaise-v2-dev-loadtest2-bucketname",
@@ -67,7 +62,6 @@ class TestDeliverDataFunction(unittest.TestCase):
 
         mock_get_environment_suffix.return_value = "loadtest2"
         mock_split_filename.return_value = ("dd_FRS2411_AA1", "26112024_060148")
-        mock_extract_tla.return_value = "FRS"
 
         # Mock storage client and bucket behavior
         mock_client_instance = MagicMock()
@@ -87,14 +81,13 @@ class TestDeliverDataFunction(unittest.TestCase):
         mock_get_environment_suffix.assert_called_once_with("ons-blaise-v2-dev-loadtest2-bucketname")
         filename = os.path.splitext(data["name"])[0]
         mock_split_filename.assert_called_once_with(filename)
-        mock_extract_tla.assert_called_once_with(prefix="dd_FRS2411_AA1")
 
         mock_storage_client.assert_called_once()
         mock_client_instance.bucket.assert_any_call("ons-blaise-v2-dev-loadtest2-bucketname")
 
         mock_source_bucket.blob.assert_called_once_with("dd_FRS2411_AA1_26112024_060148.zip")
         mock_source_bucket.copy_blob.assert_called_once_with(
-            mock_source_blob, mock_destination_bucket, "dd_FRS2411_AA1_loadtest2_FRS_26112024_060148.zip"
+            mock_source_blob, mock_destination_bucket, "dd_FRS2411_AA1_sandbox_loadtest2_26112024_060148.zip"
         )
 
     @patch('main.logging.info') 
@@ -138,16 +131,6 @@ class TestDeliverDataFunction(unittest.TestCase):
         assert received_prefix == expected_prefix
         assert received_suffix == expected_suffix
 
-
-    @parameterized.expand([
-        ("dd_FRS2411_AA1", "FRS"),
-        ("dd_IPS2411A", "IPS"),
-        ("dd_LMS2412A_AA1", "LMS"),
-    ])
-    def test_extract_tla(self, prefix, expected_tla):
-       
-        received_tla = extract_tla(prefix)
-        assert received_tla == expected_tla
 
     @parameterized.expand([
         ("ons-blaise-v2-dev-rr3-nifi", "rr3"),

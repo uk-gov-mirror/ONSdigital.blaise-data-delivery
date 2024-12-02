@@ -19,30 +19,28 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
         
         logging.info(f"File received: {file_name}")
 
-        if("mi" not in file_name and "dd" in file_name):
+        if("mi_" not in file_name and "dd_" in file_name):
 
             storage_client = storage.Client()
 
             destination_bucket_name = "ons-blaise-v2-dev-nifi"
 
             env_suffix = get_environment_suffix(bucket_name)
-            filename, fileExtension = os.path.splitext(file_name)  #removes extension only
+            filename, fileExtension = os.path.splitext(file_name)  #splits at extension only
             
             prefix, suffix = split_filename(filename) 
 
-            new_file_name = f"{prefix}_{env_suffix}_{extract_tla(prefix=prefix)}_{suffix}{fileExtension}"
+            #new_file_name = f"{prefix}_{env_suffix}_{extract_tla(prefix=prefix)}_{suffix}{fileExtension}"
+            new_file_name = f"{prefix}_sandbox_{env_suffix}_{suffix}{fileExtension}"
 
-            print(f"New file name {new_file_name}")
-
-            # Get source and destination bucket objects
             source_bucket = storage_client.bucket(bucket_name)
             destination_bucket = storage_client.bucket(destination_bucket_name)
 
             source_blob = source_bucket.blob(file_name)
 
-            new_blob = source_bucket.copy_blob(source_blob, destination_bucket, new_file_name)
+            source_bucket.copy_blob(source_blob, destination_bucket, new_file_name)
 
-            print(f"File {file_name} copied to {destination_bucket_name}/{new_file_name}") 
+            logging.info(f"File {file_name} copied to {destination_bucket_name} renamed as {new_file_name}") 
         else:
             logging.info("Non-dd file received, no data delivery needed")
             return
@@ -65,8 +63,3 @@ def split_filename(filename):
         suffix = "_".join(parts[1:])
         return prefix, suffix
     return None, None
-
-def extract_tla(prefix):
-    prefix = ''.join(prefix)
-    parts = prefix.split("_")
-    return parts[1][:3]
