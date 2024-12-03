@@ -29,7 +29,6 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
             
             prefix, suffix = split_filename(filename) 
 
-            #new_file_name = f"{prefix}_{env_suffix}_{extract_tla(prefix=prefix)}_{suffix}{fileExtension}"
             new_file_name = f"{prefix}_sandbox_{env_suffix}_{suffix}{fileExtension}"
 
             source_bucket = storage_client.bucket(bucket_name)
