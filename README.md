@@ -58,3 +58,17 @@ The default configuration delivers the Blaise data along with SPSS and ASCII for
 1. Another cloud function publishes zip metadata to Pub/Sub.
 1. NiFi monitors the Pub/Sub topic.
 1. NiFi consumes the message, unzips the data, and delivers it on-premises.
+
+## Sandbox data delivery cloud function
+
+An automated solution for delivering survey data files from a sandbox NiFi Google Cloud Storage bucket to the development (dev) NiFi Google Cloud Storage bucket.\
+This supports future survey uplifts and testing in sandbox environments by delivering test data to the development (dev) environment for business approval.\
+The cloud function also renames files to distinguish them from normal survey data.
+
+## Sandbox data delivery process
+
+1. A `.zip` file containing survey data arrives in the sandbox NiFi bucket.
+1. The cloud function is triggered and determines if the filename starts with `dd_<survey>_<timestamp>.zip`.
+1. If the prefix `dd` is found, the process continues, otherwise it is ignored.
+1. It renames the file to include the sandbox/environment suffix, like so:  ```dd_<survey>_sandbox_<env_suffix>_<timestamp>.zip```
+1. The renamed file is then copied into the development (dev) NiFi bucket.
