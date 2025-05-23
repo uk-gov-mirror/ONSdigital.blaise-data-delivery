@@ -19,5 +19,5 @@ Meta (var)
    
   MANIPULATE
     MyOutputFile.WRITE
-
+    MyOutputFile.flush
 END

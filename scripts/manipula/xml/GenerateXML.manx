@@ -17,6 +17,6 @@ USES
    
   MANIPULATE
     MyOutputFile.WRITE
-
+    MyOutputFile.flush
 END
 

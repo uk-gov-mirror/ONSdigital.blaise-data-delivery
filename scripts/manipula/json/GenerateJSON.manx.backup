@@ -1,6 +1,6 @@
 ﻿{
-Setup:        ExportAscii
-Date Created: 07/05/2021
+Setup:        ExportXml
+Date Created: 20/04/2021
 Author:       Nik
 }
 
@@ -11,14 +11,14 @@ Meta (var)
    MyInputFile: Meta ('inputfile.bdbx', BLAISE)
    
    OUTPUTFILE
-   MyOutputFile: Meta ('outputfile.asc', ASCII)
+   MyOutputFile: Meta ('outputfile.json', JSON)
 
   SETTINGS
     BUFFERSIZE = 1000
-    ADDUTF8BOM = NO
-    CHARACTERSET = ANSI
+    AddUTF8BOM = NO
    
   MANIPULATE
     MyOutputFile.WRITE
     MyOutputFile.flush
+
 END
