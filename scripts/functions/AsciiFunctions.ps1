@@ -12,8 +12,27 @@ function AddAsciiFilesToDeliveryPackage {
     Copy-Item -Path "$PSScriptRoot\..\manipula\ascii\GenerateAscii.msux" -Destination $processingFolder
     # Generate .ASC file
     try {
-        & cmd.exe /c $processingFolder\Manipula.exe "$processingFolder\GenerateAscii.msux" -A:True -Q:True -K:Meta="$processingFolder/$questionnaireName.bmix" -I:$processingFolder/$questionnaireName.bdbx -O:$processingFolder/$questionnaireName.asc
-        LogInfo("Generated the .ASC file")
+        $manipulaPath = Join-Path -Path $processingFolder -ChildPath "Manipula.exe"
+        $msuxPath = Join-Path -Path $processingFolder -ChildPath "GenerateAscii.msux"
+        $bmixPath = Join-Path -Path $processingFolder -ChildPath "$questionnaireName.bmix"
+        $bdbxPath = Join-Path -Path $processingFolder -ChildPath "$questionnaireName.bdbx"
+        $ascPath = Join-Path -Path $processingFolder -ChildPath "$questionnaireName.asc"
+
+        $arguments = @(
+            "`"$msuxPath`"",
+            "-A:True",
+            "-Q:True",
+            "-K:Meta=`"$bmixPath`"",
+            "-I:`"$bdbxPath`"", 
+            "-O:`"$ascPath`""      
+        )
+        $process = Start-Process -FilePath $manipulaPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+        if ($process.ExitCode -eq 0) {
+            LogInfo("Generated the .ASC file successfully for $questionnaireName")
+        }
+        else {
+            LogWarning("Generating ASCII Failed for $questionnaireName. Manipula.exe exited with code $($process.ExitCode)")
+        }
     }
     catch {
         LogWarning("Generating ASCII Failed for $questionnaireName : $($_.Exception.Message)")
