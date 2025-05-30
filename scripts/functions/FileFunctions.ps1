@@ -36,59 +36,136 @@ function GenerateBatchFileName {
 }
 
 function ExtractZipFile {
+    [CmdletBinding()]
     param (
         [string] $pathTo7zip,
         [string] $zipFilePath,
         [string] $destinationPath
     )
 
-    If (-not (Test-Path $zipFilePath)) {
-        throw "$zipFilePath not found"
+    if (-not (Test-Path $zipFilePath)) {
+        LogWarning "Zip file not found: '$zipFilePath'. Cannot extract."
+        return $false
     }
 
-    # 7zip extract - x = extract and keep folder structure of zup - o = output file can't have a space between -o and folder
-    & $pathTo7zip\7za x $zipFilePath -o"$destinationPath"
+    $exePath = Join-Path -Path $pathTo7zip -ChildPath "7za.exe"
+    if (-not (Test-Path $exePath)) {
+        LogWarning "7-Zip executable not found at '$exePath'."
+        return $false
+    }
 
-    LogInfo("Extracting zip file '$zipFilePath' to path '$destinationPath'")
+    $arguments = @(
+        "x", # Extract with full paths
+        "`"$zipFilePath`"", # Source ZIP file, quoted
+        "-o`"$destinationPath`"", # Output directory, quoted, no space after -o
+        "-y"  # Assume Yes to all queries (e.g., overwrite files)
+    )
+
+    LogInfo "Attempting to extract zip file '$zipFilePath' to path '$destinationPath'..."
+    try {
+        $process = Start-Process -FilePath $exePath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+        if ($process.ExitCode -eq 0) {
+            LogInfo "Successfully extracted zip file '$zipFilePath' to '$destinationPath'."
+            return $true
+        }
+        else {
+            LogWarning "7-Zip failed to extract '$zipFilePath'. Exit code: $($process.ExitCode)."
+            return $false
+        }
+    }
+    catch {
+        LogWarning "An error occurred while trying to run 7-Zip for extraction of '$zipFilePath': $($_.Exception.Message)"
+        return $false
+    }
 }
 
 function AddFilesToZip {
+    [CmdletBinding()]
     param (
         [string] $pathTo7zip,
         [string[]] $files,
         [string] $zipFilePath
     )
 
-    If ($files.count -eq 0) {
-        throw "No files provided"
+    if ($null -eq $files -or $files.Count -eq 0) {
+        LogWarning "No files provided to add to zip '$zipFilePath'."
+        return $false 
     }
 
-    If (-not (Test-Path $zipFilePath)) {
-        throw "$zipFilePath not found"
+    $exePath = Join-Path -Path $pathTo7zip -ChildPath "7za.exe"
+    if (-not (Test-Path $exePath)) {
+        LogWarning "7-Zip executable not found at '$exePath'."
+        return $false
     }
-    #7 zip CLI - a = add / append - Zip file to Create / append too - Files to add to the zip
-    & $pathTo7zip\7za a $zipFilePath $files
-    LogInfo("Added the file(s) '$files' to the zip file '$zipFilePath'")
+
+    $arguments = @(
+        "a", # Add to archive
+        "-tzip", # Specify ZIP archive type
+        "`"$zipFilePath`"" # Output ZIP file path, quoted
+    ) + $files.ForEach({ "`"$_`"" }) # Add each file, quoted
+
+    LogInfo "Attempting to add files to '$zipFilePath'. Files: $($files -join ', ')"
+    try {
+        $process = Start-Process -FilePath $exePath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+        if ($process.ExitCode -eq 0) {
+            LogInfo "Successfully added file(s) to '$zipFilePath'."
+            return $true
+        }
+        else {
+            LogWarning "7-Zip failed to add files to '$zipFilePath'. Exit code: $($process.ExitCode). Files: $($files -join ', ')"
+            return $false
+        }
+    }
+    catch {
+        LogWarning "An error occurred while trying to run 7-Zip to add files to '$zipFilePath': $($_.Exception.Message)"
+        return $false
+    }
 }
 
 function AddFolderToZip {
+    [CmdletBinding()]
     param (
         [string] $pathTo7zip,
         [string] $folder,
         [string] $zipFilePath
     )
 
-    If (-not (Test-Path $folder)) {
-        throw "$zipFilePath not found"
+    if (-not (Test-Path $folder -PathType Container)) {
+        LogWarning "Folder to zip not found or is not a directory: '$folder'."
+        return $false
     }
 
-    If (-not (Test-Path $zipFilePath)) {
-        throw "$zipFilePath not found"
+    $exePath = Join-Path -Path $pathTo7zip -ChildPath "7za.exe"
+    if (-not (Test-Path $exePath)) {
+        LogWarning "7-Zip executable not found at '$exePath'."
+        return $false
     }
 
-    #7 zip CLI - a = add / append - Zip file to Create / append too - Files to add to the zip
-    & $pathTo7zip\7za a $zipFilePath $folder
-    LogInfo("Added the folder '$folder' to the zip file '$zipFilePath'")
+    $sourcePathFor7zip = Join-Path -Path $folder -ChildPath "*" 
+
+    $arguments = @(
+        "a",
+        "-tzip",
+        "`"$zipFilePath`"",
+        "`"$sourcePathFor7zip`""
+    )
+
+    LogInfo "Attempting to add contents of folder '$folder' to '$zipFilePath'."
+    try {
+        $process = Start-Process -FilePath $exePath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+        if ($process.ExitCode -eq 0) {
+            LogInfo "Successfully added folder contents of '$folder' to '$zipFilePath'."
+            return $true
+        }
+        else {
+            LogWarning "7-Zip failed to add folder '$folder' to '$zipFilePath'. Exit code: $($process.ExitCode)."
+            return $false
+        }
+    }
+    catch {
+        LogWarning "An error occurred while trying to run 7-Zip to add folder '$folder' to '$zipFilePath': $($_.Exception.Message)"
+        return $false
+    }
 }
 
 function CreateANewFolder {
