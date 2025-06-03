@@ -157,11 +157,32 @@ function AddFilesToZip {
             LogInfo("Removed old zip file '$zipFilePath' before recreation.")
         }
 
-        & $exe a "`"$zipFilePath`"" "`"$tempWorkingDir\*`"" -y
-        if ($LASTEXITCODE -ne 0) {
-            throw "Failed to create new zip archive '$zipFilePath' from temporary directory '$tempWorkingDir'. Exit code: $LASTEXITCODE."
+        # Use Start-Process to capture output for this specific 7-Zip call
+        $createArguments = @(
+            "a", # Add to archive
+            "-tzip", # Specify ZIP archive type
+            "`"$zipFilePath`"", # Output ZIP file path, quoted
+            "`"$tempWorkingDir\*`"", # Add all contents from the temporary directory
+            "-y"  # Assume Yes to all queries
+        )
+        $createStdOutFile = Join-Path -Path $tempPath -ChildPath "7zip_create_final_stdout_$(Get-Random).log"
+        $createStdErrFile = Join-Path -Path $tempPath -ChildPath "7zip_create_final_stderr_$(Get-Random).log"
+
+        $createProcess = Start-Process -FilePath $exe -ArgumentList $createArguments -Wait -PassThru -NoNewWindow -RedirectStandardOutput $createStdOutFile -RedirectStandardError $createStdErrFile
+        
+        $createStdOutput = if (Test-Path $createStdOutFile) { Get-Content $createStdOutFile -Raw } else { "No standard output." }
+        $createStdError = if (Test-Path $createStdErrFile) { Get-Content $createStdErrFile -Raw } else { "No standard error." }
+
+        if ($createProcess.ExitCode -eq 0) {
+            LogInfo("Successfully created new zip archive '$zipFilePath' from contents of '$tempWorkingDir'.")
+            if ($createStdOutput -ne "No standard output." -and -not [string]::IsNullOrWhiteSpace($createStdOutput)) { LogInfo("7-Zip Create Output: $createStdOutput") }
+            if ($createStdError -ne "No standard error." -and -not [string]::IsNullOrWhiteSpace($createStdError)) { LogInfo("7-Zip Create Error Output (though successful, could be warnings): $createStdError") }
+        } else {
+            $errorMessage = "Failed to create new zip archive '$zipFilePath' from temporary directory '$tempWorkingDir'. Exit code: $($createProcess.ExitCode)."
+            $errorMessage += "`n7-Zip Create Standard Output:`n$createStdOutput"
+            $errorMessage += "`n7-Zip Create Standard Error:`n$createStdError"
+            throw $errorMessage
         }
-        LogInfo("Successfully created new zip archive '$zipFilePath' from contents of '$tempWorkingDir'.")
     }
     catch {
         throw "An error occurred during the zip update workaround for '$zipFilePath': $($_.Exception.Message)"
@@ -170,6 +191,8 @@ function AddFilesToZip {
         if (Test-Path $tempWorkingDir) {
             LogInfo("Cleaning up temporary working directory '$tempWorkingDir'.")
             Remove-Item -Path $tempWorkingDir -Recurse -Force -ErrorAction SilentlyContinue
+            if (Test-Path $createStdOutFile) { Remove-Item $createStdOutFile -ErrorAction SilentlyContinue }
+            if (Test-Path $createStdErrFile) { Remove-Item $createStdErrFile -ErrorAction SilentlyContinue }
         }
     }
 }
