@@ -51,17 +51,50 @@ function ExtractZipFile {
         New-Item -Path $destinationPath -ItemType Directory -Force -ErrorAction Stop | Out-Null
     }
 
-    $exe = Join-Path -Path $pathTo7zip -ChildPath "7za.exe"
-    if (-not (Test-Path $exe)) {
-        throw "7-Zip executable not found at '$exe'"
+    $exePath = Join-Path -Path $pathTo7zip -ChildPath "7za.exe"
+    if (-not (Test-Path $exePath)) {
+        throw "7-Zip executable for extraction not found at '$exePath'"
     }
 
-    LogInfo("Attempting to extract zip file '$zipFilePath' to path '$destinationPath' using '$exe'...")
-    & $exe x "`"$zipFilePath`"" -o"`"$destinationPath`"" -y
-    if ($LASTEXITCODE -ne 0) {
-        throw "7-Zip failed to extract '$zipFilePath'. Exit code: $LASTEXITCODE."
+    LogInfo("Using 7-Zip executable for extraction: $exePath")
+    $arguments = @(
+        "x", # Extract with full paths
+        "`"$zipFilePath`"", # Source ZIP file, quoted
+        "-o`"$destinationPath`"", # Output directory, quoted, no space after -o
+        "-y"  # Assume Yes to all queries (e.g., overwrite files)
+    )
+
+    LogInfo("Attempting to extract zip file '$zipFilePath' to path '$destinationPath' using '$exePath'...")
+    
+    $tempDirForLogs = if (-not [string]::IsNullOrWhiteSpace($pathTo7zip)) { $pathTo7zip } else { $env:TEMP }
+    $stdOutFile = Join-Path -Path $tempDirForLogs -ChildPath "7zip_extract_stdout_$(Get-Random).log"
+    $stdErrFile = Join-Path -Path $tempDirForLogs -ChildPath "7zip_extract_stderr_$(Get-Random).log"
+
+    try {
+        $process = Start-Process -FilePath $exePath -ArgumentList $arguments -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdOutFile -RedirectStandardError $stdErrFile
+        
+        $stdOutput = if (Test-Path $stdOutFile) { Get-Content $stdOutFile -Raw } else { "No standard output." }
+        $stdError = if (Test-Path $stdErrFile) { Get-Content $stdErrFile -Raw } else { "No standard error." }
+
+        if ($process.ExitCode -eq 0) {
+            LogInfo("Successfully extracted zip file '$zipFilePath' to '$destinationPath'.")
+            if ($stdOutput -ne "No standard output." -and -not [string]::IsNullOrWhiteSpace($stdOutput)) { LogInfo("7-Zip Output: $stdOutput") }
+            if ($stdError -ne "No standard error." -and -not [string]::IsNullOrWhiteSpace($stdError)) { LogInfo("7-Zip Error Output (though successful, could be warnings): $stdError") }
+        }
+        else {
+            $errorMessage = "7-Zip failed to extract '$zipFilePath'. Exit code: $($process.ExitCode)."
+            $errorMessage += "`n7-Zip Standard Output:`n$stdOutput"
+            $errorMessage += "`n7-Zip Standard Error:`n$stdError"
+            throw $errorMessage
+        }
     }
-    LogInfo("Successfully extracted zip file '$zipFilePath' to path '$destinationPath'")
+    catch {
+        throw "An error occurred while trying to run 7-Zip for extraction of '$zipFilePath': $($_.Exception.Message)"
+    }
+    finally {
+        if (Test-Path $stdOutFile) { Remove-Item $stdOutFile -ErrorAction SilentlyContinue }
+        if (Test-Path $stdErrFile) { Remove-Item $stdErrFile -ErrorAction SilentlyContinue }
+    }
 }
 
 function AddFilesToZip {
