@@ -102,7 +102,7 @@ function AddFilesToZip {
     param (
         [string] $pathTo7zip,
         [string[]] $files,
-        [string] $zipFilePath,
+        [string] $zipFilePath
     )
 
     if ($null -eq $files -or $files.Count -eq 0) {
