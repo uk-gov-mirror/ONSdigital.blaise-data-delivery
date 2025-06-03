@@ -103,16 +103,18 @@ function AddFilesToZip {
         [string] $pathTo7zip,
         [string[]] $files,
         [string] $zipFilePath,
-        [string] $tempPath
     )
 
     if ($null -eq $files -or $files.Count -eq 0) {
         throw "No files provided to add to zip '$zipFilePath'."
     }
-    if ([string]::IsNullOrWhiteSpace($tempPath)) {
-        throw "tempPath parameter is required for AddFilesToZip workaround. Please provide a valid temporary path."
-    }
 
+    $parentDirOfZip = Split-Path -Path $zipFilePath -Parent
+    $tempPath = if (-not [string]::IsNullOrWhiteSpace($parentDirOfZip)) {
+        $parentDirOfZip
+    } else {
+        $PWD.Path # PWD is the current working directory
+    }
     $exe = Join-Path -Path $pathTo7zip -ChildPath "7za.exe"
     if (-not (Test-Path $exe)) {
         throw "7-Zip executable not found at '$exe'"
