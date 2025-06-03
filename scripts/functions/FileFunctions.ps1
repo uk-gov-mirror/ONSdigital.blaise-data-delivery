@@ -92,6 +92,18 @@ function AddFilesToZip {
         return $false 
     }
 
+    $actualFilesToProcess = @()
+    foreach ($filePattern in $files) {
+        $foundItems = Get-Item -Path $filePattern -ErrorAction SilentlyContinue
+        if ($null -ne $foundItems) {
+            $actualFilesToProcess += $foundItems.FullName
+        }
+    }
+    if ($actualFilesToProcess.Count -eq 0) {
+        LogWarning "No files found matching the patterns: $($files -join ', '). Cannot add to zip '$zipFilePath'."
+        return $false
+    }
+
     $exePath = Join-Path -Path $pathTo7zip -ChildPath "7za.exe"
     if (-not (Test-Path $exePath)) {
         LogWarning "7-Zip executable not found at '$exePath'."
@@ -105,20 +117,38 @@ function AddFilesToZip {
     ) + $files.ForEach({ "`"$_`"" }) # Add each file, quoted
 
     LogInfo "Attempting to add files to '$zipFilePath'. Files: $($files -join ', ')"
+
+    $tempDirForLogs = if (-not [string]::IsNullOrEmpty($pathTo7zip)) { $pathTo7zip } else { $env:TEMP }
+    $stdOutFile = Join-Path -Path $tempDirForLogs -ChildPath "7zip_addfiles_stdout_$(Get-Random).log"
+    $stdErrFile = Join-Path -Path $tempDirForLogs -ChildPath "7zip_addfiles_stderr_$(Get-Random).log"
+
     try {
-        $process = Start-Process -FilePath $exePath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+        $process = Start-Process -FilePath $exePath -ArgumentList $arguments -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdOutFile -RedirectStandardError $stdErrFile
+        
+        $stdOutput = if (Test-Path $stdOutFile) { Get-Content $stdOutFile -Raw } else { "No standard output." }
+        $stdError = if (Test-Path $stdErrFile) { Get-Content $stdErrFile -Raw } else { "No standard error." }
+
         if ($process.ExitCode -eq 0) {
             LogInfo "Successfully added file(s) to '$zipFilePath'."
+            if ($stdOutput -ne "No standard output." -and -not [string]::IsNullOrWhiteSpace($stdOutput)) { LogInfo "7-Zip Output: $stdOutput" }
+            if ($stdError -ne "No standard error." -and -not [string]::IsNullOrWhiteSpace($stdError)) { LogInfo "7-Zip Error Output (though successful, could be warnings): $stdError" }
             return $true
         }
         else {
-            LogWarning "7-Zip failed to add files to '$zipFilePath'. Exit code: $($process.ExitCode). Files: $($files -join ', ')"
+            $errorMessage = "7-Zip failed to add files to '$zipFilePath'. Exit code: $($process.ExitCode). Files: $($files -join ', ')"
+            $errorMessage += "`n7-Zip Standard Output:`n$stdOutput"
+            $errorMessage += "`n7-Zip Standard Error:`n$stdError"
+            LogWarning $errorMessage
             return $false
         }
     }
     catch {
         LogWarning "An error occurred while trying to run 7-Zip to add files to '$zipFilePath': $($_.Exception.Message)"
         return $false
+    }
+    finally {
+        if (Test-Path $stdOutFile) { Remove-Item $stdOutFile -ErrorAction SilentlyContinue }
+        if (Test-Path $stdErrFile) { Remove-Item $stdErrFile -ErrorAction SilentlyContinue }
     }
 }
 
