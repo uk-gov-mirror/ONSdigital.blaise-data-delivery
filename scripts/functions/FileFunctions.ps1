@@ -123,14 +123,15 @@ function AddFilesToZip {
     $tempWorkingDir = Join-Path -Path $tempPath -ChildPath "7zip_add_temp_$(Get-Random)"
     LogInfo("Using temporary working directory for zip update workaround: $tempWorkingDir")
 
-    $createStdOutFile = $null
-    $createStdErrFile = $null
+    $createStdOutFile = Join-Path -Path $tempPath -ChildPath "7zip_create_final_stdout_$(Get-Random).log"
+    $createStdErrFile = Join-Path -Path $tempPath -ChildPath "7zip_create_final_stderr_$(Get-Random).log"
 
     try {
         New-Item -Path $tempWorkingDir -ItemType Directory -ErrorAction Stop | Out-Null
 
         if (Test-Path $zipFilePath) {
             LogInfo("Extracting existing zip '$zipFilePath' to temporary directory '$tempWorkingDir'...")
+            LogInfo("7-Zip command for extraction: ""$exe"" x ""`"$zipFilePath`"" -o""`"$tempWorkingDir`"" -y")
             & $exe x "`"$zipFilePath`"" -o"`"$tempWorkingDir`"" -y
             if ($LASTEXITCODE -ne 0) {
                 throw "Failed to extract existing zip '$zipFilePath' (Exit code: $LASTEXITCODE) for update workaround."
@@ -160,7 +161,6 @@ function AddFilesToZip {
             LogInfo("Removed old zip file '$zipFilePath' before recreation.")
         }
 
-        # Use Start-Process to capture output for this specific 7-Zip call
         $createArguments = @(
             "a", # Add to archive
             "-tzip", # Specify ZIP archive type
@@ -168,8 +168,6 @@ function AddFilesToZip {
             "`"$tempWorkingDir\*`"", # Add all contents from the temporary directory
             "-y"  # Assume Yes to all queries
         )
-        $createStdOutFile = Join-Path -Path $tempPath -ChildPath "7zip_create_final_stdout_$(Get-Random).log"
-        $createStdErrFile = Join-Path -Path $tempPath -ChildPath "7zip_create_final_stderr_$(Get-Random).log"
 
         $createProcess = Start-Process -FilePath $exe -ArgumentList $createArguments -Wait -PassThru -NoNewWindow -RedirectStandardOutput $createStdOutFile -RedirectStandardError $createStdErrFile
         
