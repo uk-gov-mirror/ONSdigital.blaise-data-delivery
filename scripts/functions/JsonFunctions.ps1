@@ -3,20 +3,13 @@
 function AddJSONFileToDeliveryPackage {
     param(
         [string] $processingFolder,
-        [string] $deliveryZip,
         [string] $questionnaireName,
-        [string] $subFolder,
-        [string] $tempPath
+        [string] $subFolder # Optional: if provided, copy files here from $processingFolder
     )
 
     If (-not (Test-Path $processingFolder)) {
         throw "$processingFolder not found" 
     }
-
-    If (-not (Test-Path $deliveryZip)) {
-        throw "$deliveryZip not found" 
-    }
-
     If ([string]::IsNullOrEmpty($questionnaireName)) {
         throw "No questionnaire name provided" 
     }
@@ -24,29 +17,37 @@ function AddJSONFileToDeliveryPackage {
     # Copy Manipula xml files to the processing folder
     Copy-Item -Path "$PSScriptRoot\..\manipula\json\GenerateJSON.msux" -Destination $processingFolder
 
+    $jsonOutputPath = Join-Path $processingFolder "$($questionnaireName).json"
+    $jsonBdixOutputPath = Join-Path $processingFolder "$($questionnaireName).json.bdix"
+
     try {
-        # Generate XML file
-        & cmd.exe /c $processingFolder\Manipula.exe "$processingFolder\GenerateJSON.msux" -A:True -Q:True -K:Meta="$processingFolder/$questionnaireName.bmix" -I:$processingFolder/$questionnaireName.bdbx -O:$processingFolder/$questionnaireName.json
-        LogInfo("Generated .Json File for $deliveryZip")
+        # Generate JSON file
+        $manipulaExePath = Join-Path $processingFolder "Manipula.exe"
+        $msuxPathInProcessing = Join-Path $processingFolder "GenerateJSON.msux"
+        $bmixPath = Join-Path $processingFolder "$($questionnaireName).bmix"
+        $bdbxPath = Join-Path $processingFolder "$($questionnaireName).bdbx"
+        
+        & cmd.exe /c "$manipulaExePath" "$msuxPathInProcessing" -A:True -Q:True -K:Meta="$bmixPath" -I:"$bdbxPath" -O:"$jsonOutputPath"
+        LogInfo("Generated .JSON file: $jsonOutputPath")
     }
     catch {
         LogWarning("Generating Json Failed: $($_.Exception.Message)")
+        return
     }
-    try {
-        if ([string]::IsNullOrEmpty($subFolder)) {
-            AddFilesToZip -pathTo7zip $tempPath -files "$processingFolder\*.json*" -zipFilePath $deliveryZip
-            LogInfo("Added .JSON File to '$deliveryZip'")
-        }
-        else {
-            Copy-Item -Path "$processingFolder/$($questionnaireName).json" -Destination $subFolder/$questionnaireName.json
-            Copy-Item -Path "$processingFolder/$($questionnaireName).json.bdix" -Destination $subFolder/$questionnaireName.json.bdix
-            LogInfo("Copied .JSON Files to $subFolder")
 
-            AddFolderToZip -pathTo7zip $tempPath -folder $subFolder -zipFilePath $deliveryZip
-            LogInfo("Added '$subFolder' to '$deliveryZip'")
+    # If a subFolder is specified, copy the generated .json and .json.bdix files to it
+    if (-not [string]::IsNullOrEmpty($subFolder)) {
+        LogInfo("Copying JSON related files from $processingFolder to subfolder: $subFolder")
+        if (Test-Path $jsonOutputPath) {
+            Copy-Item -Path $jsonOutputPath -Destination (Join-Path $subFolder "$($questionnaireName).json") -Force
+            LogInfo("Copied $jsonOutputPath to $subFolder")
+        }
+        if (Test-Path $jsonBdixOutputPath) {
+            Copy-Item -Path $jsonBdixOutputPath -Destination (Join-Path $subFolder "$($questionnaireName).json.bdix") -Force
+            LogInfo("Copied $jsonBdixOutputPath to $subFolder")
         }
     }
-    catch {
-        LogWarning("Unable to add .Json file to $deliveryZip")
+    else {
+        LogInfo("JSON files generated in $processingFolder. No subfolder specified for further copying.")
     }
 }

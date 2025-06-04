@@ -77,10 +77,22 @@ function CreateDeliveryFile {
     # Populate data
     # the use of the parameter '2>&1' redirects output of the cli to the command line and will allow any errors to bubble up
     C:\BlaiseServices\BlaiseCli\blaise.cli datadelivery -s $serverParkName -q $questionnaireName -f $deliveryFile -a $config.auditTrailData -b $config.batchSize 2>&1        
-    
+
     # Extact Questionnaire Package to processing folder
+    # The $deliveryFile at this point is the .bpkg which might have been updated by blaise.cli
     ExtractZipFile -pathTo7zip $tempPath -zipFilePath $deliveryFile -destinationPath $processingFolder
 
     # Add additional file formats specified in the config i.e. JSON, ASCII
-    AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -deliveryFile $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -dqsBucket $dqsBucket -subFolder $processingSubFolder -tempPath $tempPath   
+    # This function and its children will now only place files into $processingFolder or $processingSubFolder
+    AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $processingSubFolder
+
+    # Final step: Create the delivery zip from the contents of the processing folder
+    LogInfo("Preparing to create final delivery package: $deliveryFile")
+    # Remove the old (potentially intermediate) $deliveryFile to ensure a fresh zip is created
+    Remove-Item -Path $deliveryFile -Force -ErrorAction SilentlyContinue
+    
+    LogInfo("Zipping contents of $processingFolder to $deliveryFile")
+    # Use AddFilesToZip with a wildcard to zip the contents of $processingFolder
+    AddFilesToZip -pathTo7zip $tempPath -files "$processingFolder\*" -zipFilePath $deliveryFile
+    LogInfo("Successfully created final delivery package: $deliveryFile")
 }
