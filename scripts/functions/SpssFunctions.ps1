@@ -33,11 +33,10 @@ function AddSpssFilesToDeliveryPackage {
     try {
         $manipulaExePath = Join-Path $processingFolder "Manipula.exe"
         $msuxPathInProcessing = Join-Path $processingFolder "GenerateStatisticalScript.msux"
-        $bmixPath = Join-Path $processingFolder "$($questionnaireName).bmix" # Assuming .bmix is in $processingFolder
-        $bdixPath = Join-Path $processingFolder "$($questionnaireName).bdix" # Assuming .bdix is in $processingFolder
-        $ascPathForSpss = Join-Path $processingFolder "$($questionnaireName).asc" # Assuming .asc is in $processingFolder if needed by SPSS script
+        $bmixPath = Join-Path $processingFolder "$($questionnaireName).bmix"
+        $bdixPath = Join-Path $processingFolder "$($questionnaireName).bdix"
+        $ascPathForSpss = Join-Path $processingFolder "$($questionnaireName).asc"
 
-        # The N:oScript parameter seems to define output name parts. Manipula might create $questionnaireName.sps in $processingFolder.
         & cmd.exe /c "$manipulaExePath" "$msuxPathInProcessing" -K:meta="$bmixPath" -H:"" -L:"" -N:oScript="$questionnaireName,iFNames=,iData=$bdixPath" -P:"SPSS;;;;;;$ascPathForSpss;;;2;;64;;Y" -Q:True
         LogInfo("Generated the .SPS file in $processingFolder")
 
