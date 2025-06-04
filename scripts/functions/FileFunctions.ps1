@@ -123,6 +123,9 @@ function AddFilesToZip {
     $tempWorkingDir = Join-Path -Path $tempPath -ChildPath "7zip_add_temp_$(Get-Random)"
     LogInfo("Using temporary working directory for zip update workaround: $tempWorkingDir")
 
+    $createStdOutFile = $null
+    $createStdErrFile = $null
+
     try {
         New-Item -Path $tempWorkingDir -ItemType Directory -ErrorAction Stop | Out-Null
 
