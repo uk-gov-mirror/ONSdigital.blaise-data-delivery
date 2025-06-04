@@ -63,9 +63,6 @@ function AddFilesToZip {
         throw "No files provided"
     }
 
-    If (-not (Test-Path $zipFilePath)) {
-        throw "$zipFilePath not found"
-    }
     #7 zip CLI - a = add / append - Zip file to Create / append too - Files to add to the zip
     & $pathTo7zip\7za a $zipFilePath $files
     LogInfo("Added the file(s) '$files' to the zip file '$zipFilePath'")
@@ -79,11 +76,7 @@ function AddFolderToZip {
     )
 
     If (-not (Test-Path $folder)) {
-        throw "$zipFilePath not found"
-    }
-
-    If (-not (Test-Path $zipFilePath)) {
-        throw "$zipFilePath not found"
+        throw "$folder not found"
     }
 
     #7 zip CLI - a = add / append - Zip file to Create / append too - Files to add to the zip

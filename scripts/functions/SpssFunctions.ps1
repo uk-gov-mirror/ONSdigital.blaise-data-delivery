@@ -50,13 +50,11 @@ function AddSpssFilesToDeliveryPackage {
             Move-Item -Path $_.FullName -Destination $spssSpecificFolder -Force
             LogInfo("Moved $($_.Name) to $spssSpecificFolder")
         }
-        # Keep the upload logic here as requested
         LogInfo("Uploading delivery file $deliveryZip to $dqsBucket as part of SPSS processing")
         UploadFileToBucket -filePath $deliveryZip -bucketName $dqsBucket -deliveryFileName "$($questionnaireName).bpkg"
         LogInfo("Uploaded $deliveryZip")
     }
     catch {
         LogWarning("Generating SPS or Uploading Failed for $questionnaireName : $($_.Exception.Message)")
-        # Consider Get-Error or re-throwing if this is a critical failure
     }
 }
