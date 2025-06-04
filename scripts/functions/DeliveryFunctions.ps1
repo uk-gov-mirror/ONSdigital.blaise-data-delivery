@@ -84,7 +84,7 @@ function CreateDeliveryFile {
 
     # Add additional file formats specified in the config i.e. JSON, ASCII
     # This function and its children will now only place files into $processingFolder or $processingSubFolder
-    AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $processingSubFolder
+    AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $processingSubFolder -deliveryFile $deliveryFile -dqsBucket $dqsBucket -tempPath $tempPath
 
     # Final step: Create the delivery zip from the contents of the processing folder
     LogInfo("Preparing to create final delivery package: $deliveryFile")

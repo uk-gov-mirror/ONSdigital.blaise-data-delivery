@@ -24,38 +24,39 @@ function AddSpssFilesToDeliveryPackage {
         throw "No questionnaire name argument provided"
     }
 
-    if (-not (Test-Path "$processingFolder\spss")) {
-        # Copy Manipula spss files to the processing folder
-        Copy-Item -Path "$PSScriptRoot\..\manipula\spss\*" -Destination $processingFolder
+    # Ensure Manipula SPSS scripts are in the $processingFolder for execution
+    # Assuming 'GenerateStatisticalScript.msux' is the key script.
+    # This copy is redundant if AddManipulaToProcessingFolder is called correctly, but kept for safety based on original code pattern.
+    Copy-Item -Path "$PSScriptRoot\..\manipula\spss\*" -Destination $processingFolder -Force
 
-        # Generate SPS file
-        try {
-            & cmd.exe /c $processingFolder\Manipula.exe "$processingFolder\GenerateStatisticalScript.msux" -K:meta="$questionnaireName.bmix" -H:"" -L:"" -N:oScript="$questionnaireName,iFNames=,iData=$questionnaireName.bdix" -P:"SPSS;;;;;;$questionnaireName.asc;;;2;;64;;Y" -Q:True
-            LogInfo("Generated the .SPSS file")
-            #create an sps folder
-            CreateANewFolder -folderPath $processingFolder -folderName "spss"
-            #copying the files needed to create an sps file
-            Copy-Item -Path "$processingFolder\*.sps" -Destination "$processingFolder/spss"
-            #adding the above files to the delivery zip
-            AddFolderToZip -pathTo7zip $tempPath -folder "$processingFolder/spss" -zipFilePath $deliveryZip
-            #uploading the delivery file back to the dqs bucket with the
-            UploadFileToBucket -filePath $deliveryZip -bucketName $dqsBucket -deliveryFileName "$($questionnaireName).bpkg"
+    # Generate SPS file (Manipula outputs to its current working directory, which is $processingFolder here)
+    try {
+        $manipulaExePath = Join-Path $processingFolder "Manipula.exe"
+        $msuxPathInProcessing = Join-Path $processingFolder "GenerateStatisticalScript.msux"
+        $bmixPath = Join-Path $processingFolder "$($questionnaireName).bmix" # Assuming .bmix is in $processingFolder
+        $bdixPath = Join-Path $processingFolder "$($questionnaireName).bdix" # Assuming .bdix is in $processingFolder
+        $ascPathForSpss = Join-Path $processingFolder "$($questionnaireName).asc" # Assuming .asc is in $processingFolder if needed by SPSS script
+
+        # The N:oScript parameter seems to define output name parts. Manipula might create $questionnaireName.sps in $processingFolder.
+        & cmd.exe /c "$manipulaExePath" "$msuxPathInProcessing" -K:meta="$bmixPath" -H:"" -L:"" -N:oScript="$questionnaireName,iFNames=,iData=$bdixPath" -P:"SPSS;;;;;;$ascPathForSpss;;;2;;64;;Y" -Q:True
+        LogInfo("Generated the .SPS file in $processingFolder")
+
+        # Determine the target folder for SPSS files (either $processingFolder\spss or $subFolder\spss)
+        $spssBaseOutputFolder = if ([string]::IsNullOrEmpty($subFolder)) { $processingFolder } else { $subFolder }
+        $spssSpecificFolder = CreateANewFolder -folderPath $spssBaseOutputFolder -folderName "spss"
+
+        # Move the generated .sps file(s) from $processingFolder to $spssSpecificFolder
+        Get-ChildItem -Path $processingFolder -Filter "$($questionnaireName)*.sps" | ForEach-Object {
+            Move-Item -Path $_.FullName -Destination $spssSpecificFolder -Force
+            LogInfo("Moved $($_.Name) to $spssSpecificFolder")
         }
-        catch {
-            LogWarning("Generating SPS and FPS Failed for $questionnaireName : $($_.Exception.Message)")
-            Get-Error
-        }
+        # Keep the upload logic here as requested
+        LogInfo("Uploading delivery file $deliveryZip to $dqsBucket as part of SPSS processing")
+        UploadFileToBucket -filePath $deliveryZip -bucketName $dqsBucket -deliveryFileName "$($questionnaireName).bpkg"
+        LogInfo("Uploaded $deliveryZip")
     }
-    else {
-        Copy-Item -Path "$processingFolder/spss/*" -Destination $processingFolder -verbose
-    }
-    
-    if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying spss related files from $processingFolder to subfolder: $subFolder")
-        Copy-Item -Path "$processingFolder\*.sps" -Destination $subFolder
-        LogInfo("Copied spss files to $subFolder")
-    }
-    else {
-        LogInfo("spss files generated in $processingFolder. No subfolder specified for further copying.")
+    catch {
+        LogWarning("Generating SPS or Uploading Failed for $questionnaireName : $($_.Exception.Message)")
+        # Consider Get-Error or re-throwing if this is a critical failure
     }
 }
