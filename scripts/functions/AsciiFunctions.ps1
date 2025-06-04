@@ -3,13 +3,15 @@
 function AddAsciiFilesToDeliveryPackage {
     param (
         [string] $processingFolder,
-        [string] $deliveryZip,
         [string] $questionnaireName,
-        [string] $subFolder,
-        [string] $tempPath
+        [string] $subFolder # Optional: if provided, copy files here from $processingFolder
     )
 
+    # Ensure Manipula script for ASCII generation is in the processing folder
+    $msuxFileName = "GenerateAscii.msux"
+    $msuxSourcePath = Join-Path $PSScriptRoot "..\manipula\ascii" $msuxFileName
     Copy-Item -Path "$PSScriptRoot\..\manipula\ascii\GenerateAscii.msux" -Destination $processingFolder
+
     # Generate .ASC file
     try {
         $manipulaPath = Join-Path -Path $processingFolder -ChildPath "Manipula.exe"
@@ -36,17 +38,17 @@ function AddAsciiFilesToDeliveryPackage {
     }
     catch {
         LogWarning("Generating ASCII Failed for $questionnaireName : $($_.Exception.Message)")
+        return # Exit function if generation fails
     }
 
-    if ([string]::IsNullOrEmpty($subFolder)) {
-        # Add the ASC & FPS files to the questionnaire package
-        AddFilesToZip -pathTo7zip $tempPath -files "$processingFolder\*.asc", "$processingFolder\*.fps" -zipFilePath $deliveryZip
-        LogInfo("Added .ASC File to $deliveryZip")
+    # If a subFolder is specified, copy the generated .asc and any related .fps files to it
+    # Otherwise, they remain in $processingFolder where they were generated.
+    if (-not [string]::IsNullOrEmpty($subFolder)) {
+        LogInfo("Copying ASCII related files from $processingFolder to subfolder: $subFolder")
+        Copy-Item -Path "$processingFolder\*.asc", "$processingFolder\*.fps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
+        LogInfo("Copied .ASC and .FPS files to $subFolder")
     }
     else {
-        Copy-Item -Path "$processingFolder\*.asc", "$processingFolder\*.fps" -Destination $subFolder
-
-        AddFolderToZip -pathTo7zip $tempPath -folder $subFolder -zipFilePath $deliveryZip
-        LogInfo("Added '$subFolder' to '$deliveryZip'")
+        LogInfo("ASCII files generated in $processingFolder. No subfolder specified for further copying.")
     }
 }

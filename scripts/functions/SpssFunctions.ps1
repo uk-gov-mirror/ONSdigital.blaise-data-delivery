@@ -34,7 +34,7 @@ function AddSpssFilesToDeliveryPackage {
             LogInfo("Generated the .SPSS file")
             #create an sps folder
             CreateANewFolder -folderPath $processingFolder -folderName "spss"
-            #copying the files needed to create an Ascii file
+            #copying the files needed to create an sps file
             Copy-Item -Path "$processingFolder\*.sps" -Destination "$processingFolder/spss"
             #adding the above files to the delivery zip
             AddFolderToZip -pathTo7zip $tempPath -folder "$processingFolder/spss" -zipFilePath $deliveryZip
@@ -49,16 +49,13 @@ function AddSpssFilesToDeliveryPackage {
     else {
         Copy-Item -Path "$processingFolder/spss/*" -Destination $processingFolder -verbose
     }
-
-    if ([string]::IsNullOrEmpty($subFolder)) {
-        # Add the SPS, ASC & FPS files to the questionnaire package
-        AddFilesToZip -pathTo7zip $tempPath -files "$processingFolder\*.sps" -zipFilePath $deliveryZip
-        LogInfo("Added .SPS Files to $deliveryZip")
+    
+    if (-not [string]::IsNullOrEmpty($subFolder)) {
+        LogInfo("Copying spss related files from $processingFolder to subfolder: $subFolder")
+        Copy-Item -Path "$processingFolder\*.sps" -Destination $subFolder
+        LogInfo("Copied spss files to $subFolder")
     }
     else {
-        Copy-Item -Path "$processingFolder\*.sps" -Destination $subFolder
-
-        AddFolderToZip -pathTo7zip $tempPath -folder $subFolder -zipFilePath $deliveryZip
-        LogInfo("Added '$subFolder' to '$deliveryZip'")
+        LogInfo("spss files generated in $processingFolder. No subfolder specified for further copying.")
     }
 }
