@@ -131,7 +131,7 @@ function AddFilesToZip {
 
         if (Test-Path $zipFilePath) {
             LogInfo("Extracting existing zip '$zipFilePath' to temporary directory '$tempWorkingDir'...")
-            LogInfo("7-Zip command for extraction: ""$exe"" x ""`"$zipFilePath`"" -o""`"$tempWorkingDir`"" -y")
+            LogInfo("7-Zip command for extraction: ""{0}"" x {1} -o{2} -y" -f $exe, "`"$zipFilePath`"", "`"$tempWorkingDir`"")
             & $exe x "`"$zipFilePath`"" -o"`"$tempWorkingDir`"" -y
             if ($LASTEXITCODE -ne 0) {
                 throw "Failed to extract existing zip '$zipFilePath' (Exit code: $LASTEXITCODE) for update workaround."
