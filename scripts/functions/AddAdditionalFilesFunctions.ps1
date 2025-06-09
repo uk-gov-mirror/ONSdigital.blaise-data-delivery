@@ -33,16 +33,16 @@ function AddAdditionalFilesToDeliveryPackage {
     $config = GetConfigFromFile -surveyType $surveyType
     LogInfo("Add additional files config $($config.deliver) $($config)")
 
-    # Generate and add SPSS files if configured
-    if($config.deliver.spss -eq $true) {
-        LogInfo("Adding SPSS files")
-        AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -dqsBucket $dqsBucket -subFolder $processingSubFolder -tempPath $tempPath
-    }
-
     # Generate and add Ascii files if configured
     if($config.deliver.ascii -eq $true) {
         LogInfo("Adding ASCII files")
-        AddAsciiFilesToDeliveryPackage -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $processingSubFolder
+        AddAsciiFilesToDeliveryPackage -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
+    }
+
+    # Generate and add SPSS files if configured
+    if($config.deliver.spss -eq $true) {
+        LogInfo("Adding SPSS files")
+        AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -dqsBucket $dqsBucket -subFolder $subFolder -tempPath $tempPath
     }
 
     # Generate and add XML Files if configured
@@ -54,6 +54,6 @@ function AddAdditionalFilesToDeliveryPackage {
     # Generate and add json Files if configured
     if($config.deliver.json -eq $true) {
         LogInfo("Adding JSON files")
-        AddJSONFileToDeliveryPackage -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $processingSubFolder
+        AddJSONFileToDeliveryPackage -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 }

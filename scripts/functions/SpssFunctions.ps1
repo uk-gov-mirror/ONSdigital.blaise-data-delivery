@@ -25,8 +25,6 @@ function AddSpssFilesToDeliveryPackage {
     }
 
     # Ensure Manipula SPSS scripts are in the $processingFolder for execution
-    # Assuming 'GenerateStatisticalScript.msux' is the key script.
-    # This copy is redundant if AddManipulaToProcessingFolder is called correctly, but kept for safety based on original code pattern.
     Copy-Item -Path "$PSScriptRoot\..\manipula\spss\*" -Destination $processingFolder -Force
 
     # Generate SPS file (Manipula outputs to its current working directory, which is $processingFolder here)
@@ -49,9 +47,6 @@ function AddSpssFilesToDeliveryPackage {
             Move-Item -Path $_.FullName -Destination $spssSpecificFolder -Force
             LogInfo("Moved $($_.Name) to $spssSpecificFolder")
         }
-        # LogInfo("Uploading delivery file $deliveryZip to $dqsBucket as part of SPSS processing")
-        # UploadFileToBucket -filePath $deliveryZip -bucketName $dqsBucket -deliveryFileName "$($questionnaireName).bpkg"
-        # LogInfo("Uploaded $deliveryZip")
     }
     catch {
         LogWarning("Generating SPS or Uploading Failed for $questionnaireName : $($_.Exception.Message)")
