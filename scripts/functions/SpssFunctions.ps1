@@ -7,8 +7,7 @@ function AddSpssFilesToDeliveryPackage {
         [string] $processingFolder,
         [string] $deliveryZip,
         [string] $questionnaireName,
-        [string] $subFolder,
-        [string] $tempPath
+        [string] $subFolder
     )
 
     If (-not (Test-Path $processingFolder)) {

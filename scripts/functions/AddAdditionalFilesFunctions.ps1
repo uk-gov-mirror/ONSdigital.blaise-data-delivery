@@ -12,8 +12,7 @@ function AddAdditionalFilesToDeliveryPackage {
         [string] $processingFolder,
         [string] $questionnaireName,
         [string] $subFolder, # This is $processingSubFolder from CreateDeliveryFile, if $config.createSubFolder is true
-        [string] $deliveryFile,
-        [string] $tempPath
+        [string] $deliveryFile
     )
           
     If ([string]::IsNullOrEmpty($surveyType)) {
@@ -41,7 +40,7 @@ function AddAdditionalFilesToDeliveryPackage {
     # Generate and add SPSS files if configured
     if($config.deliver.spss -eq $true) {
         LogInfo("Adding SPSS files")
-        AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder -tempPath $tempPath
+        AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
     # Generate and add XML Files if configured
