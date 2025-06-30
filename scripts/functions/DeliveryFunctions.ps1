@@ -80,6 +80,9 @@ function CreateDeliveryFile {
         $ext = $_.Extension.TrimStart('.').ToLower()
         -not ($keepQuestionnairePackageFileExtensions -contains $ext)
         } | Remove-Item -Force
+    Get-ChildItem -Path $processingFolderPath -Recurse -Directory | Sort-Object -Property FullName -Descending | Where-Object {
+        @(Get-ChildItem -Path $_.FullName -Recurse | Where-Object { -not $_.PSIsContainer }).Count -eq 0
+        } | Remove-Item -Force
 
     # Add Manipula files to the processing folder
     LogInfo("Adding Manipula files to $processingFolderPath")
@@ -90,6 +93,9 @@ function CreateDeliveryFile {
     AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolderPath -questionnaireName $questionnaireName -subFolder $processingSubFolderPath -deliveryFile $deliveryFile -tempPath $tempPath
 
     # Remove files that are not in the deliverFileExtensions list
+    Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
+        $_.Name -like '*$$$*'
+        } | Remove-Item -Force
     Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
         $ext = $_.Extension.TrimStart('.').ToLower()
         -not ($deliverFileExtensions -contains $ext)
