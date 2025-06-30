@@ -78,7 +78,7 @@ function CreateDeliveryFile {
     # Remove unwanted files after questionnaire package extraction
     Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
         $ext = $_.Extension.TrimStart('.').ToLower()
-        -not ($keepExtensions -contains $ext)
+        -not ($keepQuestionnairePackageFileExtensions -contains $ext)
         } | Remove-Item -Force
 
     # Add Manipula files to the processing folder
