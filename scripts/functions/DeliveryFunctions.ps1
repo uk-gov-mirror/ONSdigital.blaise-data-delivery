@@ -13,7 +13,9 @@ function CreateDeliveryFile {
         [string] $questionnaireName,
         [string] $subFolder,
         [string] $dqsBucket,
-        [string] $tempPath
+        [string] $tempPath,
+        [string[]] $keepQuestionnairePackageFileExtensions = @('bdix', 'bmix', 'bdbx', 'blix'),
+        [string[]] $deliverFileExtensions = @('bdix', 'bmix', 'bdbx', 'blix', 'sps', 'fps', 'asc', 'json', 'xml', 'csv')
     )
 
     If ([string]::IsNullOrEmpty($deliveryFile)) {
@@ -73,6 +75,12 @@ function CreateDeliveryFile {
     LogInfo("Extracting questionnaire package $deliveryFile to processing folder $processingFolderPath")
     ExtractZipFile -pathTo7zip $tempPath -zipFilePath $deliveryFile -destinationPath $processingFolderPath
 
+    # Remove unwanted files after questionnaire package extraction
+    Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
+        $ext = $_.Extension.TrimStart('.').ToLower()
+        -not ($keepExtensions -contains $ext)
+        } | Remove-Item -Force
+
     # Add Manipula files to the processing folder
     LogInfo("Adding Manipula files to $processingFolderPath")
     AddManipulaToProcessingFolder -manipulaPackage "$tempPath/manipula.zip" -processingFolder $processingFolderPath -tempPath $tempPath
@@ -80,6 +88,12 @@ function CreateDeliveryFile {
     # Add additional file formats specified in the survey config, will be placed in the processing subfolder if config.createSubFolder is true, i.e. processingSubFolderPath is not $NULL
     LogInfo("Adding additional file formats to $processingFolderPath")
     AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolderPath -questionnaireName $questionnaireName -subFolder $processingSubFolderPath -deliveryFile $deliveryFile -tempPath $tempPath
+
+    # Remove files that are not in the deliverFileExtensions list
+    Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
+        $ext = $_.Extension.TrimStart('.').ToLower()
+        -not ($deliverFileExtensions -contains $ext)
+        } | Remove-Item -Force
 
     # Create the data delivery zip from the contents of the processing folder
     LogInfo("Creating data delivery zip $deliveryFile")
