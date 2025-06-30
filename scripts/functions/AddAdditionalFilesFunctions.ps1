@@ -11,7 +11,7 @@ function AddAdditionalFilesToDeliveryPackage {
         [string] $surveyType,
         [string] $processingFolder,
         [string] $questionnaireName,
-        [string] $subFolder, # This is $processingSubFolder from CreateDeliveryFile, if $config.createSubFolder is true
+        [string] $subFolder,
         [string] $deliveryFile
     )
           
