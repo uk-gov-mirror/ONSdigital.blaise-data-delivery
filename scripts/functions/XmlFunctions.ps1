@@ -37,7 +37,7 @@ function AddXMLFiletoDeliveryPackage {
         LogInfo("Copying XML related files from $processingFolder to subfolder: $subFolder")
         if (Test-Path $xmlOutputPathInProcessing) {
             $finalXmlNameInSubFolder = Join-Path $subFolder "$($questionnaireName).xml"
-            Copy-Item -Path $xmlOutputPathInProcessing -Destination $finalXmlNameInSubFolder -Force
+            Move-Item -Path $xmlOutputPathInProcessing -Destination $finalXmlNameInSubFolder -Force
             LogInfo("Copied $xmlOutputPathInProcessing to $finalXmlNameInSubFolder")
         }
         else {

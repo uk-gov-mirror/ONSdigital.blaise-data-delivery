@@ -39,11 +39,11 @@ function AddJSONFileToDeliveryPackage {
     if (-not [string]::IsNullOrEmpty($subFolder)) {
         LogInfo("Copying JSON related files from $processingFolder to subfolder: $subFolder")
         if (Test-Path $jsonOutputPath) {
-            Copy-Item -Path $jsonOutputPath -Destination (Join-Path $subFolder "$($questionnaireName).json") -Force
+            Move-Item -Path $jsonOutputPath -Destination (Join-Path $subFolder "$($questionnaireName).json") -Force
             LogInfo("Copied $jsonOutputPath to $subFolder")
         }
         if (Test-Path $jsonBdixOutputPath) {
-            Copy-Item -Path $jsonBdixOutputPath -Destination (Join-Path $subFolder "$($questionnaireName).json.bdix") -Force
+            Move-Item -Path $jsonBdixOutputPath -Destination (Join-Path $subFolder "$($questionnaireName).json.bdix") -Force
             LogInfo("Copied $jsonBdixOutputPath to $subFolder")
         }
     }

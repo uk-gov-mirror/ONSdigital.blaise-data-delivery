@@ -36,14 +36,15 @@ function AddSpssFilesToDeliveryPackage {
         & cmd.exe /c "$manipulaExePath" "$msuxPathInProcessing" -K:meta="$bmixPath" -H:"" -L:"" -N:oScript="$questionnaireName,iFNames=,iData=$bdixPath" -P:"SPSS;;;;;;$ascPathForSpss;;;2;;64;;Y" -Q:True
         LogInfo("Generated the .SPS file in $processingFolder")
 
-        # Determine the target folder for SPSS files (either $processingFolder\spss or $subFolder\spss)
-        $spssBaseOutputFolder = if ([string]::IsNullOrEmpty($subFolder)) { $processingFolder } else { $subFolder }
-        $spssSpecificFolder = CreateFolder -folderPath $spssBaseOutputFolder -folderName "spss"
-
-        # Move the generated .sps file(s) from $processingFolder to $spssSpecificFolder
-        Get-ChildItem -Path $processingFolder -Filter "$($questionnaireName)*.sps" | ForEach-Object {
-            Move-Item -Path $_.FullName -Destination $spssSpecificFolder -Force
-            LogInfo("Moved $($_.Name) to $spssSpecificFolder")
+        # If a subFolder is specified, copy the generated .sps files to it
+        # Otherwise, they remain in $processingFolder where they were generated.
+        if (-not [string]::IsNullOrEmpty($subFolder)) {
+            LogInfo("Copying SPSS related files from $processingFolder to subfolder: $subFolder")
+            Move-Item -Path "$processingFolder\*.sps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
+            LogInfo("Copied .SPS files to $subFolder")
+        }
+        else {
+            LogInfo("SPSS files generated in $processingFolder. No subfolder specified for further copying.")
         }
     }
     catch {

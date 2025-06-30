@@ -49,7 +49,7 @@ function CreateDeliveryFile {
     # Determine subfolder creation preference for non-Blaise file formats
     $processingSubFolderPath = $null
     if($config.createSubFolder -eq $true) {
-        LogInfo("Creating subfolder for $deliveryFile data delivery")
+        LogInfo("Creating subfolder for $questionnaireName data delivery")
     
         # Get the unique name of the processing folder to use for the subfolder
         $subFolderName = Split-Path $processingFolderPath -Leaf
@@ -58,7 +58,7 @@ function CreateDeliveryFile {
         $processingSubFolderPath = CreateFolder -folderPath $processingFolderPath -folderName $subFolderName
     }
     else {
-        LogInfo("Did not create subfolder for $deliveryFile data delivery")
+        LogInfo("Did not create subfolder for $questionnaireName data delivery")
     }
     
     # Download questionnaire package

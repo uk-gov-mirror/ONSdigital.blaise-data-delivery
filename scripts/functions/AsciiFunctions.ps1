@@ -45,7 +45,7 @@ function AddAsciiFilesToDeliveryPackage {
     # Otherwise, they remain in $processingFolder where they were generated.
     if (-not [string]::IsNullOrEmpty($subFolder)) {
         LogInfo("Copying ASCII related files from $processingFolder to subfolder: $subFolder")
-        Copy-Item -Path "$processingFolder\*.asc", "$processingFolder\*.fps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
+        Move-Item -Path "$processingFolder\*.asc", "$processingFolder\*.fps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
         LogInfo("Copied .ASC and .FPS files to $subFolder")
     }
     else {

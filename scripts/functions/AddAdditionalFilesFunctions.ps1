@@ -29,7 +29,7 @@ function AddAdditionalFilesToDeliveryPackage {
           
     # Get configuration for survey type
     $config = GetConfigFromFile -surveyType $surveyType
-    LogInfo("Add additional files config $($config.deliver) $($config)")
+    LogInfo("Add additional files config - $($config.deliver) $($config)")
 
     # Generate and add Ascii files if configured
     if($config.deliver.ascii -eq $true) {
