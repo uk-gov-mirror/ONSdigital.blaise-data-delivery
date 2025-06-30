@@ -8,7 +8,6 @@ function AddSpssFilesToDeliveryPackage {
         [string] $deliveryZip,
         [string] $questionnaireName,
         [string] $subFolder,
-        [string] $dqsBucket,
         [string] $tempPath
     )
 

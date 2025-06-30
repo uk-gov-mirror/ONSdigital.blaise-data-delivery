@@ -13,7 +13,6 @@ function AddAdditionalFilesToDeliveryPackage {
         [string] $questionnaireName,
         [string] $subFolder, # This is $processingSubFolder from CreateDeliveryFile, if $config.createSubFolder is true
         [string] $deliveryFile, # Needed for SPSS upload
-        [string] $dqsBucket, # Needed for SPSS upload
         [string] $tempPath # Needed for SPSS zipping/uploading
     )
           
@@ -42,7 +41,7 @@ function AddAdditionalFilesToDeliveryPackage {
     # Generate and add SPSS files if configured
     if($config.deliver.spss -eq $true) {
         LogInfo("Adding SPSS files")
-        AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -dqsBucket $dqsBucket -subFolder $subFolder -tempPath $tempPath
+        AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder -tempPath $tempPath
     }
 
     # Generate and add XML Files if configured

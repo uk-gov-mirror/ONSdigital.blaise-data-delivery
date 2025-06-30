@@ -61,13 +61,13 @@ stages:
                         Write-Host "Logging into GCP with shared service account..."
                         gcloud auth activate-service-account $env:ENV_SHARED_SERVICE_ACCOUNT --key-file=$(gcpkey.secureFilePath)
                         
-                        Write-Host "Downloading questionnaire"
+                        Write-Host "Downloading Manipula..."
                         gsutil cp gs://$env:ENV_SHARED_BUCKET/Manipula_Package_5_14_6.zip $env:TempPath\Manipula.zip
-                        Write-Host "Downloading 7zip cli"
+                        Write-Host "Downloading 7-Zip..."
                         gsutil cp gs://ons-blaise-v2-europe-west2-shared-data/7za.exe $env:TempPath\7za.exe
                       } catch {
                         Write-Error "Error during download: $_"
-                        exit 1
+                        exit 1 
                       } finally {
                         Write-Host "Reverting GCP login to VM service account..."
                         gcloud auth login $env:ENV_VM_SERVICEACCOUNT
