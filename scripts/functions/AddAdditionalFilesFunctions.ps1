@@ -12,8 +12,8 @@ function AddAdditionalFilesToDeliveryPackage {
         [string] $processingFolder,
         [string] $questionnaireName,
         [string] $subFolder, # This is $processingSubFolder from CreateDeliveryFile, if $config.createSubFolder is true
-        [string] $deliveryFile, # Needed for SPSS upload
-        [string] $tempPath # Needed for SPSS zipping/uploading
+        [string] $deliveryFile,
+        [string] $tempPath
     )
           
     If ([string]::IsNullOrEmpty($surveyType)) {
