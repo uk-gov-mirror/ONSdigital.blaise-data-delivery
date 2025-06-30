@@ -13,86 +13,77 @@ function CreateDeliveryFile {
         [string] $questionnaireName,
         [string] $subFolder,
         [string] $dqsBucket,
-        [string] $tempPath, 
-        [bool] $uneditedData=$false       
+        [string] $tempPath
     )
 
     If ([string]::IsNullOrEmpty($deliveryFile)) {
-        throw "No deliveryFile argument provided"
+        throw "deliveryFile not provided"
     }
 
     If ([string]::IsNullOrEmpty($serverParkName)) {
-        throw "No serverParkName argument provided"
+        throw "serverParkName not provided"
     }
 
     If ([string]::IsNullOrEmpty($surveyType)) {
-        throw "No surveyType argument provided"
+        throw "surveyType not provided"
     }
 
     If ([string]::IsNullOrEmpty($questionnaireName)) {
-        throw "No questionnaire name argument provided"
+        throw "questionnaireName not provided"
     }
 
     If ([string]::IsNullOrEmpty($dqsBucket)) {
-        throw "No dqsBucket argument provided"
+        throw "dqsBucket not provided"
     }
 
     If ([string]::IsNullOrEmpty($tempPath)) {
-        throw "No tempPath argument provided"
+        throw "tempPath not provided"
     }
 
     # Get configuration for survey type
     $config = GetConfigFromFile -surveyType $surveyType
-    
-    # Download questionnaire package
-    DownloadFileFromBucket -questionnaireFileName "$($questionnaireName).bpkg" -bucketName $dqsBucket -filePath $deliveryFile
-    
-    # Create a temporary folder for processing questionnaires
-    $processingFolder = CreateANewFolder -folderPath $tempPath -folderName "$($questionnaireName)_$(Get-Date -format "ddMMyyyy")_$(Get-Date -format "HHmmss")"
+
+    # Create a temporary folder for processing questionnaire data delivery
+    $processingFolderPath = CreateFolder -folderPath $tempPath -folderName "$($questionnaireName)_$(Get-Date -format "ddMMyyyy")_$(Get-Date -format "HHmmss")"
      
-    # If we need to use subfolders then create one and set variable
+    # Determine subfolder creation preference for non-Blaise file formats
+    $processingSubFolderPath = $null
     if($config.createSubFolder -eq $true) {
-        LogInfo("Creating subfolder for delivery")
+        LogInfo("Creating subfolder for $deliveryFile data delivery")
     
-        # Gets the folder name of the processing folder
-        $processingSubFolderName = GetFolderNameFromAPath -folderPath $processingFolder
+        # Get the unique name of the processing folder to use for the subfolder
+        $subFolderName = Split-Path $processingFolderPath -Leaf
     
-        # Create a sub folder within the temporary folder
-        $processingSubFolder = CreateANewFolder -folderPath $processingFolder -folderName $processingSubFolderName
+        # Create subfolder within the processing folder
+        $processingSubFolderPath = CreateFolder -folderPath $processingFolderPath -folderName $subFolderName
     }
     else {
-        # This variable will be ignored in the function called if passed - ugh
-        LogInfo("Did not create subfolder for delivery")
-        $processingSubFolder = $NULL
+        LogInfo("Did not create subfolder for $deliveryFile data delivery")
     }
-
-    # Add manipula and questionnaire package to processing folder
-    LogInfo("Add manipula to $processingFolder")
-    AddManipulaToProcessingFolder -manipulaPackage "$tempPath/manipula.zip" -processingFolder $processingFolder -tempPath $tempPath
+    
+    # Download questionnaire package
+    LogInfo("Downloading questionnaire package $questionnaireName from $dqsBucket bucket")
+    DownloadFileFromBucket -questionnaireFileName "$($questionnaireName).bpkg" -bucketName $dqsBucket -filePath $deliveryFile
  
-    # Populate data files and formats
-    # Get configuration for survey type
-    $config = GetConfigFromFile -surveyType $surveyType
-
-    # Populate data
-    # the use of the parameter '2>&1' redirects output of the cli to the command line and will allow any errors to bubble up
+    # Extract data to Blaise file format (BDBX, BMIX) via Blaise CLI, '2>&1' redirects output to command line allowing errors to bubble up
+    LogInfo("Extracting data in Blaise format for questionnaire $questionnaireName via Blaise CLI")
     C:\BlaiseServices\BlaiseCli\blaise.cli datadelivery -s $serverParkName -q $questionnaireName -f $deliveryFile -a $config.auditTrailData -b $config.batchSize 2>&1        
 
-    # Extact Questionnaire Package to processing folder
-    # The $deliveryFile at this point is the .bpkg which might have been updated by blaise.cli
+    # Extact questionnaire package to processing folder, now contains data in Blaise file format (BDBX, BMIX) from the previous step
+    LogInfo("Extracting questionnaire package $deliveryFile to processing folder $processingFolderPath")
     ExtractZipFile -pathTo7zip $tempPath -zipFilePath $deliveryFile -destinationPath $processingFolder
 
-    # Add additional file formats specified in the config i.e. JSON, ASCII
-    # This function and its children will now only place files into $processingFolder or $processingSubFolder
-    AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $processingSubFolder -deliveryFile $deliveryFile -tempPath $tempPath
+    # Add Manipula files to the processing folder
+    LogInfo("Adding Manipula files to $processingFolderPath")
+    AddManipulaToProcessingFolder -manipulaPackage "$tempPath/manipula.zip" -processingFolder $processingFolderPath -tempPath $tempPath
 
-    # Final step: Create the delivery zip from the contents of the processing folder
-    LogInfo("Preparing to create final delivery package: $deliveryFile")
-    # Remove the old (potentially intermediate) $deliveryFile to ensure a fresh zip is created
+    # Add additional file formats specified in the survey config, will be placed in the processing subfolder if config.createSubFolder is true, i.e. processingSubFolderPath is not $NULL
+    LogInfo("Adding additional file formats to $processingFolderPath")
+    AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $processingSubFolderPath -deliveryFile $deliveryFile -tempPath $tempPath
+
+    # Create the data delivery zip from the contents of the processing folder
+    LogInfo("Creating data delivery zip $deliveryFile")
     Remove-Item -Path $deliveryFile -Force -ErrorAction SilentlyContinue
-    
-    LogInfo("Zipping contents of $processingFolder to $deliveryFile")
-    # Use AddFilesToZip with a wildcard to zip the contents of $processingFolder
     AddFilesToZip -pathTo7zip $tempPath -files "$processingFolder\*" -zipFilePath $deliveryFile
-    LogInfo("Successfully created final delivery package: $deliveryFile")
+    LogInfo("Successfully created data delivery zip $deliveryFile")
 }

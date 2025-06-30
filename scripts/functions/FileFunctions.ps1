@@ -1,4 +1,5 @@
 . "$PSScriptRoot\LoggingFunctions.ps1"
+
 function GenerateDeliveryFilename {
     param (
         [string] $prefix,
@@ -9,15 +10,15 @@ function GenerateDeliveryFilename {
     )
 
     If ([string]::IsNullOrEmpty($prefix)) {
-        throw "No prefix provided"
+        throw "Prefix not provided"
     }
 
     If ([string]::IsNullOrEmpty($questionnaireName)) {
-        throw "No questionnaire name argument provided"
+        throw "Questionnaire name not provided"
     }
 
     If ([string]::IsNullOrEmpty($fileExt)) {
-        throw "No file extension argument provided"
+        throw "File extension not provided"
     }
 
     return "$($prefix)_$($questionnaireName)_$($dateTime.ToString("ddMMyyyy"))_$($dateTime.ToString("HHmmss"))$($suffix).$fileExt"
@@ -29,9 +30,8 @@ function GenerateBatchFileName {
         [string] $surveyType
     )
     If ([string]::IsNullOrEmpty($surveyType)) {
-        throw "No Survey Type has been provided"
+        throw "Survey type not provided"
     }
-
     return "$($surveyType)_$($dateTime.ToString("ddMMyyyy"))_$($dateTime.ToString("HHmmss"))"
 }
 
@@ -84,40 +84,29 @@ function AddFolderToZip {
     LogInfo("Added the folder '$folder' to the zip file '$zipFilePath'")
 }
 
-function CreateANewFolder {
+function CreateFolder {
     param (
         [string] $folderPath,
         [string] $folderName
     )
     If ([string]::IsNullOrEmpty($folderPath)) {
-        throw "No Path to the new folder provided"
+        throw "Folder path not provided"
     }
     If ([string]::IsNullOrEmpty($folderName)) {
-        throw "No folder name provided"
+        throw "Folder name not provided"
     }
 
     if (-not (Test-Path $folderPath\$folderName)) {
-        Write-Host "creating new folder: $folderName in $folderPath"
+        Write-Host "creating folder $folderName in $folderPath"
         New-Item -Path $folderPath -Name $folderName -ItemType "directory" | Out-Null
     }
 
     return "$folderPath\$folderName"
 }
 
-function GetFolderNameFromAPath {
-    param (
-        [string] $folderPath
-    )
-    If ([string]::IsNullOrEmpty($folderPath)) {
-        throw "No Path to the new folder provided"
-    }
-    return Split-Path $processingFolder -Leaf
-}
-
 function ConvertJsonFileToObject {
     param (
         [string] $jsonFile
-    )  
-
+    )
     return Get-Content -Path $jsonFile | ConvertFrom-Json
 }

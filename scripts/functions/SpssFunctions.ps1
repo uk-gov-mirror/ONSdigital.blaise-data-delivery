@@ -38,7 +38,7 @@ function AddSpssFilesToDeliveryPackage {
 
         # Determine the target folder for SPSS files (either $processingFolder\spss or $subFolder\spss)
         $spssBaseOutputFolder = if ([string]::IsNullOrEmpty($subFolder)) { $processingFolder } else { $subFolder }
-        $spssSpecificFolder = CreateANewFolder -folderPath $spssBaseOutputFolder -folderName "spss"
+        $spssSpecificFolder = CreateFolder -folderPath $spssBaseOutputFolder -folderName "spss"
 
         # Move the generated .sps file(s) from $processingFolder to $spssSpecificFolder
         Get-ChildItem -Path $processingFolder -Filter "$($questionnaireName)*.sps" | ForEach-Object {

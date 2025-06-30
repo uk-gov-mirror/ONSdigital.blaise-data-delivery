@@ -46,7 +46,7 @@ function AddAdditionalFilesToDeliveryPackage {
     # Generate and add XML Files if configured
     if($config.deliver.xml -eq $true) {
         LogInfo("Adding XML files")
-        AddXMLFileToDeliveryPackage -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $processingSubFolder
+        AddXMLFileToDeliveryPackage -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
     # Generate and add json Files if configured

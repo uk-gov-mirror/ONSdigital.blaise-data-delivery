@@ -14,7 +14,7 @@ parameters:
     default: '' # Added default value for validation
   - name: Questionnaires
     displayName: Questionnaires separated by commas
-    default: ' '
+    default: ' ' # Space required or it breaks Azure DevOps
 
 trigger: none
 pr: none

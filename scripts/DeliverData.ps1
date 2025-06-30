@@ -57,7 +57,7 @@ try {
     # Create synchronised hashtable to manage the processing status of each questionnaire
     $sync = CreateQuestionnaireSync -questionnaires $questionnaires
 
-    # Deliver the questionnaire package with data for each questionnaire
+    # Deliver the data for each questionnaire
     $questionnaires | ForEach-Object -ThrottleLimit $config.throttleLimit -Parallel {
         . "$using:PSScriptRoot\functions\ThreadingFunctions.ps1"
         $process = GetProcess -questionnaire $_ -sync $using:sync
