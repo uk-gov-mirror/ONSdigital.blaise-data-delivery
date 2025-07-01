@@ -47,21 +47,6 @@ function CreateDeliveryFile {
 
     # Create a temporary folder for processing questionnaire data delivery
     $processingFolderPath = CreateFolder -folderPath $tempPath -folderName "$($questionnaireName)_$(Get-Date -format "ddMMyyyy")_$(Get-Date -format "HHmmss")"
-     
-    # Determine subfolder creation preference for non-Blaise file formats
-    $processingSubFolderPath = $null
-    if($config.createSubFolder -eq $true) {
-        LogInfo("Creating subfolder for $questionnaireName data delivery")
-    
-        # Get the unique name of the processing folder to use for the subfolder
-        $subFolderName = Split-Path $processingFolderPath -Leaf
-    
-        # Create subfolder within the processing folder
-        $processingSubFolderPath = CreateFolder -folderPath $processingFolderPath -folderName $subFolderName
-    }
-    else {
-        LogInfo("Did not create subfolder for $questionnaireName data delivery")
-    }
     
     # Download questionnaire package
     LogInfo("Downloading questionnaire package $questionnaireName from $dqsBucket bucket")
@@ -83,6 +68,21 @@ function CreateDeliveryFile {
     Get-ChildItem -Path $processingFolderPath -Recurse -Directory | Sort-Object -Property FullName -Descending | Where-Object {
         @(Get-ChildItem -Path $_.FullName -Recurse | Where-Object { -not $_.PSIsContainer }).Count -eq 0
         } | Remove-Item -Force
+        
+    # Determine subfolder creation preference for non-Blaise file formats
+    $processingSubFolderPath = $null
+    if($config.createSubFolder -eq $true) {
+        LogInfo("Creating subfolder for $questionnaireName data delivery")
+    
+        # Get the unique name of the processing folder to use for the subfolder
+        $subFolderName = Split-Path $processingFolderPath -Leaf
+    
+        # Create subfolder within the processing folder
+        $processingSubFolderPath = CreateFolder -folderPath $processingFolderPath -folderName $subFolderName
+    }
+    else {
+        LogInfo("Did not create subfolder for $questionnaireName data delivery")
+    }
 
     # Add Manipula files to the processing folder
     LogInfo("Adding Manipula files to $processingFolderPath")
