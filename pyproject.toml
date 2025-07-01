@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "blaise_data_delivery_functions"
+name = "sandbox-data-delivery"
 version = "0.1.0"
-description = "A GCP Cloud Function to copy files from sandbox bucket to dev bucket"
-authors = ["Sidra <sidra.javed@example.com>"]
+description = "GCP Cloud Function to copy files from sandbox NiFi bucket to dev NiFi bucket"
+authors = ["Blaise Team"]
 
 [tool.poetry.dependencies]
 python = "^3.9"

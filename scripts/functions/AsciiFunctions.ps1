@@ -1,54 +1,60 @@
 . "$PSScriptRoot\LoggingFunctions.ps1"
 . "$PSScriptRoot\FileFunctions.ps1"
-function AddAsciiFilesToDeliveryPackage {
-    param (
+
+function AddAsciiToDelivery {
+    param(
         [string] $processingFolder,
         [string] $questionnaireName,
-        [string] $subFolder # Optional: if provided, copy files here from $processingFolder
+        [string] $subFolder
     )
 
-    # Ensure Manipula script for ASCII generation is in the processing folder
-    $msuxFileName = "GenerateAscii.msux"
-    $msuxSourcePath = Join-Path $PSScriptRoot "..\manipula\ascii" $msuxFileName
-    Copy-Item -Path "$PSScriptRoot\..\manipula\ascii\GenerateAscii.msux" -Destination $processingFolder
+    If (-not (Test-Path $processingFolder)) {
+        throw "$processingFolder not found" 
+    }
+    If ([string]::IsNullOrEmpty($questionnaireName)) {
+        throw "questionnaireName not provided" 
+    }
 
-    # Generate .ASC file
+    # Copy Manipula ASCII scripts to processing folder
+    Copy-Item -Path "$PSScriptRoot\..\manipula\ascii\*" -Destination $processingFolder -Force
+
+    # Generate ASCII (ASC file with response data only)
     try {
-        $manipulaPath = Join-Path -Path $processingFolder -ChildPath "Manipula.exe"
-        $msuxPath = Join-Path -Path $processingFolder -ChildPath "GenerateAscii.msux"
-        $bmixPath = Join-Path -Path $processingFolder -ChildPath "$questionnaireName.bmix"
-        $bdbxPath = Join-Path -Path $processingFolder -ChildPath "$questionnaireName.bdbx"
-        $ascPath = Join-Path -Path $processingFolder -ChildPath "$questionnaireName.asc"
-
+        $manipulaPath = Join-Path $processingFolder "Manipula.exe"
+        $msuxPath = Join-Path $processingFolder "GenerateAscii.msux"
+        $bmixPath = Join-Path $processingFolder "$questionnaireName.bmix"
+        $bdbxPath = Join-Path $processingFolder "$questionnaireName.bdbx"
+        $outputPath = Join-Path $processingFolder "$questionnaireName.asc"
         $arguments = @(
             "`"$msuxPath`"",
             "-A:True",
             "-Q:True",
             "-K:Meta=`"$bmixPath`"",
-            "-I:`"$bdbxPath`"", 
-            "-O:`"$ascPath`""      
+            "-I:`"$bdbxPath`"",
+            "-O:`"$outputPath`""
         )
         $process = Start-Process -FilePath $manipulaPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
         if ($process.ExitCode -eq 0) {
-            LogInfo("Generated the .ASC file successfully for $questionnaireName")
+            LogInfo("Successfully generated ASCII for $questionnaireName")
         }
         else {
-            LogWarning("Generating ASCII Failed for $questionnaireName. Manipula.exe exited with code $($process.ExitCode)")
+            LogWarning("Failed generating ASCII for $questionnaireName")
+            LogWarning("Manipula exit code - $process.ExitCode")
         }
     }
     catch {
-        LogWarning("Generating ASCII Failed for $questionnaireName : $($_.Exception.Message)")
-        return # Exit function if generation fails
+        LogWarning("Failed generating ASCII for $questionnaireName")
+        LogWarning("$($_.Exception.Message)")
+        return
     }
 
-    # If a subFolder is specified, copy the generated .asc and any related .fps files to it
-    # Otherwise, they remain in $processingFolder where they were generated.
+    # Copy output to sufolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying ASCII related files from $processingFolder to subfolder: $subFolder")
-        Move-Item -Path "$processingFolder\*.asc", "$processingFolder\*.fps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
-        LogInfo("Copied .ASC and .FPS files to $subFolder")
+        LogInfo("Copying ASCII output to subfolder")
+        Copy-Item -Path "$processingFolder\*.asc", "$processingFolder\*.fps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
+        LogInfo("Copied ASCII output to subfolder")
     }
     else {
-        LogInfo("ASCII files generated in $processingFolder. No subfolder specified for further copying.")
+        LogInfo("ASCII outpit not copied to subfolder")
     }
 }

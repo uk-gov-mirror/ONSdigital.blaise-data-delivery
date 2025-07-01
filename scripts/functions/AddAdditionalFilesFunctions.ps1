@@ -34,24 +34,24 @@ function AddAdditionalFilesToDeliveryPackage {
     # Generate and add Ascii files if configured
     if($config.deliver.ascii -eq $true) {
         LogInfo("Adding ASCII files")
-        AddAsciiFilesToDeliveryPackage -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
+        AddAsciiToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
     # Generate and add SPSS files if configured
     if($config.deliver.spss -eq $true) {
         LogInfo("Adding SPSS files")
-        AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
+        AddSpssToDelivery -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
     # Generate and add XML Files if configured
     if($config.deliver.xml -eq $true) {
         LogInfo("Adding XML files")
-        AddXMLFileToDeliveryPackage -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
+        AddXmlToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
     # Generate and add json Files if configured
     if($config.deliver.json -eq $true) {
         LogInfo("Adding JSON files")
-        AddJSONFileToDeliveryPackage -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
+        AddJsonToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 }

@@ -1,50 +1,57 @@
 . "$PSScriptRoot\LoggingFunctions.ps1"
 . "$PSScriptRoot\FileFunctions.ps1"
-function AddXMLFiletoDeliveryPackage {
+
+function AddXmlToDelivery {
     param(
         [string] $processingFolder,
         [string] $questionnaireName,
-        [string] $subFolder # Optional: if provided, copy files here from $processingFolder
+        [string] $subFolder
     )
 
     If (-not (Test-Path $processingFolder)) {
         throw "$processingFolder not found" 
     }
     If ([string]::IsNullOrEmpty($questionnaireName)) {
-        throw "No questionnaire name provided" 
+        throw "questionnaireName not provided" 
     }
 
-    # Copy Manipula xml files to the processing folder
-    Copy-Item -Path "$PSScriptRoot\..\manipula\xml\GenerateXML.msux" -Destination $processingFolder
+    # Copy Manipula XML scripts to processing folder
+    Copy-Item -Path "$PSScriptRoot\..\manipula\xml\*" -Destination $processingFolder -Force
 
     # MetaViewer.exe exports as <QuestionnaireName>_meta.xml in the same folder as .bmix
     $xmlOutputPathInProcessing = Join-Path $processingFolder "$($questionnaireName)_meta.xml"
 
+    # Generate XML (metadata only)
     try {
-        # Generate XML file, Export function no longer works in Blaise 5
-        $metaViewerExePath = Join-Path $processingFolder "MetaViewer.exe" # Assuming MetaViewer.exe is part of Manipula package
-        $bmixPath = Join-Path $processingFolder "$($questionnaireName).bmix"
-        & cmd.exe /c "$metaViewerExePath" -F:"$bmixPath" -Export
-        LogInfo("Generated .XML File in $processingFolder (expected: $xmlOutputPathInProcessing)")
+        $metaViewerPath = Join-Path $processingFolder "MetaViewer.exe" # Assuming MetaViewer.exe is part of Manipula package
+        $bmixPath = Join-Path $processingFolder "$questionnaireName.bmix"
+        $outputPath = Join-Path $processingFolder "$questionnaireName.xml"
+        $arguments = @(
+            "-F:`"$bmixPath`"",
+            "-Export"
+        )
+        $process = Start-Process -FilePath $metaViewerPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+        if ($process.ExitCode -eq 0) {
+            LogInfo("Successfully generated XML for $questionnaireName")
+        }
+        else {
+            LogWarning("Failed generating XML for $questionnaireName")
+            LogWarning("Manipula exit code - $process.ExitCode")
+        }
     }
     catch {
-        LogWarning("Generating XML Failed: $($_.Exception.Message)")
+        LogWarning("Failed generating XML for $questionnaireName")
+        LogWarning("$($_.Exception.Message)")
         return
     }
 
-    # If a subFolder is specified, copy and rename the generated _meta.xml file to it
+    # Copy output to sufolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying XML related files from $processingFolder to subfolder: $subFolder")
-        if (Test-Path $xmlOutputPathInProcessing) {
-            $finalXmlNameInSubFolder = Join-Path $subFolder "$($questionnaireName).xml"
-            Move-Item -Path $xmlOutputPathInProcessing -Destination $finalXmlNameInSubFolder -Force
-            LogInfo("Copied $xmlOutputPathInProcessing to $finalXmlNameInSubFolder")
-        }
-        else {
-            LogWarning("Expected XML file $xmlOutputPathInProcessing not found for copying.")
-        }
+        LogInfo("Copying XML output to subfolder")
+        Copy-Item -Path "$processingFolder\*.xml" -Destination $subFolder -Force -ErrorAction SilentlyContinue
+        LogInfo("Copied XML output to subfolder")
     }
     else {
-        LogInfo("XML file generated in $processingFolder. No subfolder specified for further copying.")
+        LogInfo("XML outpit not copied to subfolder")
     }
 }

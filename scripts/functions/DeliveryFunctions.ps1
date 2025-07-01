@@ -14,7 +14,7 @@ function CreateDeliveryFile {
         [string] $subFolder,
         [string] $dqsBucket,
         [string] $tempPath,
-        [string[]] $keepQuestionnairePackageFileExtensions = @('bdix', 'bmix', 'bdbx', 'blix'),
+        [string[]] $keepQuestionnairePackageFileExtensions = @('bdix', 'bmix', 'bdbx', 'blix', 'csv'),
         [string[]] $deliverFileExtensions = @('bdix', 'bmix', 'bdbx', 'blix', 'sps', 'fps', 'asc', 'json', 'xml', 'csv')
     )
 
@@ -92,7 +92,7 @@ function CreateDeliveryFile {
     LogInfo("Adding additional file formats to $processingFolderPath")
     AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolderPath -questionnaireName $questionnaireName -subFolder $processingSubFolderPath -deliveryFile $deliveryFile -tempPath $tempPath
 
-    # Remove files that are not in the deliverFileExtensions list
+    # Remove files we don't want delivered
     Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
         $_.Name -like '*$$$*'
         } | Remove-Item -Force

@@ -1,53 +1,60 @@
 . "$PSScriptRoot\LoggingFunctions.ps1"
 . "$PSScriptRoot\FileFunctions.ps1"
-function AddJSONFileToDeliveryPackage {
+
+function AddJsonToDelivery {
     param(
         [string] $processingFolder,
         [string] $questionnaireName,
-        [string] $subFolder # Optional: if provided, copy files here from $processingFolder
+        [string] $subFolder
     )
 
     If (-not (Test-Path $processingFolder)) {
         throw "$processingFolder not found" 
     }
     If ([string]::IsNullOrEmpty($questionnaireName)) {
-        throw "No questionnaire name provided" 
+        throw "questionnaireName not provided" 
     }
 
-    # Copy Manipula xml files to the processing folder
-    Copy-Item -Path "$PSScriptRoot\..\manipula\json\GenerateJSON.msux" -Destination $processingFolder
+    # Copy Manipula JSON scripts to processing folder
+    Copy-Item -Path "$PSScriptRoot\..\manipula\json\*" -Destination $processingFolder -Force
 
-    $jsonOutputPath = Join-Path $processingFolder "$($questionnaireName).json"
-    $jsonBdixOutputPath = Join-Path $processingFolder "$($questionnaireName).json.bdix"
-
+    # Generate JSON
     try {
-        # Generate JSON file
-        $manipulaExePath = Join-Path $processingFolder "Manipula.exe"
-        $msuxPathInProcessing = Join-Path $processingFolder "GenerateJSON.msux"
-        $bmixPath = Join-Path $processingFolder "$($questionnaireName).bmix"
-        $bdbxPath = Join-Path $processingFolder "$($questionnaireName).bdbx"
-        
-        & cmd.exe /c "$manipulaExePath" "$msuxPathInProcessing" -A:True -Q:True -K:Meta="$bmixPath" -I:"$bdbxPath" -O:"$jsonOutputPath"
-        LogInfo("Generated .JSON file: $jsonOutputPath")
+        $manipulaPath = Join-Path $processingFolder "Manipula.exe"
+        $msuxPath = Join-Path $processingFolder "GenerateJSON.msux"
+        $bmixPath = Join-Path $processingFolder "$questionnaireName.bmix"
+        $bdbxPath = Join-Path $processingFolder "$questionnaireName.bdbx"
+        $outputPath = Join-Path $processingFolder "$questionnaireName.json"
+        $arguments = @(
+            "`"$msuxPath`"",
+            "-A:True",
+            "-Q:True",
+            "-K:Meta=`"$bmixPath`"",
+            "-I:`"$bdbxPath`"",
+            "-O:`"$outputPath`""
+        )
+        $process = Start-Process -FilePath $manipulaPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+        if ($process.ExitCode -eq 0) {
+            LogInfo("Successfully generated JSON for $questionnaireName")
+        }
+        else {
+            LogWarning("Failed generating JSON for $questionnaireName")
+            LogWarning("Manipula exit code - $process.ExitCode")
+        }
     }
     catch {
-        LogWarning("Generating Json Failed: $($_.Exception.Message)")
+        LogWarning("Failed generating JSON for $questionnaireName")
+        LogWarning("$($_.Exception.Message)")
         return
     }
 
-    # If a subFolder is specified, copy the generated .json and .json.bdix files to it
+    # Copy output to sufolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying JSON related files from $processingFolder to subfolder: $subFolder")
-        if (Test-Path $jsonOutputPath) {
-            Move-Item -Path $jsonOutputPath -Destination (Join-Path $subFolder "$($questionnaireName).json") -Force
-            LogInfo("Copied $jsonOutputPath to $subFolder")
-        }
-        if (Test-Path $jsonBdixOutputPath) {
-            Move-Item -Path $jsonBdixOutputPath -Destination (Join-Path $subFolder "$($questionnaireName).json.bdix") -Force
-            LogInfo("Copied $jsonBdixOutputPath to $subFolder")
-        }
+        LogInfo("Copying JSON output to subfolder")
+        Copy-Item -Path "$processingFolder\*.json" -Destination $subFolder -Force -ErrorAction SilentlyContinue
+        LogInfo("Copied JSON output to subfolder")
     }
     else {
-        LogInfo("JSON files generated in $processingFolder. No subfolder specified for further copying.")
+        LogInfo("JSON outpit not copied to subfolder")
     }
 }
