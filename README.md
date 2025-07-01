@@ -28,8 +28,8 @@ Survey configurations are defined in JSON files within the `configurations` fold
 | Setting | Description |
 | --- | --- |
 | deliver | Specifies which file formats to include in the delivered package. |
-| spss | Metadata in SPSS format. |
-| ascii | Data in ascii format, used for SPSS. |
+| spss | Metadata in SPSS (.SPS) format. |
+| ascii | Data in ASCII (.ASC) format, used for SPSS. Also creates "remarks" CSV file (.FPS). |
 | json | Data in JSON format. Only includes populated fields. |
 | xml | Metadata in XML format. |
 | createSubFolder | If true, creates a timestamped subfolder for the non-Blaise delivery formats. |

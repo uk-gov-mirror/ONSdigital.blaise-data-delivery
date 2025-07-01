@@ -69,7 +69,7 @@ try {
             . "$using:PSScriptRoot\functions\DeliveryFunctions.ps1"
 
             # Generate unique data delivery filename for the questionnaire
-            $deliveryFileName = GenerateDeliveryFilename -prefix "dd" -questionnaireName $_.name -fileExt $using:config.packageExtension
+            $deliveryFileName = GenerateDeliveryFileName -prefix "dd" -questionnaireName $_.name -fileExt $using:config.packageExtension
 
             # Generate full file path for questionnaire
             $deliveryFile = Join-Path $using:tempPath $deliveryFileName
@@ -78,7 +78,7 @@ try {
             CreateDataDeliveryStatus -fileName $deliveryFileName -batchStamp $using:batchStamp -state "started" -ddsUrl $using:ddsUrl -ddsClientID $using:ddsClientID
 
             # Create delivery file
-            CreateDeliveryFile -deliveryFile $deliveryFile -serverParkName $using:serverParkName -surveyType $using:surveyType -questionnaireName $_.name -dqsBucket $using:dqsBucket -subFolder $processingSubFolder -tempPath $using:tempPath -uneditedData $false          
+            CreateDeliveryFile -deliveryFile $deliveryFile -serverParkName $using:serverParkName -surveyType $using:surveyType -questionnaireName $_.name -dqsBucket $using:dqsBucket -subFolder $processingSubFolder -tempPath $using:tempPath        
                         
             # Upload questionnaire package to NiFi
             UploadFileToBucket -filePath $deliveryFile -bucketName $using:nifiBucket -deliveryFileName $deliveryFileName

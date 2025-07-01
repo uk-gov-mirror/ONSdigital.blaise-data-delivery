@@ -5,7 +5,6 @@
 . "$PSScriptRoot\JsonFunctions.ps1"
 . "$PSScriptRoot\AsciiFunctions.ps1"
 
-
 function AddAdditionalFilesToDeliveryPackage {
     param(
         [string] $surveyType,

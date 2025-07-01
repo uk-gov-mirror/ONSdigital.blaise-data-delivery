@@ -14,7 +14,7 @@ parameters:
     default: '' # Added default value for validation
   - name: Questionnaires
     displayName: Questionnaires separated by commas
-    default: ' ' # Space required or it breaks Azure DevOps
+    default: ' ' # Space required or it breaks Azure DevOps !?
 
 trigger: none
 pr: none
@@ -67,7 +67,7 @@ stages:
                         gsutil cp gs://ons-blaise-v2-europe-west2-shared-data/7za.exe $env:TempPath\7za.exe
                       } catch {
                         Write-Error "Error during download: $_"
-                        exit 1 
+                        exit 1
                       } finally {
                         Write-Host "Reverting GCP login to VM service account..."
                         gcloud auth login $env:ENV_VM_SERVICEACCOUNT

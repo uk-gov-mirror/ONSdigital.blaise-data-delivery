@@ -1,6 +1,4 @@
-. "$PSScriptRoot\LoggingFunctions.ps1"
-
-function GenerateDeliveryFilename {
+function GenerateDeliveryFileName {
     param (
         [string] $prefix,
         [string] $suffix,
@@ -46,10 +44,7 @@ function ExtractZipFile {
         throw "$zipFilePath not found"
     }
 
-    # 7zip extract - x = extract and keep folder structure of zup - o = output file can't have a space between -o and folder
-    & $pathTo7zip\7za x $zipFilePath -o"$destinationPath"
-
-    LogInfo("Extracting zip file '$zipFilePath' to path '$destinationPath'")
+    & $pathTo7zip\7za x $zipFilePath -o"$destinationPath" # x = extract and keep folder structure
 }
 
 function AddFilesToZip {
@@ -63,9 +58,7 @@ function AddFilesToZip {
         throw "No files provided"
     }
 
-    #7 zip CLI - a = add / append - Zip file to Create / append too - Files to add to the zip
-    & $pathTo7zip\7za a $zipFilePath $files
-    LogInfo("Added the file(s) '$files' to the zip file '$zipFilePath'")
+    & $pathTo7zip\7za a $zipFilePath $files # a = add
 }
 
 function AddFolderToZip {
@@ -79,9 +72,7 @@ function AddFolderToZip {
         throw "$folder not found"
     }
 
-    #7 zip CLI - a = add / append - Zip file to Create / append too - Files to add to the zip
-    & $pathTo7zip\7za a $zipFilePath $folder
-    LogInfo("Added the folder '$folder' to the zip file '$zipFilePath'")
+    & $pathTo7zip\7za a $zipFilePath $folder # a = add
 }
 
 function CreateFolder {
@@ -97,7 +88,6 @@ function CreateFolder {
     }
 
     if (-not (Test-Path $folderPath\$folderName)) {
-        Write-Host "creating folder $folderName in $folderPath"
         New-Item -Path $folderPath -Name $folderName -ItemType "directory" | Out-Null
     }
 
