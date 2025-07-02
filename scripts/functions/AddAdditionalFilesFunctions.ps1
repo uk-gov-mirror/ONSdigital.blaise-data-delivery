@@ -10,8 +10,7 @@ function AddAdditionalFilesToDeliveryPackage {
         [string] $surveyType,
         [string] $processingFolder,
         [string] $questionnaireName,
-        [string] $subFolder,
-        [string] $deliveryFile
+        [string] $subFolder
     )
           
     If ([string]::IsNullOrEmpty($surveyType)) {
@@ -39,7 +38,7 @@ function AddAdditionalFilesToDeliveryPackage {
     # Generate and add SPSS files if configured
     if($config.deliver.spss -eq $true) {
         LogInfo("Adding SPSS files")
-        AddSpssToDelivery -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
+        AddSpssToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
     # Generate and add XML Files if configured

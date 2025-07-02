@@ -44,7 +44,7 @@ function ExtractZipFile {
         throw "$zipFilePath not found"
     }
 
-    & $pathTo7zip\7za x $zipFilePath -o"$destinationPath" # x = extract and keep folder structure
+    & $pathTo7zip\7za x $zipFilePath -o"$destinationPath" > $null # x = extract and keep folder structure
 }
 
 function AddFilesToZip {
@@ -58,7 +58,7 @@ function AddFilesToZip {
         throw "No files provided"
     }
 
-    & $pathTo7zip\7za a $zipFilePath $files # a = add
+    & $pathTo7zip\7za a $zipFilePath $files > $null # a = add
 }
 
 function AddFolderToZip {
@@ -72,7 +72,7 @@ function AddFolderToZip {
         throw "$folder not found"
     }
 
-    & $pathTo7zip\7za a $zipFilePath $folder # a = add
+    & $pathTo7zip\7za a $zipFilePath $folder > $null # a = add
 }
 
 function CreateFolder {

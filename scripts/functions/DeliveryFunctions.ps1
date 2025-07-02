@@ -90,7 +90,7 @@ function CreateDeliveryFile {
 
     # Add additional file formats specified in the survey config, will be placed in the processing subfolder if config.createSubFolder is true, i.e. processingSubFolderPath is not $NULL
     LogInfo("Adding additional file formats to $processingFolderPath")
-    AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolderPath -questionnaireName $questionnaireName -subFolder $processingSubFolderPath -deliveryFile $deliveryFile -tempPath $tempPath
+    AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolderPath -questionnaireName $questionnaireName -subFolder $processingSubFolderPath
 
     # Remove files we don't want delivered
     Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
