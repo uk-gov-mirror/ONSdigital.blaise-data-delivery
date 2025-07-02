@@ -88,7 +88,7 @@ function CreateDeliveryFile {
     LogInfo("Adding Manipula files to $processingFolderPath")
     AddManipulaToProcessingFolder -manipulaPackage "$tempPath/manipula.zip" -processingFolder $processingFolderPath -tempPath $tempPath
 
-    # Add additional file formats specified in the survey config, will be placed in the processing subfolder if config.createSubFolder is true, i.e. processingSubFolderPath is not $NULL
+    # Add additional file formats specified in the survey config, will also be placed in the processing subfolder if config.createSubFolder is true, i.e. processingSubFolderPath is not $NULL
     LogInfo("Adding additional file formats to $processingFolderPath")
     AddAdditionalFilesToDeliveryPackage -surveyType $surveyType -processingFolder $processingFolderPath -questionnaireName $questionnaireName -subFolder $processingSubFolderPath
 
