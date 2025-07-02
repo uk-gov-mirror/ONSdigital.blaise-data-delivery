@@ -94,15 +94,15 @@ function CreateDeliveryFile {
 
     # Remove files we don't want delivered
     Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
-        $_.Name -like '*$$$*'
-        -or $_.Name -like '*.asc.bdix'
-        -or $_.Name -like '*.json.bdix'
-        -or $_.Name -like '*_sql.bdix'
-        } | Remove-Item -Force
-        Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
-            $ext = $_.Extension.TrimStart('.').ToLower()
-            -not ($deliverFileExtensions -contains $ext)
-            } | Remove-Item -Force
+        $_.Name -like '*$$$*' -or
+        $_.Name -like '*.asc.bdix' -or
+        $_.Name -like '*.json.bdix' -or
+        $_.Name -like '*_sql.bdix'
+    } | Remove-Item -Force
+    Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
+        $ext = $_.Extension.TrimStart('.').ToLower()
+        -not ($deliverFileExtensions -contains $ext)
+    } | Remove-Item -Force
 
     # Create the data delivery zip from the contents of the processing folder
     LogInfo("Creating data delivery zip $deliveryFile")
