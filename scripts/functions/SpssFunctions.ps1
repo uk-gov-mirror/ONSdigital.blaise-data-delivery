@@ -26,7 +26,7 @@ function AddSpssToDelivery {
         $bdixPath = Join-Path $processingFolder "$questionnaireName.bdix"
         $ascPath = Join-Path $processingFolder "$questionnaireName.asc"
         $arguments = @(
-            "`"$msuxPathInProcessing`"",
+            "`"$msuxPath`"",
             "-K:meta=`"$bmixPath`"",
             "-H:""",
             "-L:""",

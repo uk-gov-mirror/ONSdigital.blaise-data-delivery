@@ -29,7 +29,7 @@ function AddAdditionalFilesToDeliveryPackage {
     $config = GetConfigFromFile -surveyType $surveyType
     LogInfo("Add additional files config - $($config.deliver) $($config)")
 
-    # Generate and add Ascii files if configured
+    # Generate and add ASCII files if configured
     if($config.deliver.ascii -eq $true) {
         LogInfo("Adding ASCII files")
         AddAsciiToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
@@ -47,7 +47,7 @@ function AddAdditionalFilesToDeliveryPackage {
         AddXmlToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
-    # Generate and add json Files if configured
+    # Generate and add JSON Files if configured
     if($config.deliver.json -eq $true) {
         LogInfo("Adding JSON files")
         AddJsonToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
