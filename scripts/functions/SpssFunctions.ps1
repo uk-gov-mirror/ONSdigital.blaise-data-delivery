@@ -23,15 +23,10 @@ function AddSpssToDelivery {
         $manipulaPath = Join-Path $processingFolder "Manipula.exe"
         $msuxPath = Join-Path $processingFolder "GenerateStatisticalScript.msux"
         $bmixPath = Join-Path $processingFolder "$questionnaireName.bmix"
-        $bdix = "$questionnaireName.bdix"
-        $asc = "$questionnaireName.asc"
         $arguments = @(
             "`"$msuxPath`"",
             "-K:meta=`"$bmixPath`"",
-            "-H:""",
-            "-L:""",
-            "-N:oScript=$questionnaireName,iFNames=,iData=$bdix",
-            "-P:SPSS;;;;;;$asc;;;2;;64;;Y",
+            "-P:SPSS;;;;;;;;;2;;;;;;;;;;N",
             "-Q:True"
         )
         $process = Start-Process -FilePath $manipulaPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow

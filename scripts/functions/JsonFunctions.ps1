@@ -27,7 +27,6 @@ function AddJsonToDelivery {
         $outputPath = Join-Path $processingFolder "$questionnaireName.json"
         $arguments = @(
             "`"$msuxPath`"",
-            "-A:True",
             "-Q:True",
             "-K:Meta=`"$bmixPath`"",
             "-I:`"$bdbxPath`"",

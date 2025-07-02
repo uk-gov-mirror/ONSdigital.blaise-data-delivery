@@ -18,7 +18,7 @@ function AddAsciiToDelivery {
     # Copy Manipula ASCII scripts to processing folder
     Copy-Item -Path "$PSScriptRoot\..\manipula\ascii\*" -Destination $processingFolder -Force
 
-    # Generate ASCII (ASC file with response data only)
+    # Generate ASCII (ASC file with response data only, also generates field property "remarks" FPS file)
     try {
         $manipulaPath = Join-Path $processingFolder "Manipula.exe"
         $msuxPath = Join-Path $processingFolder "GenerateAscii.msux"
@@ -27,7 +27,6 @@ function AddAsciiToDelivery {
         $outputPath = Join-Path $processingFolder "$questionnaireName.asc"
         $arguments = @(
             "`"$msuxPath`"",
-            "-A:True",
             "-Q:True",
             "-K:Meta=`"$bmixPath`"",
             "-I:`"$bdbxPath`"",
