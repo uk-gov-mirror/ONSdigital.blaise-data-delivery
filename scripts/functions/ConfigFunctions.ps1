@@ -10,7 +10,7 @@ function GetConfigFromFile {
     $configFile = "$configFolder\$surveyType.json"
 
     If (Test-Path $configFile) {
-        LogInfo("Found config file for survey - $configFile")
+        LogInfo("Found config file for survey: $configFile")
         return ConvertJsonFileToObject($configFile)
     }
 

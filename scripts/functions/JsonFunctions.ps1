@@ -8,6 +8,10 @@ function AddJsonToDelivery {
         [string] $subFolder
     )
 
+    If ([string]::IsNullOrEmpty($processingFolder)) {
+        throw "processingFolder not provided"
+    }
+
     If (-not (Test-Path $processingFolder)) {
         throw "$processingFolder not found" 
     }
@@ -27,10 +31,10 @@ function AddJsonToDelivery {
         $outputPath = Join-Path $processingFolder "$questionnaireName.json"
         $arguments = @(
             "`"$msuxPath`"",
-            "-Q:True",
             "-K:Meta=`"$bmixPath`"",
             "-I:`"$bdbxPath`"",
-            "-O:`"$outputPath`""
+            "-O:`"$outputPath`"",
+            "-Q:True"            
         )
         $process = Start-Process -FilePath $manipulaPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
         if ($process.ExitCode -eq 0) {
@@ -47,13 +51,13 @@ function AddJsonToDelivery {
         return
     }
 
-    # Copy output to sufolder if specified
+    # Move output to sufolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
         LogInfo("Copying JSON output to subfolder")
-        Copy-Item -Path "$processingFolder\*.json" -Destination $subFolder -Force -ErrorAction SilentlyContinue
+        Move-Item -Path "$processingFolder\*.json" -Destination $subFolder -Force -ErrorAction SilentlyContinue
         LogInfo("Copied JSON output to subfolder")
     }
     else {
-        LogInfo("JSON outpit not copied to subfolder")
+        LogInfo("JSON output not copied to subfolder")
     }
 }

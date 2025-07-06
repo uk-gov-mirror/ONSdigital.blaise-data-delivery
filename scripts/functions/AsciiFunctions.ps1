@@ -8,9 +8,14 @@ function AddAsciiToDelivery {
         [string] $subFolder
     )
 
+    If ([string]::IsNullOrEmpty($processingFolder)) {
+        throw "processingFolder not provided"
+    }
+
     If (-not (Test-Path $processingFolder)) {
         throw "$processingFolder not found" 
     }
+
     If ([string]::IsNullOrEmpty($questionnaireName)) {
         throw "questionnaireName not provided" 
     }
@@ -27,10 +32,10 @@ function AddAsciiToDelivery {
         $outputPath = Join-Path $processingFolder "$questionnaireName.asc"
         $arguments = @(
             "`"$msuxPath`"",
-            "-Q:True",
             "-K:Meta=`"$bmixPath`"",
             "-I:`"$bdbxPath`"",
-            "-O:`"$outputPath`""
+            "-O:`"$outputPath`"",
+            "-Q:True"            
         )
         $process = Start-Process -FilePath $manipulaPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
         if ($process.ExitCode -eq 0) {
@@ -47,13 +52,13 @@ function AddAsciiToDelivery {
         return
     }
 
-    # Copy output to sufolder if specified
+    # Move output to sufolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
         LogInfo("Copying ASCII output to subfolder")
-        Copy-Item -Path "$processingFolder\*.asc", "$processingFolder\*.fps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
+        Move-Item -Path "$processingFolder\*.asc", "$processingFolder\*.fps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
         LogInfo("Copied ASCII output to subfolder")
     }
     else {
-        LogInfo("ASCII outpit not copied to subfolder")
+        LogInfo("ASCII output not copied to subfolder")
     }
 }

@@ -7,8 +7,16 @@ function AddManipulaToProcessingFolder {
         [string] $tempPath
     )
 
+    If ([string]::IsNullOrEmpty($manipulaPackage)) {
+        throw "manipulaPackage not provided"
+    }
+
     If (-not (Test-Path $manipulaPackage)) {
         throw "$manipulaPackage not found"
+    }
+
+    If ([string]::IsNullOrEmpty($processingFolder)) {
+        throw "processingFolder not provided"
     }
 
     If (-not (Test-Path $processingFolder)) {

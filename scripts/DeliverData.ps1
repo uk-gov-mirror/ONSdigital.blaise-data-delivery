@@ -18,16 +18,6 @@ try {
     $surveyType = $env:SurveyType
     $questionnaireList = $env:Questionnaires -replace '\s+', '' # Remove all spaces from the questionnaire list
 
-    LogInfo("DDS URL: $ddsUrl")
-    LogInfo("DDS Client ID: $ddsClientID")
-    LogInfo("Temp path: $tempPath")
-    LogInfo("NiFi Bucket: $nifiBucket")
-    LogInfo("DQS Bucket: $dqsBucket")
-    LogInfo("REST API URL: $restAPIUrl")
-    LogInfo("Server park name: $serverParkName")
-    LogInfo("Survey type: $surveyType")
-    LogInfo("Questionnaire list: $questionnaireList")
-
     # Get list of questionnaires for data delivery
     $questionnaires = if ([string]::IsNullOrWhitespace($questionnaireList)) {
         LogInfo("Getting installed questionnaires for survey type: '$surveyType'")

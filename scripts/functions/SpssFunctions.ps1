@@ -8,9 +8,14 @@ function AddSpssToDelivery {
         [string] $subFolder
     )
 
+    If ([string]::IsNullOrEmpty($processingFolder)) {
+        throw "processingFolder not provided"
+    }
+
     If (-not (Test-Path $processingFolder)) {
         throw "$processingFolder not found" 
     }
+    
     If ([string]::IsNullOrEmpty($questionnaireName)) {
         throw "questionnaireName not provided" 
     }
@@ -44,10 +49,10 @@ function AddSpssToDelivery {
         return
     }
 
-    # Copy output to sufolder if specified
+    # Move output to sufolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
         LogInfo("Copying SPSS output to subfolder")
-        Copy-Item -Path "$processingFolder\*.sps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
+        Move-Item -Path "$processingFolder\*.sps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
         LogInfo("Copied SPSS output to subfolder")
     }
     else {

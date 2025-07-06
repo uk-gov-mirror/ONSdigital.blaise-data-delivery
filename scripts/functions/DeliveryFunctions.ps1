@@ -52,11 +52,11 @@ function CreateDeliveryFile {
     LogInfo("Downloading questionnaire package $questionnaireName from $dqsBucket bucket")
     DownloadFileFromBucket -questionnaireFileName "$($questionnaireName).bpkg" -bucketName $dqsBucket -filePath $deliveryFile
  
-    # Extract data to Blaise file format (BDBX, BMIX) via Blaise CLI, '2>&1' redirects output to command line allowing errors to bubble up
+    # Extract data to Blaise file format (BDBX, BMIX, BDIX) via Blaise CLI, '2>&1' redirects output to command line allowing errors to bubble up
     LogInfo("Extracting data in Blaise format for questionnaire $questionnaireName via Blaise CLI")
     C:\BlaiseServices\BlaiseCli\blaise.cli datadelivery -s $serverParkName -q $questionnaireName -f $deliveryFile -a $config.auditTrailData -b $config.batchSize 2>&1        
 
-    # Extact questionnaire package to processing folder, now contains data in Blaise file format (BDBX, BMIX) from the previous step
+    # Extact questionnaire package to processing folder, now contains data in Blaise file format from the previous step
     LogInfo("Extracting questionnaire package $deliveryFile to processing folder $processingFolderPath")
     ExtractZipFile -pathTo7zip $tempPath -zipFilePath $deliveryFile -destinationPath $processingFolderPath
 
@@ -85,7 +85,7 @@ function CreateDeliveryFile {
     }
 
     # Add Manipula files to the processing folder
-    LogInfo("Adding Manipula files to $processingFolderPath")
+    LogInfo("Adding Manipula binaries to $processingFolderPath")
     AddManipulaToProcessingFolder -manipulaPackage "$tempPath/manipula.zip" -processingFolder $processingFolderPath -tempPath $tempPath
 
     # Add additional file formats specified in the survey config, will also be placed in the processing subfolder if config.createSubFolder is true, i.e. processingSubFolderPath is not $NULL

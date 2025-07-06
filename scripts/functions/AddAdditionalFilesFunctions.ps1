@@ -14,20 +14,24 @@ function AddAdditionalFilesToDeliveryPackage {
     )
           
     If ([string]::IsNullOrEmpty($surveyType)) {
-        throw "No surveyType argument provided"
+        throw "surveyType not provided"
     }
 
     If ([string]::IsNullOrEmpty($processingFolder)) {
-        throw "No processingFolder argument provided"
+        throw "processingFolder not provided"
+    }
+
+    If (-not (Test-Path $processingFolder)) {
+        throw "$processingFolder not found" 
     }
 
     If ([string]::IsNullOrEmpty($questionnaireName)) {
-        throw "No questionnaire name argument provided"
+        throw "questionnaireName not provided"
     }
           
     # Get configuration for survey type
     $config = GetConfigFromFile -surveyType $surveyType
-    LogInfo("Add additional files config - $($config.deliver) $($config)")
+    LogInfo("Add additional files config: $($config.deliver) $($config)")
 
     # Generate and add ASCII files if configured
     if($config.deliver.ascii -eq $true) {
