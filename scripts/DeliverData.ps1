@@ -10,7 +10,7 @@ $ErrorActionPreference = "Stop"
 try {
     $ddsUrl = $env:ENV_DDS_URL
     $ddsClientID = $env:ENV_DDS_CLIENT
-    $tempPath = $env:TempPath
+    $processingPath = $env:ProcessingPath
     $nifiBucket = $env:ENV_BLAISE_NIFI_BUCKET
     $dqsBucket = $env:ENV_BLAISE_DQS_BUCKET
     $restAPIUrl = $env:ENV_RESTAPI_URL
@@ -62,13 +62,13 @@ try {
             $deliveryFileName = GenerateDeliveryFileName -prefix "dd" -questionnaireName $_.name -fileExt $using:config.packageExtension
 
             # Generate full file path for questionnaire
-            $deliveryFile = Join-Path $using:tempPath $deliveryFileName
+            $deliveryFile = Join-Path $using:processingPath $deliveryFileName
 
             # Set data delivery status to started
             CreateDataDeliveryStatus -fileName $deliveryFileName -batchStamp $using:batchStamp -state "started" -ddsUrl $using:ddsUrl -ddsClientID $using:ddsClientID
 
             # Create delivery file
-            CreateDeliveryFile -deliveryFile $deliveryFile -serverParkName $using:serverParkName -surveyType $using:surveyType -questionnaireName $_.name -dqsBucket $using:dqsBucket -subFolder $processingSubFolder -tempPath $using:tempPath        
+            CreateDeliveryFile -deliveryFile $deliveryFile -serverParkName $using:serverParkName -surveyType $using:surveyType -questionnaireName $_.name -dqsBucket $using:dqsBucket -subFolder $processingSubFolder -processingPath $using:processingPath        
                         
             # Upload questionnaire package to NiFi
             UploadFileToBucket -filePath $deliveryFile -bucketName $using:nifiBucket -deliveryFileName $deliveryFileName

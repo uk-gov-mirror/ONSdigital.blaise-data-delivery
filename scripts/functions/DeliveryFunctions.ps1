@@ -13,7 +13,7 @@ function CreateDeliveryFile {
         [string] $questionnaireName,
         [string] $subFolder,
         [string] $dqsBucket,
-        [string] $tempPath,
+        [string] $processingPath,
         [string[]] $keepQuestionnairePackageFileExtensions = @('bdix', 'bmix', 'bdbx', 'blix', 'csv'),
         [string[]] $deliverFileExtensions = @('bdix', 'bmix', 'bdbx', 'blix', 'sps', 'fps', 'asc', 'json', 'xml', 'csv')
     )
@@ -38,15 +38,15 @@ function CreateDeliveryFile {
         throw "dqsBucket not provided"
     }
 
-    If ([string]::IsNullOrEmpty($tempPath)) {
-        throw "tempPath not provided"
+    If ([string]::IsNullOrEmpty($processingPath)) {
+        throw "processingPath not provided"
     }
 
     # Get configuration for survey type
     $config = GetConfigFromFile -surveyType $surveyType
 
     # Create a temporary folder for processing questionnaire data delivery
-    $processingFolderPath = CreateFolder -folderPath $tempPath -folderName "$($questionnaireName)_$(Get-Date -format "ddMMyyyy")_$(Get-Date -format "HHmmss")"
+    $processingFolderPath = CreateFolder -folderPath $processingPath -folderName "$($questionnaireName)_$(Get-Date -format "ddMMyyyy")_$(Get-Date -format "HHmmss")"
     
     # Download questionnaire package
     LogInfo("Downloading questionnaire package $questionnaireName from $dqsBucket bucket")
@@ -58,7 +58,7 @@ function CreateDeliveryFile {
 
     # Extact questionnaire package to processing folder, now contains data in Blaise file format from the previous step
     LogInfo("Extracting questionnaire package $deliveryFile to processing folder $processingFolderPath")
-    ExtractZipFile -pathTo7zip $tempPath -zipFilePath $deliveryFile -destinationPath $processingFolderPath
+    ExtractZipFile -pathTo7zip $processingPath -zipFilePath $deliveryFile -destinationPath $processingFolderPath
 
     # Remove unwanted files after questionnaire package extraction
     Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
@@ -86,7 +86,7 @@ function CreateDeliveryFile {
 
     # Add Manipula files to the processing folder
     LogInfo("Adding Manipula binaries to $processingFolderPath")
-    AddManipulaToProcessingFolder -manipulaPackage "$tempPath/manipula.zip" -processingFolder $processingFolderPath -tempPath $tempPath
+    AddManipulaToProcessingFolder -manipulaPackage "$processingPath/manipula.zip" -processingFolder $processingFolderPath -processingPath $processingPath
 
     # Add additional file formats specified in the survey config, will also be placed in the processing subfolder if config.createSubFolder is true, i.e. processingSubFolderPath is not $NULL
     LogInfo("Adding additional file formats to $processingFolderPath")
@@ -107,6 +107,6 @@ function CreateDeliveryFile {
     # Create the data delivery zip from the contents of the processing folder
     LogInfo("Creating data delivery zip $deliveryFile")
     Remove-Item -Path $deliveryFile -Force -ErrorAction SilentlyContinue
-    AddFilesToZip -pathTo7zip $tempPath -files "$processingFolderPath\*" -zipFilePath $deliveryFile
+    AddFilesToZip -pathTo7zip $processingPath -files "$processingFolderPath\*" -zipFilePath $deliveryFile
     LogInfo("Successfully created data delivery zip $deliveryFile")
 }

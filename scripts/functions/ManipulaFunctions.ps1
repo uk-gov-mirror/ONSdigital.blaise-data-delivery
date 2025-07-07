@@ -4,7 +4,7 @@ function AddManipulaToProcessingFolder {
     param (
         [string] $manipulaPackage,
         [string] $processingFolder,
-        [string] $tempPath
+        [string] $processingPath
     )
 
     If ([string]::IsNullOrEmpty($manipulaPackage)) {
@@ -24,5 +24,5 @@ function AddManipulaToProcessingFolder {
     }
 
     # Extract Manipula files to the processing folder
-    ExtractZipFile -pathTo7zip $tempPath -zipFilePath $manipulaPackage -destinationPath $processingFolder
+    ExtractZipFile -pathTo7zip $processingPath -zipFilePath $manipulaPackage -destinationPath $processingFolder
 }
