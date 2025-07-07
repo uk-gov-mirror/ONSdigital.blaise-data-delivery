@@ -20,17 +20,10 @@ function AddXmlToDelivery {
         throw "questionnaireName not provided" 
     }
 
-    # Copy Manipula XML scripts to processing folder
-    Copy-Item -Path "$PSScriptRoot\..\manipula\xml\*" -Destination $processingFolder -Force
-
-    # MetaViewer.exe exports as <QuestionnaireName>_meta.xml in the same folder as .bmix
-    $xmlOutputPathInProcessing = Join-Path $processingFolder "$($questionnaireName)_meta.xml"
-
     # Generate XML (metadata only)
     try {
-        $metaViewerPath = Join-Path $processingFolder "MetaViewer.exe" # Assuming MetaViewer.exe is part of Manipula package
+        $metaViewerPath = Join-Path $processingFolder "MetaViewer.exe"
         $bmixPath = Join-Path $processingFolder "$questionnaireName.bmix"
-        $outputPath = Join-Path $processingFolder "$questionnaireName.xml"
         $arguments = @(
             "-F:`"$bmixPath`"",
             "-Export"
@@ -50,7 +43,7 @@ function AddXmlToDelivery {
         return
     }
 
-    # Move output to sufolder if specified
+    # Move output to subfolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
         LogInfo("Copying XML output to subfolder")
         Move-Item -Path "$processingFolder\*.xml" -Destination $subFolder -Force -ErrorAction SilentlyContinue

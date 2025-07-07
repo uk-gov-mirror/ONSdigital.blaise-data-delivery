@@ -49,7 +49,7 @@ function AddSpssToDelivery {
         return
     }
 
-    # Move output to sufolder if specified
+    # Move output to subfolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
         LogInfo("Copying SPSS output to subfolder")
         Move-Item -Path "$processingFolder\*.sps" -Destination $subFolder -Force -ErrorAction SilentlyContinue

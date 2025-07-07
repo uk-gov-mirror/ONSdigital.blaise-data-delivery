@@ -3,7 +3,8 @@
         "spss" : true,
         "ascii": true,
         "json" : true,
-        "xml" : true
+        "xml" : true,
+        "dataXml" : true
     },
 
     "createSubFolder" : true,

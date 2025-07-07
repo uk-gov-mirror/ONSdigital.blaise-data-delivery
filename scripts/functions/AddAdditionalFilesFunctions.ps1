@@ -4,6 +4,7 @@
 . "$PSScriptRoot\XmlFunctions.ps1"
 . "$PSScriptRoot\JsonFunctions.ps1"
 . "$PSScriptRoot\AsciiFunctions.ps1"
+. "$PSScriptRoot\XmlDataFunctions.ps1"
 
 function AddAdditionalFilesToDeliveryPackage {
     param(
@@ -35,25 +36,31 @@ function AddAdditionalFilesToDeliveryPackage {
 
     # Generate and add ASCII files if configured
     if($config.deliver.ascii -eq $true) {
-        LogInfo("Adding ASCII files")
+        LogInfo("Adding ASCII data files")
         AddAsciiToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
     # Generate and add SPSS files if configured
     if($config.deliver.spss -eq $true) {
-        LogInfo("Adding SPSS files")
+        LogInfo("Adding SPSS data files")
         AddSpssToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
-    # Generate and add XML Files if configured
+    # Generate and add XML files if configured
     if($config.deliver.xml -eq $true) {
-        LogInfo("Adding XML files")
+        LogInfo("Adding XML data files")
         AddXmlToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
-    # Generate and add JSON Files if configured
+    # Generate and add JSON files if configured
     if($config.deliver.json -eq $true) {
-        LogInfo("Adding JSON files")
+        LogInfo("Adding JSON data files")
         AddJsonToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
+    }
+
+    # Generate and add JSON data files if configured
+    if($config.deliver.dataXml -eq $true) {
+        LogInfo("Adding XML metadata files")
+        AddXmlDataToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 }
