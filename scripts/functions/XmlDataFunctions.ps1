@@ -25,7 +25,7 @@ function AddXmlDataToDelivery {
     # Generate XML data
     try {
         $manipulaPath = Join-Path $processingFolder "Manipula.exe"
-        $msuxPath = Join-Path $processingFolder "GenerateXml.msux"
+        $msuxPath = Join-Path $processingFolder "GenerateXmlData.msux"
         $bmixPath = Join-Path $processingFolder "$questionnaireName.bmix"
         $bdbxPath = Join-Path $processingFolder "$questionnaireName.bdbx"
         $outputPath = Join-Path $processingFolder "$questionnaireName.xml"

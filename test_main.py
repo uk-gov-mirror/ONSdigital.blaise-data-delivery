@@ -10,7 +10,7 @@ class TestDeliverDataFunction(unittest.TestCase):
     @patch("main.storage.Client")  
     @patch("main.get_environment_suffix")  
     @patch("main.split_filename") 
-    def test_deliver_sandbox_dd_files_to_dev_for_IPS_DD_File(self, mock_split_filename, mock_get_environment_suffix, mock_storage_client):
+    def test_deliver_sandbox_dd_files_to_dev_for_ips_dd_file(self, mock_split_filename, mock_get_environment_suffix, mock_storage_client):
        
         data = {
             "bucket": "ons-blaise-v2-dev-ips-bucketname",
@@ -48,11 +48,10 @@ class TestDeliverDataFunction(unittest.TestCase):
             mock_source_blob, mock_destination_bucket, "dd_IPS2411A_sandbox_ips_26112024_060148.zip"
         )
 
-
     @patch("main.storage.Client")  
     @patch("main.get_environment_suffix")  
     @patch("main.split_filename") 
-    def test_deliver_sandbox_dd_files_to_dev_for_FRS_DD_File(self, mock_split_filename, mock_get_environment_suffix, mock_storage_client):
+    def test_deliver_sandbox_dd_files_to_dev_for_frs_dd_file(self, mock_split_filename, mock_get_environment_suffix, mock_storage_client):
        
         data = {
             "bucket": "ons-blaise-v2-dev-loadtest2-bucketname",
@@ -90,22 +89,19 @@ class TestDeliverDataFunction(unittest.TestCase):
             mock_source_blob, mock_destination_bucket, "dd_FRS2411_AA1_sandbox_loadtest2_26112024_060148.zip"
         )
 
-    
-
-
     @patch("main.storage.Client")  
     @patch("main.get_environment_suffix")  
     @patch("main.split_filename") 
-    def test_deliver_sandbox_dd_files_to_dev_for_IPS_DD_File(self, mock_split_filename, mock_get_environment_suffix, mock_storage_client):
+    def test_deliver_sandbox_dd_files_to_dev_for_lms_dd_file(self, mock_split_filename, mock_get_environment_suffix, mock_storage_client):
        
         data = {
             "bucket": "ons-blaise-v2-dev-loadtest2-bucketname",
-            "name": "dd_IPS2413A_AA1_26112024_060148.zip",
+            "name": "dd_LMS2413A_AA1_26112024_060148.zip",
         }
         context = {}
 
         mock_get_environment_suffix.return_value = "loadtest2"
-        mock_split_filename.return_value = ("dd_IPS2413A_AA1", "26112024_060148")
+        mock_split_filename.return_value = ("dd_LMS2413A_AA1", "26112024_060148")
 
         # Mock storage client and bucket behavior
         mock_client_instance = MagicMock()
@@ -129,9 +125,9 @@ class TestDeliverDataFunction(unittest.TestCase):
         mock_storage_client.assert_called_once()
         mock_client_instance.bucket.assert_any_call("ons-blaise-v2-dev-loadtest2-bucketname")
 
-        mock_source_bucket.blob.assert_called_once_with("dd_IPS2413A_AA1_26112024_060148.zip")
+        mock_source_bucket.blob.assert_called_once_with("dd_LMS2413A_AA1_26112024_060148.zip")
         mock_source_bucket.copy_blob.assert_called_once_with(
-            mock_source_blob, mock_destination_bucket, "dd_IPS2413A_AA1_sandbox_loadtest2_26112024_060148.zip"
+            mock_source_blob, mock_destination_bucket, "dd_LMS2413A_AA1_sandbox_loadtest2_26112024_060148.zip"
         )
 
     @patch('main.logging.info') 
@@ -159,8 +155,7 @@ class TestDeliverDataFunction(unittest.TestCase):
         deliver_sandbox_dd_files_to_dev(data, context)
 
         # Assertions
-        mock_error.assert_called_once_with(f"An error occured while trying to run the data-delivery-function. Exception: Not a valid request object")
-    
+        mock_error.assert_called_once_with(f"An error occured while trying to run the sandbox data delivery function. Exception: Not a valid request object")
     
     @parameterized.expand([
         ("dd_FRS2411_AA1_26112024_060148", "dd_FRS2411_AA1","26112024_060148"),
@@ -169,13 +164,11 @@ class TestDeliverDataFunction(unittest.TestCase):
         ("dd_IPS2413A_AA1_26112024_060148", "dd_IPS2413A_AA1","26112024_060148"),
     ])
     def test_split_filename(self, filename, expected_prefix, expected_suffix) :
-       
         
         received_prefix , received_suffix = split_filename(filename)
        
         assert received_prefix == expected_prefix
         assert received_suffix == expected_suffix
-
 
     @parameterized.expand([
         ("ons-blaise-v2-dev-rr3-nifi", "rr3"),

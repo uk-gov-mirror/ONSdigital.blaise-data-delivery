@@ -7,7 +7,7 @@ setup_logger()
 
 def deliver_sandbox_dd_files_to_dev(data, _context):
 
-    logging.info(f"Sandbox Data Delivery Process triggered")
+    logging.info(f"Sandbox data delivery process triggered")
     try:
         if(data == None or data == {}):
             raise ValueError("Not a valid request object")
@@ -25,7 +25,7 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
             destination_bucket_name = "ons-blaise-v2-dev-nifi"
 
             env_suffix = get_environment_suffix(bucket_name)
-            filename, fileExtension = os.path.splitext(file_name)  #splits at extension only
+            filename, fileExtension = os.path.splitext(file_name)  # Splits at extension only
             
             prefix, suffix = split_filename(filename) 
 
@@ -43,7 +43,7 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
             logging.info("Non-dd file received, no data delivery needed")
             return
     except Exception as e:
-        error = f"An error occured while trying to run the data-delivery-function. Exception: {e}"
+        error = f"An error occured while trying to run the sandbox data delivery function. Exception: {e}"
         logging.error(error)
         return error, 500
 

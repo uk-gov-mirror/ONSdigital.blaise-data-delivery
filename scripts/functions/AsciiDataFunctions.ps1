@@ -26,7 +26,7 @@ function AddAsciiDataToDelivery {
     # Generate ASCII data (also generates field property "remarks" FPS file)
     try {
         $manipulaPath = Join-Path $processingFolder "Manipula.exe"
-        $msuxPath = Join-Path $processingFolder "GenerateAscii.msux"
+        $msuxPath = Join-Path $processingFolder "GenerateAsciiData.msux"
         $bmixPath = Join-Path $processingFolder "$questionnaireName.bmix"
         $bdbxPath = Join-Path $processingFolder "$questionnaireName.bdbx"
         $outputPath = Join-Path $processingFolder "$questionnaireName.asc"
