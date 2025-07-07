@@ -95,8 +95,10 @@ function CreateDeliveryFile {
     # Remove files we don't want delivered
     Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {
         $_.Name -like '*$$$*' -or
+        $_.Name -like '*.manx.bmix' -or
         $_.Name -like '*.asc.bdix' -or
         $_.Name -like '*.json.bdix' -or
+        $_.Name -like '*.xml.bdix' -or
         $_.Name -like '*_sql.bdix'
     } | Remove-Item -Force
     Get-ChildItem -Path $processingFolderPath -Recurse -File | Where-Object {

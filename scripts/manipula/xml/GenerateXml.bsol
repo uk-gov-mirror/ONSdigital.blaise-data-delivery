@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Solution Name="GenerateXml Solution">
-  <StartupProject RelativePath="true">GenerateXml.bproj</StartupProject>
-  <ProjectItems>
-    <Project RelativePath="true" BuildSequence="2">GenerateXml.bproj</Project>
-  </ProjectItems>
-</Solution>

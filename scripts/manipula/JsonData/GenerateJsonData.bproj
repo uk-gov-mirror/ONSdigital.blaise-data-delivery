@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Name="GenerateJson" Guid="c77c1818-481c-4a4d-83fb-a2f7465290db" ProjectType="ManipulaProject">
-  <MainFile RelativePath="true">GenerateJson.manx</MainFile>
+<Project Name="GenerateJsonData" Guid="c77c1818-481c-4a4d-83fb-a2f7465290db" ProjectType="ManipulaProject">
+  <MainFile RelativePath="true">GenerateJsonData.manx</MainFile>
   <FileItems>
-    <File FileType="ManipulaFileType" RelativePath="true">GenerateJson.manx</File>
+    <File FileType="ManipulaFileType" RelativePath="true">GenerateJsonData.manx</File>
   </FileItems>
   <Properties>
     <IncludeSearchPath />

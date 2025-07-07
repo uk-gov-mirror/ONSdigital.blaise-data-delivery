@@ -1,7 +1,7 @@
 ﻿. "$PSScriptRoot\LoggingFunctions.ps1"
 . "$PSScriptRoot\FileFunctions.ps1"
 
-function AddSpssToDelivery {
+function AddSpssMetadataToDelivery {
     param(
         [string] $processingFolder,
         [string] $questionnaireName,
@@ -20,10 +20,10 @@ function AddSpssToDelivery {
         throw "questionnaireName not provided" 
     }
 
-    # Copy Manipula SPSS scripts to processing folder
-    Copy-Item -Path "$PSScriptRoot\..\manipula\spss\*" -Destination $processingFolder -Force
+    # Copy Manipula statistical metadata scripts to processing folder
+    Copy-Item -Path "$PSScriptRoot\..\manipula\StatisticalMetadata\*" -Destination $processingFolder -Force
 
-    # Generate SPSS (SPS file with metadata only)
+    # Generate SPSS metadata
     try {
         $manipulaPath = Join-Path $processingFolder "Manipula.exe"
         $msuxPath = Join-Path $processingFolder "GenerateStatisticalScript.msux"
@@ -36,26 +36,26 @@ function AddSpssToDelivery {
         )
         $process = Start-Process -FilePath $manipulaPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
         if ($process.ExitCode -eq 0) {
-            LogInfo("Successfully generated SPSS for $questionnaireName")
+            LogInfo("Successfully generated SPSS metadata for $questionnaireName")
         }
         else {
-            LogWarning("Failed generating SPSS for $questionnaireName")
+            LogWarning("Failed generating SPSS metadata for $questionnaireName")
             LogWarning("Manipula exit code - $process.ExitCode")
         }
     }
     catch {
-        LogWarning("Failed generating SPSS for $questionnaireName")
+        LogWarning("Failed generating SPSS metadata for $questionnaireName")
         LogWarning("$($_.Exception.Message)")
         return
     }
 
     # Move output to subfolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying SPSS output to subfolder")
+        LogInfo("Copying SPSS metadata output to subfolder")
         Move-Item -Path "$processingFolder\*.sps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
-        LogInfo("Copied SPSS output to subfolder")
+        LogInfo("Copied SPSS metadata output to subfolder")
     }
     else {
-        LogInfo("SPSS output not copied to subfolder")
+        LogInfo("SPSS metadata output not copied to subfolder")
     }
 }

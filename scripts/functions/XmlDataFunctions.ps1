@@ -20,7 +20,7 @@ function AddXmlDataToDelivery {
     }
 
     # Copy Manipula XML data scripts to processing folder
-    Copy-Item -Path "$PSScriptRoot\..\manipula\xml\*" -Destination $processingFolder -Force
+    Copy-Item -Path "$PSScriptRoot\..\manipula\XmlData\*" -Destination $processingFolder -Force
 
     # Generate XML data
     try {

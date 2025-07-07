@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Solution Name="GenerateAscii Solution">
-  <StartupProject RelativePath="true">GenerateAscii.bproj</StartupProject>
-  <ProjectItems>
-    <Project RelativePath="true" BuildSequence="2">GenerateAscii.bproj</Project>
-  </ProjectItems>
-</Solution>

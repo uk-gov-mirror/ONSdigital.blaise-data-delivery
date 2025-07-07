@@ -1,7 +1,7 @@
 . "$PSScriptRoot\LoggingFunctions.ps1"
 . "$PSScriptRoot\FileFunctions.ps1"
 
-function AddAsciiToDelivery {
+function AddAsciiDataToDelivery {
     param(
         [string] $processingFolder,
         [string] $questionnaireName,
@@ -20,10 +20,10 @@ function AddAsciiToDelivery {
         throw "questionnaireName not provided" 
     }
 
-    # Copy Manipula ASCII scripts to processing folder
-    Copy-Item -Path "$PSScriptRoot\..\manipula\ascii\*" -Destination $processingFolder -Force
+    # Copy Manipula ASCII data scripts to processing folder
+    Copy-Item -Path "$PSScriptRoot\..\manipula\AsciiData\*" -Destination $processingFolder -Force
 
-    # Generate ASCII (ASC file with response data only, also generates field property "remarks" FPS file)
+    # Generate ASCII data (also generates field property "remarks" FPS file)
     try {
         $manipulaPath = Join-Path $processingFolder "Manipula.exe"
         $msuxPath = Join-Path $processingFolder "GenerateAscii.msux"
@@ -39,26 +39,26 @@ function AddAsciiToDelivery {
         )
         $process = Start-Process -FilePath $manipulaPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
         if ($process.ExitCode -eq 0) {
-            LogInfo("Successfully generated ASCII for $questionnaireName")
+            LogInfo("Successfully generated ASCII data for $questionnaireName")
         }
         else {
-            LogWarning("Failed generating ASCII for $questionnaireName")
+            LogWarning("Failed generating ASCII data for $questionnaireName")
             LogWarning("Manipula exit code - $process.ExitCode")
         }
     }
     catch {
-        LogWarning("Failed generating ASCII for $questionnaireName")
+        LogWarning("Failed generating ASCII data for $questionnaireName")
         LogWarning("$($_.Exception.Message)")
         return
     }
 
     # Move output to subfolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying ASCII output to subfolder")
+        LogInfo("Copying ASCII data output to subfolder")
         Move-Item -Path "$processingFolder\*.asc", "$processingFolder\*.fps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
-        LogInfo("Copied ASCII output to subfolder")
+        LogInfo("Copied ASCII data output to subfolder")
     }
     else {
-        LogInfo("ASCII output not copied to subfolder")
+        LogInfo("ASCII data output not copied to subfolder")
     }
 }

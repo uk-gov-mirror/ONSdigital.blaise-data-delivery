@@ -1,7 +1,7 @@
 . "$PSScriptRoot\LoggingFunctions.ps1"
 . "$PSScriptRoot\FileFunctions.ps1"
 
-function AddXmlToDelivery {
+function AddXmlMetadataToDelivery {
     param(
         [string] $processingFolder,
         [string] $questionnaireName,
@@ -20,7 +20,7 @@ function AddXmlToDelivery {
         throw "questionnaireName not provided" 
     }
 
-    # Generate XML (metadata only)
+    # Generate XML metadata
     try {
         $metaViewerPath = Join-Path $processingFolder "MetaViewer.exe"
         $bmixPath = Join-Path $processingFolder "$questionnaireName.bmix"
@@ -30,26 +30,26 @@ function AddXmlToDelivery {
         )
         $process = Start-Process -FilePath $metaViewerPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
         if ($process.ExitCode -eq 0) {
-            LogInfo("Successfully generated XML for $questionnaireName")
+            LogInfo("Successfully generated XML metadata for $questionnaireName")
         }
         else {
-            LogWarning("Failed generating XML for $questionnaireName")
+            LogWarning("Failed generating XML metadata for $questionnaireName")
             LogWarning("Manipula exit code - $process.ExitCode")
         }
     }
     catch {
-        LogWarning("Failed generating XML for $questionnaireName")
+        LogWarning("Failed generating XML metadata for $questionnaireName")
         LogWarning("$($_.Exception.Message)")
         return
     }
 
     # Move output to subfolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying XML output to subfolder")
+        LogInfo("Copying XML metadata output to subfolder")
         Move-Item -Path "$processingFolder\*.xml" -Destination $subFolder -Force -ErrorAction SilentlyContinue
-        LogInfo("Copied XML output to subfolder")
+        LogInfo("Copied XML metadata output to subfolder")
     }
     else {
-        LogInfo("XML output not copied to subfolder")
+        LogInfo("XML metadata output not copied to subfolder")
     }
 }
