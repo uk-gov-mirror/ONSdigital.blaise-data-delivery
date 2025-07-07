@@ -53,11 +53,11 @@ function AddXmlDataToDelivery {
 
     # Move output to subfolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying XML data output to subfolder")
+        LogInfo("Moving XML data output to subfolder")
         Move-Item -Path "$processingFolder\*.xml" -Destination $subFolder -Force -ErrorAction SilentlyContinue
-        LogInfo("Copied XML data output to subfolder")
+        LogInfo("Moved XML data output to subfolder")
     }
     else {
-        LogInfo("XML data output not copied to subfolder")
+        LogInfo("XML data output not moved to subfolder")
     }
 }

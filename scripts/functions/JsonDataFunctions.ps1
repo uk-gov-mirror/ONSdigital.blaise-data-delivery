@@ -53,11 +53,11 @@ function AddJsonDataToDelivery {
 
     # Move output to subfolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying JSON data output to subfolder")
+        LogInfo("Moving JSON data output to subfolder")
         Move-Item -Path "$processingFolder\*.json" -Destination $subFolder -Force -ErrorAction SilentlyContinue
-        LogInfo("Copied JSON data output to subfolder")
+        LogInfo("Moved JSON data output to subfolder")
     }
     else {
-        LogInfo("JSON data output not copied to subfolder")
+        LogInfo("JSON data output not moved to subfolder")
     }
 }

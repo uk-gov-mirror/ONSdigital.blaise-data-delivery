@@ -51,11 +51,11 @@ function AddSpssMetadataToDelivery {
 
     # Move output to subfolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying SPSS metadata output to subfolder")
+        LogInfo("Moving SPSS metadata output to subfolder")
         Move-Item -Path "$processingFolder\*.sps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
-        LogInfo("Copied SPSS metadata output to subfolder")
+        LogInfo("Moved SPSS metadata output to subfolder")
     }
     else {
-        LogInfo("SPSS metadata output not copied to subfolder")
+        LogInfo("SPSS metadata output not moved to subfolder")
     }
 }

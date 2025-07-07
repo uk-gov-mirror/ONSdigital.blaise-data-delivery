@@ -45,11 +45,11 @@ function AddXmlMetadataToDelivery {
 
     # Move output to subfolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying XML metadata output to subfolder")
+        LogInfo("Moving XML metadata output to subfolder")
         Move-Item -Path "$processingFolder\*.xml" -Destination $subFolder -Force -ErrorAction SilentlyContinue
-        LogInfo("Copied XML metadata output to subfolder")
+        LogInfo("Moved XML metadata output to subfolder")
     }
     else {
-        LogInfo("XML metadata output not copied to subfolder")
+        LogInfo("XML metadata output not moved to subfolder")
     }
 }

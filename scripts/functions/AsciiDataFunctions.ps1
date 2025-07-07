@@ -54,11 +54,11 @@ function AddAsciiDataToDelivery {
 
     # Move output to subfolder if specified
     if (-not [string]::IsNullOrEmpty($subFolder)) {
-        LogInfo("Copying ASCII data output to subfolder")
+        LogInfo("Moving ASCII data output to subfolder")
         Move-Item -Path "$processingFolder\*.asc", "$processingFolder\*.fps" -Destination $subFolder -Force -ErrorAction SilentlyContinue
-        LogInfo("Copied ASCII data output to subfolder")
+        LogInfo("Moved ASCII data output to subfolder")
     }
     else {
-        LogInfo("ASCII data output not copied to subfolder")
+        LogInfo("ASCII data output not moved to subfolder")
     }
 }

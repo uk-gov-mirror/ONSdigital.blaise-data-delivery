@@ -9,16 +9,15 @@ def deliver_sandbox_dd_files_to_dev(data, _context):
 
     logging.info(f"Sandbox data delivery process triggered")
     try:
-        if(data == None or data == {}):
+        if not data:
             raise ValueError("Not a valid request object")
         
         bucket_name = data["bucket"]
         file_name = data["name"]
-
         
         logging.info(f"File received: {file_name}")
 
-        if("mi_" not in file_name and "dd_" in file_name):
+        if file_name.startswith("dd_"):
 
             storage_client = storage.Client()
 
