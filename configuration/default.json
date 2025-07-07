@@ -8,7 +8,7 @@
     },
 
     "createSubFolder" : false,
-    "auditTrailData" : false,
+    "auditTrailData" : true,
     "packageExtension" : "zip",
     "batchSize" : 0,
     "throttleLimit" : 3
