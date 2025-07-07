@@ -340,4 +340,9 @@ ASALocalRun/
 healthchecksdb
 .vscode/settings.json
 
+# Blaise stuff
 .usersettings
+.pdf
+ReadMe.txt
+GenerateStatisticalScript_Starter.cmd
+GenerateStatisticalScript_Starter.ps1

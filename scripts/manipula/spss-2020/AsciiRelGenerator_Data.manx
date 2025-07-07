@@ -2,7 +2,7 @@
 {*************************************************}
 {                                                 }
 {  Blaise 5. A Survey Processing System           }
-{  Copyright (c) 2024 Statistics Netherlands      }
+{  Copyright (c) 2021 Statistics Netherlands      }
 {                                                 }
 {*************************************************}
 SETUP AsciiRelGenerator_Data
@@ -47,7 +47,7 @@ SETUP AsciiRelGenerator_Data
 {$DEFINE UseBlockMetaXML} //use XML file that contains the meta data including offroute/unprocessed attributes
                           //when disable the block based .bmix file will be used. This requires a call to
                           //loadDataModel when a different blocktype needs to be processed. Seems somewhat slower 
-                          //than using the Block Meta xml file. 
+                          //then using the Block Meta xml file. 
 SETTINGS
   AUTOREAD=NO 
   {$IFDEF DEBUG}
@@ -252,7 +252,7 @@ PARAMETERS
   pINumber: INTEGER
 AUXFIELDS
   tmp: OPEN
-  aHeader: OPEN  
+  aHeader: STRING  
   LFN, BFN: STRING
 INSTRUCTIONS
 //Struture of record is as follows:
@@ -321,7 +321,7 @@ AUXFIELDS
   tmp: STRING
   tmpFileName: STRING
   tmpB: BLOBTYPE
-  aHeader: OPEN  
+  aHeader: STRING  
   LFN, BFN: STRING
 INSTRUCTIONS
 //Struture of record is as follows:
@@ -636,7 +636,7 @@ AUXFIELDS
   i: INTEGER
   FPN: STRING
   BFN, LFN: STRING
-  aHeader: OPEN
+  aHeader: STRING
   aBlockName: STRING
 INSTRUCTIONS
 //Struture of record is as follows:

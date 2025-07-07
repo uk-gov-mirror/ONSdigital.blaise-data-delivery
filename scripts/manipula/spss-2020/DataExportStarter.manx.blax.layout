@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LayoutSpecification xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="DataExportStarter" Version="10" GenerateAllSections="true" GenerateClientRules="true" UseGenericPages="false">
+<LayoutSpecification xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="StartMetaAndDataExport" Version="10" GenerateAllSections="true" GenerateClientRules="true" UseGenericPages="false">
   <Languages>
     <Language Name="" />
   </Languages>
@@ -226,303 +226,303 @@
                         <FieldType>Enumeration</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_1_</ReferenceName>
+                        <ReferenceName>langstr_1_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_2_</ReferenceName>
+                        <ReferenceName>langstr_2_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_3_</ReferenceName>
+                        <ReferenceName>langstr_3_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_4_</ReferenceName>
+                        <ReferenceName>langstr_4_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_5_</ReferenceName>
+                        <ReferenceName>langstr_5_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_6_</ReferenceName>
+                        <ReferenceName>langstr_6_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_7_</ReferenceName>
+                        <ReferenceName>langstr_7_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_8_</ReferenceName>
+                        <ReferenceName>langstr_8_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_9_</ReferenceName>
+                        <ReferenceName>langstr_9_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_10_</ReferenceName>
+                        <ReferenceName>langstr_10_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_11_</ReferenceName>
+                        <ReferenceName>langstr_11_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_12_</ReferenceName>
+                        <ReferenceName>langstr_12_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_13_</ReferenceName>
+                        <ReferenceName>langstr_13_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_14_</ReferenceName>
+                        <ReferenceName>langstr_14_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_15_</ReferenceName>
+                        <ReferenceName>langstr_15_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_16_</ReferenceName>
+                        <ReferenceName>langstr_16_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_17_</ReferenceName>
+                        <ReferenceName>langstr_17_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_18_</ReferenceName>
+                        <ReferenceName>langstr_18_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_19_</ReferenceName>
+                        <ReferenceName>langstr_19_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_20_</ReferenceName>
+                        <ReferenceName>langstr_20_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_21_</ReferenceName>
+                        <ReferenceName>langstr_21_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_22_</ReferenceName>
+                        <ReferenceName>langstr_22_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_23_</ReferenceName>
+                        <ReferenceName>langstr_23_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_24_</ReferenceName>
+                        <ReferenceName>langstr_24_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>LangStr_25_</ReferenceName>
+                        <ReferenceName>langstr_25_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_1_</ReferenceName>
+                        <ReferenceName>rolestr_1_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_2_</ReferenceName>
+                        <ReferenceName>rolestr_2_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_3_</ReferenceName>
+                        <ReferenceName>rolestr_3_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_4_</ReferenceName>
+                        <ReferenceName>rolestr_4_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_5_</ReferenceName>
+                        <ReferenceName>rolestr_5_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_6_</ReferenceName>
+                        <ReferenceName>rolestr_6_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_7_</ReferenceName>
+                        <ReferenceName>rolestr_7_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_8_</ReferenceName>
+                        <ReferenceName>rolestr_8_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_9_</ReferenceName>
+                        <ReferenceName>rolestr_9_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_10_</ReferenceName>
+                        <ReferenceName>rolestr_10_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_11_</ReferenceName>
+                        <ReferenceName>rolestr_11_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_12_</ReferenceName>
+                        <ReferenceName>rolestr_12_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_13_</ReferenceName>
+                        <ReferenceName>rolestr_13_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_14_</ReferenceName>
+                        <ReferenceName>rolestr_14_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_15_</ReferenceName>
+                        <ReferenceName>rolestr_15_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_16_</ReferenceName>
+                        <ReferenceName>rolestr_16_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_17_</ReferenceName>
+                        <ReferenceName>rolestr_17_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_18_</ReferenceName>
+                        <ReferenceName>rolestr_18_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_19_</ReferenceName>
+                        <ReferenceName>rolestr_19_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_20_</ReferenceName>
+                        <ReferenceName>rolestr_20_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_21_</ReferenceName>
+                        <ReferenceName>rolestr_21_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_22_</ReferenceName>
+                        <ReferenceName>rolestr_22_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_23_</ReferenceName>
+                        <ReferenceName>rolestr_23_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_24_</ReferenceName>
+                        <ReferenceName>rolestr_24_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>RoleStr_25_</ReferenceName>
+                        <ReferenceName>rolestr_25_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_1_</ReferenceName>
+                        <ReferenceName>modestr_1_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_2_</ReferenceName>
+                        <ReferenceName>modestr_2_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_3_</ReferenceName>
+                        <ReferenceName>modestr_3_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_4_</ReferenceName>
+                        <ReferenceName>modestr_4_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_5_</ReferenceName>
+                        <ReferenceName>modestr_5_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_6_</ReferenceName>
+                        <ReferenceName>modestr_6_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_7_</ReferenceName>
+                        <ReferenceName>modestr_7_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_8_</ReferenceName>
+                        <ReferenceName>modestr_8_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_9_</ReferenceName>
+                        <ReferenceName>modestr_9_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_10_</ReferenceName>
+                        <ReferenceName>modestr_10_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_11_</ReferenceName>
+                        <ReferenceName>modestr_11_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_12_</ReferenceName>
+                        <ReferenceName>modestr_12_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_13_</ReferenceName>
+                        <ReferenceName>modestr_13_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_14_</ReferenceName>
+                        <ReferenceName>modestr_14_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_15_</ReferenceName>
+                        <ReferenceName>modestr_15_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_16_</ReferenceName>
+                        <ReferenceName>modestr_16_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_17_</ReferenceName>
+                        <ReferenceName>modestr_17_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_18_</ReferenceName>
+                        <ReferenceName>modestr_18_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_19_</ReferenceName>
+                        <ReferenceName>modestr_19_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_20_</ReferenceName>
+                        <ReferenceName>modestr_20_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_21_</ReferenceName>
+                        <ReferenceName>modestr_21_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_22_</ReferenceName>
+                        <ReferenceName>modestr_22_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_23_</ReferenceName>
+                        <ReferenceName>modestr_23_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_24_</ReferenceName>
+                        <ReferenceName>modestr_24_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
-                        <ReferenceName>ModeStr_25_</ReferenceName>
+                        <ReferenceName>modestr_25_</ReferenceName>
                         <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                       <MappedFieldExpressionReference>
@@ -540,10 +540,6 @@
                       <MappedFieldExpressionReference>
                         <ReferenceName>ModesCount</ReferenceName>
                         <FieldType>Integer</FieldType>
-                      </MappedFieldExpressionReference>
-                      <MappedFieldExpressionReference>
-                        <ReferenceName>DialogTitle</ReferenceName>
-                        <FieldType>String</FieldType>
                       </MappedFieldExpressionReference>
                     </ExpressionReferences>
                     <Columns>
@@ -584,11 +580,7 @@
                                     <Row Height="Auto" />
                                   </Rows>
                                   <Children>
-                                    <ImageControl Name="companyLogo" Margin="2" ScreenReaderText="Company logo" Source="Logo" ScreenReaderTextSource="Literal" TabIndex="-1">
-                                      <ScreenReaderRichTextDefinition>
-                                        <RunElements />
-                                      </ScreenReaderRichTextDefinition>
-                                    </ImageControl>
+                                    <ImageControl Name="companyLogo" Margin="2" ScreenReaderText="Company logo" Source="Logo" ScreenReaderTextSource="Literal" TabIndex="-1" />
                                     <ParallelsArea Name="parallelsArea1" ColumnIndex="1" DesignHeight="42">
                                       <DefaultTemplates>
                                         <TemplateReference Name="DialogHeader" Kind="Parallel" />
@@ -815,7 +807,6 @@
               <Instructions>
                 <TemplateInstruction TemplateName="OnlyInput" TemplateTarget="FieldPane" />
                 <TemplateInstruction TemplateName="Set" TemplateTarget="Category" Parameters="{ParameterValues Enabled={Expression Package.ValueAsText = '1'};IsStretched='True';AutoEnter='False';TextAutoEnter='False';CodeAutoEnter='False';IsEnabled='True'}" ObjectName="" />
-                <TemplateInstruction TemplateName="Set" TemplateTarget="Category" Parameters="{ParameterValues Enabled={Expression Package.ValueAsText = '1' OR Package.ValueAsText = '2'}}" ObjectName="Yes" />
               </Instructions>
             </RouteItemLayoutInstructions>
             <RouteItemLayoutInstructions RouteItemName="SpecifyPackageSettings.DoDKRFConversionForNonNumeric">
@@ -905,10 +896,6 @@
                         <ReferenceName>Package</ReferenceName>
                         <FieldType>Enumeration</FieldType>
                       </MappedFieldExpressionReference>
-                      <MappedFieldExpressionReference>
-                        <ReferenceName>DialogTitle</ReferenceName>
-                        <FieldType>String</FieldType>
-                      </MappedFieldExpressionReference>
                     </ExpressionReferences>
                     <Columns>
                       <Column Width="*" />
@@ -948,11 +935,7 @@
                                     <Row Height="Auto" />
                                   </Rows>
                                   <Children>
-                                    <ImageControl Name="companyLogo" Margin="2" ScreenReaderText="Company logo" Source="Logo" ScreenReaderTextSource="Literal" TabIndex="-1">
-                                      <ScreenReaderRichTextDefinition>
-                                        <RunElements />
-                                      </ScreenReaderRichTextDefinition>
-                                    </ImageControl>
+                                    <ImageControl Name="companyLogo" Margin="2" ScreenReaderText="Company logo" Source="Logo" ScreenReaderTextSource="Literal" TabIndex="-1" />
                                     <ParallelsArea Name="parallelsArea1" ColumnIndex="1" DesignHeight="42">
                                       <DefaultTemplates>
                                         <TemplateReference Name="DialogHeader" Kind="Parallel" />
@@ -1247,7 +1230,7 @@
     <LayoutSpecFieldReference Name="RespondentTimeZone" />
     <LayoutSpecFieldReference Name="RespondentTime" />
     <LayoutSpecFieldReference Name="MainSurveyName" />
-    <LayoutSpecFieldReference Name="InstrumentID" />
+    <LayoutSpecFieldReference Name="QuestionnaireID" />
     <LayoutSpecFieldReference Name="InterviewerID" />
     <LayoutSpecFieldReference Name="CaseID" />
   </LayoutSpecFieldReferences>

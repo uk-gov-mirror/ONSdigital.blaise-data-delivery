@@ -2,11 +2,11 @@
 {*************************************************}
 {                                                 }
 {  Blaise 5. A Survey Processing System           }
-{  Copyright (c) 2024 Statistics Netherlands      }
+{  Copyright (c) 2021 Statistics Netherlands      }
 {                                                 }
 {*************************************************}
 //
-//This setup can be used to start the statistical script generator
+//This setup can be used to start the statistical script genarator
 //and the data export for the import in SAS,SPSS or Stata
 
 
@@ -413,7 +413,7 @@ INSTRUCTIONS
                      +DFStr+';'           //param 19: SAS only. Generate formats
                      
   IF DoAsciiRelational<>EMPTY THEN 
-    strCmdLine:= strCmdLine+'N' //No Manipula scripts
+    strCmdLine:= strCmdLine+'N' 
   ENDIF                   
   strCmdLine:= strCmdLine+'"' 
   RESULT:= strCmdLine

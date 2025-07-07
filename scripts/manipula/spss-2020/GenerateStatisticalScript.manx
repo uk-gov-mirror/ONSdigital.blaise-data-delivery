@@ -1,21 +1,21 @@
 ﻿{*************************************************}
 {                                                 }
 {  Blaise 5. A Survey Processing System           }
-{  Copyright (c) 2024 Statistics Netherlands      }
+{  Copyright (c) 2021 Statistics Netherlands      }
 {                                                 }
 {*************************************************}
 
 PROCESS GenerateStatisticalScript
 //********************************************************************************************
 //                                                 
-// Version: 1.41 - July 20, 2022                  
+// Version: 1.21 - October 13, 2020                  
 // Based on Blaise 4 script 1.3 - 29-Feb-2016      
 //                                                 
 // Generate scripts for statistical packages       
 // Based on ideas from                             
-// - Peter Sinkiewicz,                          
-// - Leif Bochis Madsen and           
-// - Lon Hofman                       
+// - Peter <psnz@cbs.nl>,                          
+// - Leif Bochis Madsen <lbm@dst.dk> and           
+// - Lon Hofman <lhfn@cbs.nl>                      
 // Some SPSS improvements were provided by         
 // - Kees de Boer (VUmc, Amsterdam)                
 // Many valuable comments on the Stata script      
@@ -112,13 +112,6 @@ PROCESS GenerateStatisticalScript
 //   - Stata script improved, for instance: INSHEET replaced by IMPORT and large
 //     integer/real no longer handled as string
 //   - Generated files no longer have BOM when in UTF8 format. Stata can not handle BOM.
-// 1.3 December 10-2020
-//   - Adapted to handle DATETIMETYPE
-// 1.4 February 2-2022
-//   - Support for NOT converting date/time fields in SPSS added. 
-//   - DATETIMETYPE export for SPSS improved (exported as A29)
-// 1.41 July 20-2022
-//   - Separator now only set to TAB for SPSS UTF8 export when not provided on command line
 
 //
 //*******************************************************************************************
@@ -180,15 +173,16 @@ PROCESS GenerateStatisticalScript
 //                script to ANSI, else (default) it will be exported to UTF-8
 //  parameter 15: Add zero to index of array elements when number of elements is more
 //                than 9. When 'N' (no) this will be disabled. Default is 'Y' (Yes)
-//  parameter 16: SAS/SPSS only. Convert date/time fields (optional). When 'Y' conversion 
-//                will be done. When 'N' this will not be done. Default is 'Y'
+//  parameter 16: SAS only. Convert date/time fields (optional). When 'Y' conversion will be
+//                done. When 'N' this will not be done. Default is 'Y'
 //  parameter 17: SAS only. Recode DK/RF for non-numeric veriables. When 'Y' recoding will be
 //                done. When 'N' this will not be done. Default is 'Y'
 //  parameter 18: SAS only. Recode empty to missing. Default is 'Y'  
 //  parameter 19: SAS only. Generate formats. Default is 'Y'
 //  parameter 20: Produce Manipula export script. Default is 'Y'
 //                                                                                            
-// You can us the DateExportStarter script to specify the parameters and run this script.                                   
+// You can us the StartStatisticalScriptGenerator.ps1 PowerShell script to specify the        
+// parameters and run this script.                                                            
 //                                                                                            
 //********************************************************************************************
 {.$DEFINE DEBUG}
@@ -282,6 +276,7 @@ SETTINGS
    TRAILINGSPACES = NO
    OPEN = NO
    ADDUTF8BOM = NO //needed for Stata...
+   BUFFERSIZE = 1000
 
 OUTPUTFILE oASCII: AsciiMeta (ASCII)
 SETTINGS
@@ -789,11 +784,7 @@ INSTRUCTIONS
   //Result is: STRING, INTEGER, REAL, DATETYPE, TIMETYPE, OPEN, ENUMERATION, SET, CLASSIFICATION or BLOCK, all in UPPERCASE
   s:= UPPERCASE([[meta.GetField(pFieldName).Type.Structure]])
   CASE s OF
-  'DATE': IF [[meta.GetField(pFieldName).Type.IncludeTime]]='True' THEN 
-            s:= 'DATETIMETYPE'
-          ELSE
-            s:= 'DATETYPE'
-          ENDIF  
+  'DATE': s:= 'DATETYPE'
   'TIME': s:= 'TIMETYPE'
   'BLOCKNAME': s:= 'BLOCK' 
   'STRING': IF [[meta.GetField(pFieldName).Type.MaxLength]]='' THEN s:= 'OPEN' ENDIF
@@ -1502,6 +1493,7 @@ INSTRUCTIONS
   ENDIF  
   IF SetW<>1 THEN WriteLineToASCII('SETTINGS') Setw:= 1 ENDIF
   WriteLineToASCII('  ADDUTF8BOM = NO')
+  WriteLineToASCII('  BUFFERSIZE = 1000')
   IF DoProduceANSI=Yes THEN
     IF SetW<>1 THEN WriteLineToASCII('SETTINGS') ENDIF
     WriteLineToASCII('  CHARACTERSET = ANSI')
@@ -1846,7 +1838,7 @@ INSTRUCTIONS
     Dollar:= ''
     IF tfRec.ftAdded=EMPTY THEN
       l:= tfrec.width
-      IF tfrec.fieldtype in ['DATETYPE','CLASSIFICATION','TIMETYPE','DATETIMETYPE','STRING'] THEN
+      IF tfrec.fieldtype in ['DATETYPE','CLASSIFICATION','TIMETYPE','STRING'] THEN
         Dollar:='$'
       ENDIF
       IF tfRec.vUniqueName<>tfRec.vFieldName THEN
@@ -1882,7 +1874,7 @@ INSTRUCTIONS
   spaces:= getSpaces(35-LEN(uname))
 
   CASE ftype OF
-  'STRING', 'CLASSIFICATION', 'DATETIMETYPE' :
+  'STRING', 'CLASSIFICATION' :
     WriteText( uname + spaces + ' $ ' + [[meta.GetField(pFieldName).TextSize('')]], Plevel)
 
   'DATETYPE', 'TIMETYPE' :
@@ -2200,7 +2192,7 @@ INSTRUCTIONS
   FOR i:= 1 TO tfRec.FORMCOUNT DO
     tfrec.READNEXT
     IF tfrec.ftAdded=EMPTY THEN
-      IF DoDKRFConversionForNonNumeric=Yes or NOT (tfrec.fieldtype IN ['DATETYPE','TIMETYPE','DATETIMETYPE','STRING','CLASSIFICATION']) THEN
+      IF DoDKRFConversionForNonNumeric=Yes or NOT (tfrec.fieldtype IN ['DATETYPE','TIMETYPE','STRING','CLASSIFICATION']) THEN
         IF NOT (tfrec.fieldtype IN ['DATETYPE', 'TIMETYPE'])
              { always handled in PROCEDURE SAS_GenerateDateTimeModifications}
         THEN
@@ -2277,14 +2269,14 @@ INSTRUCTIONS
                       _format:= STR(tfrec.width) + '.'
                     ENDIF
         'ENUMERATION','SET': _format:= STR(tfrec.width) + '.'
-        'DATETYPE','CLASSIFICATION','TIMETYPE','DATETIMETYPE','DATETIMETYPE','STRING': _format:= '$char'+STR(tfrec.width) + '.'
+        'DATETYPE','CLASSIFICATION','TIMETYPE','STRING': _format:= '$char'+STR(tfrec.width) + '.'
       ENDCASE
 
       Attrib_Line:= Attrib_Line+' format='+_format 
       //length
       CASE tfrec.fieldtype OF
         'INTEGER','REAL','ENUMERATION','SET': _length:= '8'
-        'DATETYPE','CLASSIFICATION','TIMETYPE','DATETIMETYPE','STRING': _length:= '$'+STR(tfrec.width)
+        'DATETYPE','CLASSIFICATION','TIMETYPE','STRING': _length:= '$'+STR(tfrec.width)
       ENDCASE
       Attrib_Line:= Attrib_Line+' length='+_length 
       WriteText(Attrib_Line, 2)
@@ -2494,7 +2486,7 @@ INSTRUCTIONS
     tfrec.READNEXT
     IF (tfRec.ftAdded=EMPTY) AND (tfrec.FieldType<>'OPEN') THEN
       formatstr:= EMPTY
-      IF tfrec.FieldType IN ['INTEGER','ENUMERATION','SET'] THEN
+      IF tfrec.FieldType IN ['INTEGER','ENUMERATION','DATETYPE','SET'] THEN
         formatstr:= '(F'+STR(tfrec.width)+'.0)'
       ELSEIF  tfrec.FieldType='REAL' THEN
         //IF tfrec.decim<>255 THEN
@@ -2508,22 +2500,10 @@ INSTRUCTIONS
         ELSE
           formatstr:= '(A'+STR(tfrec.width*4)+')'
         ENDIF  
-      ELSEIF  tfrec.FieldType='DATETIMETYPE' THEN
-        formatstr:= '(A'+STR(tfrec.width)+')'
       ELSEIF tfrec.FieldType='CLASSIFICATION' THEN
         formatstr:= '(A'+STR(tfrec.width)+')'
-      ELSEIF  tfrec.FieldType='DATETYPE' THEN
-        IF DoConvertDateTime=Yes THEN
-          formatstr:= '(F'+STR(tfrec.width)+'.0)'
-        ELSE  
-          formatstr:= '(A'+STR(tfrec.width)+')'
-        ENDIF  
-      ELSEIF  tfrec.FieldType='TIMETYPE' THEN
-        IF DoConvertDateTime=Yes THEN
-          formatstr:= '(TIME'+STR(tfrec.width)+')'
-        ELSE  
-          formatstr:= '(A'+STR(tfrec.width)+')'
-        ENDIF   
+      ELSEIF  tfrec.FieldType IN ['TIMETYPE'] THEN
+        formatstr:= '(TIME'+STR(tfrec.width)+')'
       ENDIF
       WriteText(FORMAT(tfrec.vUniqueName,MaxNameLen+2,LEFT)+formatstr,2)
     ENDIF
@@ -2623,29 +2603,27 @@ PROCEDURE SPSS_ComputeDateTimeVariables
 AUXFIELDS i: INTEGER
 INSTRUCTIONS
   tfrec.RESET
-  IF DoConvertDateTime=Yes THEN
-    FOR i:= 1 TO tfrec.FORMCOUNT DO
-      tfrec.READNEXT
-      IF tfrec.fieldtype='DATETYPE' THEN
-        {LHFN Changed 4-9-2013. Always test on missing}
-        {IF (POSITION(';rf;',tfrec.attribute)>0) OR (POSITION(';dk;',tfrec.attribute)>0) THEN}
-          WriteText('DO IF NOT MISSING('+tfRec.vUniquename+').',0)
-        {ENDIF}
-        WriteText('COMPUTE',0)
-        WriteText('#DD = NUMBER(SUBSTRING(STRING('+tfrec.vUniqueName+',F8.0),1,2),F2).',2)
-        WriteText('COMPUTE',0)
-        WriteText('#MM = NUMBER(SUBSTRING(STRING('+tfrec.vUniqueName+',F8.0),3,2),F2).',2)
-        WriteText('COMPUTE',0)
-        WriteText('#YY = NUMBER(SUBSTRING(STRING('+tfrec.vUniqueName+',F8.0),5,4),F4).',2)
-        WriteText('COMPUTE',0)
-        WriteText(tfrec.vUniqueName+' = DATE.DMY(#DD, #MM, #YY).',2)
-        {LHFN Changed 4-9-2013. Always test on missing}
-        {IF (POSITION(';rf;',tfrec.attribute)>0) OR (POSITION(';dk;',tfrec.attribute)>0) THEN}
-          WriteText('END IF.',0)
-        {ENDIF}
-      ENDIF
-    ENDDO
-  ENDIF
+  FOR i:= 1 TO tfrec.FORMCOUNT DO
+    tfrec.READNEXT
+    IF tfrec.fieldtype='DATETYPE' THEN
+      {LHFN Changed 4-9-2013. Always test on missing}
+      {IF (POSITION(';rf;',tfrec.attribute)>0) OR (POSITION(';dk;',tfrec.attribute)>0) THEN}
+        WriteText('DO IF NOT MISSING('+tfRec.vUniquename+').',0)
+      {ENDIF}
+      WriteText('COMPUTE',0)
+      WriteText('#DD = NUMBER(SUBSTRING(STRING('+tfrec.vUniqueName+',F8.0),1,2),F2).',2)
+      WriteText('COMPUTE',0)
+      WriteText('#MM = NUMBER(SUBSTRING(STRING('+tfrec.vUniqueName+',F8.0),3,2),F2).',2)
+      WriteText('COMPUTE',0)
+      WriteText('#YY = NUMBER(SUBSTRING(STRING('+tfrec.vUniqueName+',F8.0),5,4),F4).',2)
+      WriteText('COMPUTE',0)
+      WriteText(tfrec.vUniqueName+' = DATE.DMY(#DD, #MM, #YY).',2)
+      {LHFN Changed 4-9-2013. Always test on missing}
+      {IF (POSITION(';rf;',tfrec.attribute)>0) OR (POSITION(';dk;',tfrec.attribute)>0) THEN}
+        WriteText('END IF.',0)
+      {ENDIF}
+    ENDIF
+  ENDDO
 ENDPROCEDURE
 
 PROCEDURE SPSS_WriteFormats
@@ -2805,12 +2783,10 @@ INSTRUCTIONS
   SPSS_Make_MISSING_VALUES(0)
   DisplayProgress('SPSS Compute Date Time Variables')
   SPSS_ComputeDateTimeVariables
-  IF DoConvertDateTime=Yes THEN 
-    DisplayProgress('SPSS Write Formats (DATETYPE)')
-    SPSS_WriteFormats('DATETYPE')
-    DisplayProgress('SPSS Write Formats (TIMETYPE)')
-    SPSS_WriteFormats('TIMETYPE')
-  ENDIF
+  DisplayProgress('SPSS Write Formats (DATETYPE)')
+  SPSS_WriteFormats('DATETYPE')
+  DisplayProgress('SPSS Write Formats (TIMETYPE)')
+  SPSS_WriteFormats('TIMETYPE')
   DisplayProgress('SPSS WriteFormats (REAL)')
   SPSS_WriteFormats('REAL')
   IF DoSetConversion=Yes THEN
@@ -3387,9 +3363,7 @@ INSTRUCTIONS
     DoProduceANSI:= Yes
   ENDIF
   IF DoProduceANSI<>Yes AND Package='SPSS' THEN 
-    IF SeparatorChar=EMPTY THEN
-      SeparatorChar:= 'TAB'
-    ENDIF
+    SeparatorChar:= 'TAB'  // seems the only way to do it in old versions of SPSS
   ENDIF  
   IF SeparatorChar<>EMPTY THEN
     UseSeparator:= Yes
@@ -3399,7 +3373,7 @@ INSTRUCTIONS
     DoAddZeroToIndex:= EMPTY
   ENDIF  
   DoConvertDateTime:= Yes
-  IF Package IN ['SAS','SPSS'] AND PARAMETER(16)='N' THEN
+  IF Package='SAS' AND PARAMETER(16)='N' THEN
     DoConvertDateTime:= EMPTY
   ENDIF 
   DoDKRFConversionForNonNumeric:= Yes

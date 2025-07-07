@@ -1,15 +1,15 @@
 ﻿{*************************************************}
 {                                                 }
 {  Blaise 5. A Survey Processing System           }
-{  Copyright (c) 2024 Statistics Netherlands      }
+{  Copyright (c) 2021 Statistics Netherlands      }
 {                                                 }
 {*************************************************}
 
 PROCESS AsciiRelGenerator_Meta
 
 //
-//Version: 1.1 
-//Date: December 10, 2020
+//Version: 1.01 
+//Date: October 3, 2020
 //
 //This setup can be used to generate the datamodel that describe the relational output files
 //Per block type all instances of that type are be written to a separate file.
@@ -544,11 +544,7 @@ INSTRUCTIONS
   //Result is: STRING, INTEGER, REAL, DATETYPE, TIMETYPE, OPEN, ENUMERATION, SET, CLASSIFICATION, BLOBTYPE or BLOCK, all in UPPERCASE
   s:= UPPERCASE([[pMeta.GetField(pFieldName).Type.Structure]])
   CASE s OF
-  'DATE': IF [[meta.GetField(pFieldName).Type.IncludeTime]]='True' THEN 
-            s:= 'DATETIMETYPE'
-          ELSE
-            s:= 'DATETYPE'
-          ENDIF 
+  'DATE': s:= 'DATETYPE'
   'TIME': s:= 'TIMETYPE'
   'BLOCKNAME': s:= 'BLOCK' 
   'STRING': IF [[pMeta.GetField(pFieldName).Type.MaxLength]]='' THEN s:= 'OPEN' ENDIF
@@ -912,7 +908,7 @@ INSTRUCTIONS
     MyType := [[Data.GetField(FN).Definition.Type.Structure]]
     ML:= [[Data.GetField(FN).Definition.Type.MaxLength]]
     CASE MyType OF
-      'Date': Res:= VAL([[Data.GetField(FN).Definition.TextSize('')]])
+      'Date': Res:= 8
       'Time': Res:= 8
       'Enumeration': tmp1:= [[Data.GetField(fn).Definition.Type.MaxValue]] Res:= LEN(tmp1) 
       'String': Res:= VAL(ml)
@@ -1537,11 +1533,10 @@ INSTRUCTIONS
 {$IFNDEF NOPREPARE}
   DISPLAY('Preparing solution '+[[Data.Datamodel.Name]]+'_AsciiRel.bsol (#Projects='+STR(ProjectCount)+')',HOURGLASS)
   RunRes:= RUN('"'+ExtractFilePath(PARAMETER(0))+'\InstrumentBuilder.exe" -F:"'+BlaiseSol.PATHNAME+BlaiseSol.FILENAME+'" -FP:+ -P:- -VERBOSE:+ -BP:- -L:-',HIDE,WAIT)
-  IF RunRes=0 THEN RunRes:= RUNRESULT ENDIF
-  IF RunRes<>0 THEN 
+  IF RunRes<>0 or RunResult<>0 THEN 
     CLEARDISPLAY 
-    DISPLAY('Error '+STR(RunRes)+' preparing solution', WAIT) 
-	HALT(999)
+    DISPLAY('Error '+STR(RunResult)+' preparing solution', WAIT) 
+	  HALT(999)
   ENDIF
 {$ENDIF}
   CLEARDISPLAY
@@ -1700,8 +1695,6 @@ INSTRUCTIONS
           Tmp:= Tmp+'.'+pBlockTypeName+Ext
         ENDIF  
       ENDIF
-    ELSEIF Index=14 THEN //=parameter 13 = separator
-      Tmp:= '\''+Tmp+'\''
     ENDIF
     Param:= Param+';'+Tmp
   ENDDO
@@ -1709,12 +1702,6 @@ INSTRUCTIONS
   Display('Generating script for '+Package+' for block '+pBlockTypeName,HOURGLASS) 
   //res:= CALL(CmdLine)
   res:= RUN('"'+ExtractFilePath(PARAMETER(0))+'\Manipula.exe" '+cmdline,WAIT)
-  IF res=0 THEN res:= RUNRESULT ENDIF
-  IF res<>0 THEN 
-    CLEARDISPLAY 
-    DISPLAY('Error '+STR(res)+' generating script for '+Package+' for block '+pBlockTypeName, HOURGLASS) 
-	HALT(999)
-  ENDIF    
 ENDPROCEDURE  
 
 PROCEDURE GenerateStatisticalScripts
