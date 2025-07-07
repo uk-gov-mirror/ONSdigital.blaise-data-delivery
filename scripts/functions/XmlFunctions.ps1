@@ -57,6 +57,6 @@ function AddXmlToDelivery {
         LogInfo("Copied XML output to subfolder")
     }
     else {
-        LogInfo("XML outpit not copied to subfolder")
+        LogInfo("XML output not copied to subfolder")
     }
 }

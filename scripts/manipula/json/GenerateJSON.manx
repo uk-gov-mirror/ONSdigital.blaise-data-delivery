@@ -1,23 +1,22 @@
-﻿{
-Setup:        ExportXml
-Date Created: 20/04/2021
-Author:       Nik
-}
+﻿USES
 
-USES
-Meta (var)
+	Meta (var)
 
-   INPUTFILE
-   MyInputFile: Meta ('inputfile.bdbx', BLAISE)
-   
-   OUTPUTFILE
-   MyOutputFile: Meta ('outputfile.json', JSON)
+INPUTFILE
 
-  SETTINGS
-    BUFFERSIZE = 1000
-    AddUTF8BOM = NO
-   
-  MANIPULATE
-    MyOutputFile.WRITE
-    MyOutputFile.flush
+	MyInputFile: Meta ('inputfile.bdbx', BLAISE)
+
+OUTPUTFILE
+
+	MyOutputFile: Meta ('outputfile.json', JSON)
+
+	SETTINGS
+		BUFFERSIZE = 1000
+		ADDUTF8BOM = NO
+
+MANIPULATE
+
+	MyOutputFile.WRITE
+	MyOutputFile.flush
+
 END

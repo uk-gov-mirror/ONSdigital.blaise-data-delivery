@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Solution Name="GenerateJson Solution">
+  <StartupProject RelativePath="true">GenerateJson.bproj</StartupProject>
+  <ProjectItems>
+    <Project RelativePath="true" BuildSequence="2">GenerateJson.bproj</Project>
+  </ProjectItems>
+</Solution>

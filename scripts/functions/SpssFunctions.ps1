@@ -56,6 +56,6 @@ function AddSpssToDelivery {
         LogInfo("Copied SPSS output to subfolder")
     }
     else {
-        LogInfo("SPSS outpit not copied to subfolder")
+        LogInfo("SPSS output not copied to subfolder")
     }
 }

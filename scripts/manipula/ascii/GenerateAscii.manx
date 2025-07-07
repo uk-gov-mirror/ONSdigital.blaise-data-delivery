@@ -1,24 +1,23 @@
-﻿{
-Setup:        ExportAscii
-Date Created: 07/05/2021
-Author:       Nik
-}
+﻿USES
 
-USES
-Meta (var)
+	Meta (var)
 
-   INPUTFILE
-   MyInputFile: Meta ('inputfile.bdbx', BLAISE)
-   
-   OUTPUTFILE
-   MyOutputFile: Meta ('outputfile.asc', ASCII)
+INPUTFILE
 
-  SETTINGS
-    BUFFERSIZE = 1000
-    ADDUTF8BOM = NO
-    CHARACTERSET = ANSI
-   
-  MANIPULATE
-    MyOutputFile.WRITE
-    MyOutputFile.flush
+	MyInputFile: Meta ('inputfile.bdbx', BLAISE)
+
+OUTPUTFILE
+
+	MyOutputFile: Meta ('outputfile.asc', ASCII)
+
+	SETTINGS
+		BUFFERSIZE = 1000
+		ADDUTF8BOM = NO
+		CHARACTERSET = ANSI
+
+MANIPULATE
+
+	MyOutputFile.WRITE
+	MyOutputFile.flush
+
 END

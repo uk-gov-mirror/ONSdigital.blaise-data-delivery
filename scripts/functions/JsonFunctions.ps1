@@ -25,7 +25,7 @@ function AddJsonToDelivery {
     # Generate JSON
     try {
         $manipulaPath = Join-Path $processingFolder "Manipula.exe"
-        $msuxPath = Join-Path $processingFolder "GenerateJSON.msux"
+        $msuxPath = Join-Path $processingFolder "GenerateJson.msux"
         $bmixPath = Join-Path $processingFolder "$questionnaireName.bmix"
         $bdbxPath = Join-Path $processingFolder "$questionnaireName.bdbx"
         $outputPath = Join-Path $processingFolder "$questionnaireName.json"
