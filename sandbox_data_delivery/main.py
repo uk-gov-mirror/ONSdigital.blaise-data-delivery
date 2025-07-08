@@ -9,7 +9,7 @@ handler = StructuredLogHandler()
 setup_logging(handler)
 
 
-def deliver_sandbox_dd_files_to_dev(data, _context):
+def copy_sandbox_dd_files_to_dev(data, _context):
 
     logging.info(f"Sandbox data delivery process triggered")
     try:

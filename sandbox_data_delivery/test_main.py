@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 from parameterized import parameterized
 
-from main import (deliver_sandbox_dd_files_to_dev, get_environment_suffix,
+from main import (copy_sandbox_dd_files_to_dev, get_environment_suffix,
                   split_filename)
 
 
@@ -13,7 +13,7 @@ class TestDeliverDataFunction(unittest.TestCase):
     @patch("main.storage.Client")
     @patch("main.get_environment_suffix")
     @patch("main.split_filename")
-    def test_deliver_sandbox_dd_files_to_dev_for_ips_dd_file(
+    def test_copy_sandbox_dd_files_to_dev_for_ips_dd_file(
         self, mock_split_filename, mock_get_environment_suffix, mock_storage_client
     ):
 
@@ -41,7 +41,7 @@ class TestDeliverDataFunction(unittest.TestCase):
         mock_source_bucket.blob.return_value = mock_source_blob
 
         # Call the function
-        deliver_sandbox_dd_files_to_dev(data, context)
+        copy_sandbox_dd_files_to_dev(data, context)
 
         # Assertions
         mock_get_environment_suffix.assert_called_once_with(
@@ -65,7 +65,7 @@ class TestDeliverDataFunction(unittest.TestCase):
     @patch("main.storage.Client")
     @patch("main.get_environment_suffix")
     @patch("main.split_filename")
-    def test_deliver_sandbox_dd_files_to_dev_for_frs_dd_file(
+    def test_copy_sandbox_dd_files_to_dev_for_frs_dd_file(
         self, mock_split_filename, mock_get_environment_suffix, mock_storage_client
     ):
 
@@ -93,7 +93,7 @@ class TestDeliverDataFunction(unittest.TestCase):
         mock_source_bucket.blob.return_value = mock_source_blob
 
         # Call the function
-        deliver_sandbox_dd_files_to_dev(data, context)
+        copy_sandbox_dd_files_to_dev(data, context)
 
         # Assertions
         mock_get_environment_suffix.assert_called_once_with(
@@ -119,7 +119,7 @@ class TestDeliverDataFunction(unittest.TestCase):
     @patch("main.storage.Client")
     @patch("main.get_environment_suffix")
     @patch("main.split_filename")
-    def test_deliver_sandbox_dd_files_to_dev_for_lms_dd_file(
+    def test_copy_sandbox_dd_files_to_dev_for_lms_dd_file(
         self, mock_split_filename, mock_get_environment_suffix, mock_storage_client
     ):
 
@@ -147,7 +147,7 @@ class TestDeliverDataFunction(unittest.TestCase):
         mock_source_bucket.blob.return_value = mock_source_blob
 
         # Call the function
-        deliver_sandbox_dd_files_to_dev(data, context)
+        copy_sandbox_dd_files_to_dev(data, context)
 
         # Assertions
         mock_get_environment_suffix.assert_called_once_with(
@@ -171,7 +171,7 @@ class TestDeliverDataFunction(unittest.TestCase):
         )
 
     @patch("main.logging.info")
-    def test_deliver_sandbox_dd_files_should_not_work_for_non_dd_files(
+    def test_copy_sandbox_dd_files_to_dev_should_not_work_for_non_dd_files(
         self,
         mock_info,
     ):
@@ -182,7 +182,7 @@ class TestDeliverDataFunction(unittest.TestCase):
         }
         context = {}
 
-        deliver_sandbox_dd_files_to_dev(data, context)
+        copy_sandbox_dd_files_to_dev(data, context)
 
         assert 3 == mock_info.call_count
         last_logged_message = mock_info.call_args_list[-1][0][0]
@@ -192,7 +192,7 @@ class TestDeliverDataFunction(unittest.TestCase):
         )
 
     @patch("main.logging.error")
-    def test_deliver_sandbox_dd_files_to_dev_should_raise_exception_for_null_data_trigger(
+    def test_copy_sandbox_dd_files_to_dev_should_raise_exception_for_null_data_trigger(
         self,
         mock_error,
     ):
@@ -200,7 +200,7 @@ class TestDeliverDataFunction(unittest.TestCase):
         data = None
         context = {}
 
-        deliver_sandbox_dd_files_to_dev(data, context)
+        copy_sandbox_dd_files_to_dev(data, context)
 
         # Assertions
         mock_error.assert_called_once_with(
