@@ -1,14 +1,15 @@
 {
     "deliver" : {
-        "spss" : true,
-        "ascii": true,
-        "json" : true,
-        "xml" : true
+        "asciiData" : true,
+        "jsonData" : true,
+        "spssMetadata" : true,
+        "xmlData" : false,
+        "xmlMetadata" : true
     },
 
     "createSubFolder" : false,
-    "packageExtension" : "zip",
     "auditTrailData" : true,
+    "packageExtension" : "zip",
     "batchSize" : 0,
     "throttleLimit" : 3
 }

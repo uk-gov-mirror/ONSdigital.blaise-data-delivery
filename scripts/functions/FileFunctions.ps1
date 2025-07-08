@@ -1,5 +1,4 @@
-. "$PSScriptRoot\LoggingFunctions.ps1"
-function GenerateDeliveryFilename {
+function GenerateDeliveryFileName {
     param (
         [string] $prefix,
         [string] $suffix,
@@ -9,15 +8,15 @@ function GenerateDeliveryFilename {
     )
 
     If ([string]::IsNullOrEmpty($prefix)) {
-        throw "No prefix provided"
+        throw "prefix not provided"
     }
 
     If ([string]::IsNullOrEmpty($questionnaireName)) {
-        throw "No questionnaire name argument provided"
+        throw "questionnaireName not provided"
     }
 
     If ([string]::IsNullOrEmpty($fileExt)) {
-        throw "No file extension argument provided"
+        throw "fileExt not provided"
     }
 
     return "$($prefix)_$($questionnaireName)_$($dateTime.ToString("ddMMyyyy"))_$($dateTime.ToString("HHmmss"))$($suffix).$fileExt"
@@ -28,10 +27,11 @@ function GenerateBatchFileName {
         [datetime] $dateTime = (Get-Date),
         [string] $surveyType
     )
-    If ([string]::IsNullOrEmpty($surveyType)) {
-        throw "No Survey Type has been provided"
-    }
 
+    If ([string]::IsNullOrEmpty($surveyType)) {
+        throw "surveyType not provided"
+    }
+    
     return "$($surveyType)_$($dateTime.ToString("ddMMyyyy"))_$($dateTime.ToString("HHmmss"))"
 }
 
@@ -42,14 +42,23 @@ function ExtractZipFile {
         [string] $destinationPath
     )
 
+    If ([string]::IsNullOrEmpty($pathTo7zip)) {
+        throw "pathTo7zip not provided"
+    }
+
+    If (-not (Test-Path $pathTo7zip)) {
+        throw "$pathTo7zip not found"
+    }
+
+    If ([string]::IsNullOrEmpty($zipFilePath)) {
+        throw "zipFilePath not provided"
+    }
+
     If (-not (Test-Path $zipFilePath)) {
         throw "$zipFilePath not found"
     }
 
-    # 7zip extract - x = extract and keep folder structure of zup - o = output file can't have a space between -o and folder
-    & $pathTo7zip\7za x $zipFilePath -o"$destinationPath"
-
-    LogInfo("Extracting zip file '$zipFilePath' to path '$destinationPath'")
+    & $pathTo7zip\7za x $zipFilePath -o"$destinationPath" > $null # x = extract and keep folder structure
 }
 
 function AddFilesToZip {
@@ -59,16 +68,23 @@ function AddFilesToZip {
         [string] $zipFilePath
     )
 
-    If ($files.count -eq 0) {
-        throw "No files provided"
+    If ([string]::IsNullOrEmpty($pathTo7zip)) {
+        throw "pathTo7zip not provided"
     }
 
-    If (-not (Test-Path $zipFilePath)) {
-        throw "$zipFilePath not found"
+    If (-not (Test-Path $pathTo7zip)) {
+        throw "$pathTo7zip not found"
     }
-    #7 zip CLI - a = add / append - Zip file to Create / append too - Files to add to the zip
-    & $pathTo7zip\7za a $zipFilePath $files
-    LogInfo("Added the file(s) '$files' to the zip file '$zipFilePath'")
+
+    If ($files.count -eq 0) {
+        throw "files not provided"
+    }
+
+    If ([string]::IsNullOrEmpty($zipFilePath)) {
+        throw "zipFilePath not provided"
+    }
+
+    & $pathTo7zip\7za a $zipFilePath $files > $null # a = add
 }
 
 function AddFolderToZip {
@@ -79,52 +95,36 @@ function AddFolderToZip {
     )
 
     If (-not (Test-Path $folder)) {
-        throw "$zipFilePath not found"
+        throw "$folder not found"
     }
 
-    If (-not (Test-Path $zipFilePath)) {
-        throw "$zipFilePath not found"
-    }
-
-    #7 zip CLI - a = add / append - Zip file to Create / append too - Files to add to the zip
-    & $pathTo7zip\7za a $zipFilePath $folder
-    LogInfo("Added the folder '$folder' to the zip file '$zipFilePath'")
+    & $pathTo7zip\7za a $zipFilePath $folder > $null # a = add
 }
 
-function CreateANewFolder {
+function CreateFolder {
     param (
         [string] $folderPath,
         [string] $folderName
     )
+
     If ([string]::IsNullOrEmpty($folderPath)) {
-        throw "No Path to the new folder provided"
+        throw "folderPath not provided"
     }
+
     If ([string]::IsNullOrEmpty($folderName)) {
-        throw "No folder name provided"
+        throw "folderName not provided"
     }
 
     if (-not (Test-Path $folderPath\$folderName)) {
-        Write-Host "creating new folder: $folderName in $folderPath"
         New-Item -Path $folderPath -Name $folderName -ItemType "directory" | Out-Null
     }
 
     return "$folderPath\$folderName"
 }
 
-function GetFolderNameFromAPath {
-    param (
-        [string] $folderPath
-    )
-    If ([string]::IsNullOrEmpty($folderPath)) {
-        throw "No Path to the new folder provided"
-    }
-    return Split-Path $processingFolder -Leaf
-}
-
 function ConvertJsonFileToObject {
     param (
         [string] $jsonFile
-    )  
-
+    )
     return Get-Content -Path $jsonFile | ConvertFrom-Json
 }
