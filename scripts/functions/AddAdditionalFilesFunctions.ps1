@@ -1,79 +1,66 @@
 ﻿. "$PSScriptRoot\LoggingFunctions.ps1"
 . "$PSScriptRoot\ConfigFunctions.ps1"
-. "$PSScriptRoot\SpssFunctions.ps1"
-. "$PSScriptRoot\XmlFunctions.ps1"
-. "$PSScriptRoot\JsonFunctions.ps1"
-. "$PSScriptRoot\AsciiFunctions.ps1"
-
+. "$PSScriptRoot\AsciiDataFunctions.ps1"
+. "$PSScriptRoot\JsonDataFunctions.ps1"
+. "$PSScriptRoot\SpssMetadataFunctions.ps1"
+. "$PSScriptRoot\XmlDataFunctions.ps1"
+. "$PSScriptRoot\XmlMetadataFunctions.ps1"
 
 function AddAdditionalFilesToDeliveryPackage {
     param(
         [string] $surveyType,
         [string] $processingFolder,
-        [string] $deliveryFile,
         [string] $questionnaireName,
-        [string] $subFolder,
-        [string] $dqsBucket,
-        [string] $tempPath
+        [string] $subFolder
     )
           
     If ([string]::IsNullOrEmpty($surveyType)) {
-        throw "No surveyType argument provided"
+        throw "surveyType not provided"
     }
 
     If ([string]::IsNullOrEmpty($processingFolder)) {
-        throw "No processingFolder argument provided"
+        throw "processingFolder not provided"
     }
 
     If (-not (Test-Path $processingFolder)) {
-        throw "$processingFolder file not found"
-    }
-
-    If ([string]::IsNullOrEmpty($deliveryFile)) {
-        throw "No deliveryFile argument provided"
-    }
-
-    If (-not (Test-Path $deliveryFile)) {
-        throw "$deliveryFile file not found"
+        throw "$processingFolder not found" 
     }
 
     If ([string]::IsNullOrEmpty($questionnaireName)) {
-        throw "No questionnaire name argument provided"
-    }
-
-    If ([string]::IsNullOrEmpty($dqsBucket)) {
-        throw "No dqsBucket argument provided"
-    }
-
-    If ([string]::IsNullOrEmpty($tempPath)) {
-        throw "No tempPath argument provided"
+        throw "questionnaireName not provided"
     }
           
     # Get configuration for survey type
     $config = GetConfigFromFile -surveyType $surveyType
-    LogInfo("Add additional files config $($config.deliver) $($config)")
+    LogInfo("Add additional files config: $($config.deliver) $($config)")
 
-    # Generate and add SPSS files if configured
-    if($config.deliver.spss -eq $true) {
-        LogInfo("Adding SPSS files")
-        AddSpssFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -dqsBucket $dqsBucket -subFolder $processingSubFolder -tempPath $tempPath
+    # Generate and add ASCII data files if configured
+    if($config.deliver.asciiData -eq $true) {
+        LogInfo("Adding ASCII data files")
+        AddAsciiDataToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
-    # Generate and add Ascii files if configured
-    if($config.deliver.ascii -eq $true) {
-        LogInfo("Adding ASCII files")
-        AddAsciiFilesToDeliveryPackage -deliveryZip $deliveryFile -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $processingSubFolder -tempPath $tempPath
+    # Generate and add JSON data files if configured
+    if($config.deliver.jsonData -eq $true) {
+        LogInfo("Adding JSON data files")
+        AddJsonDataToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
-    # Generate and add XML Files if configured
-    if($config.deliver.xml -eq $true) {
-        LogInfo("Adding XML files")
-        AddXMLFileToDeliveryPackage -processingFolder $processingFolder -deliveryZip $deliveryFile -questionnaireName $questionnaireName -subFolder $processingSubFolder -tempPath $tempPath
+    # Generate and add SPSS metadata files if configured
+    if($config.deliver.spssMetadata -eq $true) {
+        LogInfo("Adding SPSS metadata files")
+        AddSpssMetadataToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 
-    # Generate and add json Files if configured
-    if($config.deliver.json -eq $true) {
-        LogInfo("Adding JSON files")
-        AddJSONFileToDeliveryPackage -processingFolder $processingFolder -deliveryZip $deliveryFile -questionnaireName $questionnaireName -subFolder $processingSubFolder -tempPath $tempPath
+    # Generate and add XML data files if configured
+    if($config.deliver.xmlData -eq $true) {
+        LogInfo("Adding XML data files")
+        AddXmlDataToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
+    }
+
+    # Generate and add XML metadata files if configured
+    if($config.deliver.xmlMetadata -eq $true) {
+        LogInfo("Adding XML metadata files")
+        AddXmlMetadataToDelivery -processingFolder $processingFolder -questionnaireName $questionnaireName -subFolder $subFolder
     }
 }

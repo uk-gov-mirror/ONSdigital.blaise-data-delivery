@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Solution Name="GenerateAsciiData">
+  <StartupProject RelativePath="true">GenerateAsciiData.bproj</StartupProject>
+  <ProjectItems>
+    <Project RelativePath="true" BuildSequence="2">GenerateAsciiData.bproj</Project>
+  </ProjectItems>
+</Solution>

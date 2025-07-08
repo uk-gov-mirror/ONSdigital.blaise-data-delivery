@@ -6,7 +6,7 @@ function GetIDToken {
         [string] $ddsClientID
     )
     if ([string]::IsNullOrEmpty($ddsClientID)) {
-        throw "No DDS Client ID provided"
+        throw "ddsClientID not provided"
     }
 
     return Invoke-RestMethod "http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=$ddsClientID&format=full" -Headers $tokenHeaders
@@ -22,23 +22,23 @@ function CreateDataDeliveryStatus {
     )
     try {
         If ([string]::IsNullOrEmpty($fileName)) {
-            throw "No file name name provided"
+            throw "fileName not provided"
         }
 
         If ([string]::IsNullOrEmpty($batchStamp)) {
-            throw "No batch stamp name provided"
+            throw "batchStamp not provided"
         }
 
         If ([string]::IsNullOrEmpty($state)) {
-            throw "No state name provided"
+            throw "state not provided"
         }
 
         if ([string]::IsNullOrEmpty($ddsUrl)) {
-            throw "No DDS URL provided"
+            throw "ddsUrl not provided"
         }
 
         if ([string]::IsNullOrEmpty($ddsClientID)) {
-            throw "No DDS Client ID provided"
+            throw "ddsClientID not provided"
         }
 
         $DDSBaseUrl = "$ddsUrl/v1/state"
@@ -67,19 +67,19 @@ function UpdateDataDeliveryStatus {
     )
     try {
         If ([string]::IsNullOrEmpty($fileName)) {
-            throw "No file name name provided"
+            throw "fileName not provided"
         }
 
         If ([string]::IsNullOrEmpty($state)) {
-            throw "No state name provided"
+            throw "state not provided"
         }
 
         if ([string]::IsNullOrEmpty($ddsUrl)) {
-            throw "No DDS URL provided"
+            throw "ddsUrl not provided"
         }
 
         if ([string]::IsNullOrEmpty($ddsClientID)) {
-            throw "No DDS Client ID provided"
+            throw "ddsClientID not provided"
         }
 
         $DDSBaseUrl = "$ddsUrl/v1/state"
@@ -107,19 +107,19 @@ function ErrorDataDeliveryStatus {
     )
     try {
         If ([string]::IsNullOrEmpty($fileName)) {
-            throw "No file name name provided"
+            throw "fileName not provided"
         }
 
         If ([string]::IsNullOrEmpty($state)) {
-            throw "No state name provided"
+            throw "state not provided"
         }
 
         if ([string]::IsNullOrEmpty($ddsUrl)) {
-            throw "No DDS URL provided"
+            throw "ddsUrl not provided"
         }
 
         if ([string]::IsNullOrEmpty($ddsClientID)) {
-            throw "No DDS Client ID provided"
+            throw "ddsClientID not provided"
         }
 
         $DDSBaseUrl = "$ddsUrl/v1/state"

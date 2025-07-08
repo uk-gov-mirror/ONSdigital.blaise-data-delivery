@@ -7,19 +7,23 @@ function UploadFileToBucket {
         [string] $deliveryFileName
     )
 
+    If ([string]::IsNullOrEmpty($filePath)) {
+        throw "filePath not provided"
+    }
+
     If (-not (Test-Path $filePath)) {
         throw "$filePath not found"
     }
 
     If ([string]::IsNullOrEmpty($bucketName)) {
-        throw "No bucket name provided"
+        throw "bucketName not provided"
     }
 
     If ([string]::IsNullOrEmpty($deliveryFileName)) {
-        throw "No delivery file name has been provided"
+        throw "deliveryFileName not provided"
     }
 
-    LogInfo("Copying '$filePath' to '$bucketName'")
+    LogInfo("Uploading '$filePath' to '$bucketName'")
 
     # GSUtils logs its progress bar to stderr, standard powershell core throws an error
     # when run from azure because of this, using cmd seemed to be the only option but
@@ -30,7 +34,7 @@ function UploadFileToBucket {
         throw "Failed to upload '$filePath' to '$bucketName': '$output'"
     }
     
-    LogInfo("Copied '$filePath' to '$bucketName'")
+    LogInfo("Uploaded '$filePath' to '$bucketName'")
 }
 
 function DownloadFileFromBucket {
@@ -41,15 +45,15 @@ function DownloadFileFromBucket {
     )
 
     If ([string]::IsNullOrEmpty($questionnaireFileName)) {
-        throw "No questionnaire file name has been provided"
+        throw "questionnaireFileName not provided"
     }
 
     If ([string]::IsNullOrEmpty($bucketName)) {
-        throw "No bucket name provided"
+        throw "bucketName not provided"
     }
 
     If ([string]::IsNullOrEmpty($filePath)) {
-        throw "No file path provided"
+        throw "filePath not provided"
     }
 
     LogInfo("Downloading '$questionnaireFileName' from '$bucketName' to '$filePath'")

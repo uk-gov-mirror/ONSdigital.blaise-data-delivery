@@ -1,0 +1,397 @@
+datamodel DataExportStarter "Data export dialog"
+ fieldproperties onclick:string visibility:(hidden (0),visible (1)) tag:string 
+
+
+
+PARALLEL
+SpecifyParams
+SpecifyPackageSettings
+Confirm
+Display
+Process
+
+BLOCK BSpecifyParams
+FIELDS
+Package  "Package:"  : 
+		(SAS Category  "<B>SAS" ,
+		SPSS Category  "<B>SPSS" ,
+		Stata Category  "<B>Stata" )
+SettingsButton  : 
+		(EditType Category  "Settings..." )
+strMetaName  "Meta file:"  : string, Empty
+LangStr_1_  : string[40]
+LangStr_2_  : string[40]
+LangStr_3_  : string[40]
+LangStr_4_  : string[40]
+LangStr_5_  : string[40]
+LangStr_6_  : string[40]
+LangStr_7_  : string[40]
+LangStr_8_  : string[40]
+LangStr_9_  : string[40]
+LangStr_10_  : string[40]
+LangStr_11_  : string[40]
+LangStr_12_  : string[40]
+LangStr_13_  : string[40]
+LangStr_14_  : string[40]
+LangStr_15_  : string[40]
+LangStr_16_  : string[40]
+LangStr_17_  : string[40]
+LangStr_18_  : string[40]
+LangStr_19_  : string[40]
+LangStr_20_  : string[40]
+LangStr_21_  : string[40]
+LangStr_22_  : string[40]
+LangStr_23_  : string[40]
+LangStr_24_  : string[40]
+LangStr_25_  : string[40]
+SelLangStr  "Language:"  : 
+		(LangStr1 Category  "^<LangStr_1_>" ,
+		LangStr2 Category  "^<LangStr_2_>" ,
+		LangStr3 Category  "^<LangStr_3_>" ,
+		LangStr4 Category  "^<LangStr_4_>" ,
+		LangStr5 Category  "^<LangStr_5_>" ,
+		LangStr6 Category  "^<LangStr_6_>" ,
+		LangStr7 Category  "^<LangStr_7_>" ,
+		LangStr8 Category  "^<LangStr_8_>" ,
+		LangStr9 Category  "^<LangStr_9_>" ,
+		LangStr10 Category  "^<LangStr_10_>" ,
+		LangStr11 Category  "^<LangStr_11_>" ,
+		LangStr12 Category  "^<LangStr_12_>" ,
+		LangStr13 Category  "^<LangStr_13_>" ,
+		LangStr14 Category  "^<LangStr_14_>" ,
+		LangStr15 Category  "^<LangStr_15_>" ,
+		LangStr16 Category  "^<LangStr_16_>" ,
+		LangStr17 Category  "^<LangStr_17_>" ,
+		LangStr18 Category  "^<LangStr_18_>" ,
+		LangStr19 Category  "^<LangStr_19_>" ,
+		LangStr20 Category  "^<LangStr_20_>" ,
+		LangStr21 Category  "^<LangStr_21_>" ,
+		LangStr22 Category  "^<LangStr_22_>" ,
+		LangStr23 Category  "^<LangStr_23_>" ,
+		LangStr24 Category  "^<LangStr_24_>" ,
+		LangStr25 Category  "^<LangStr_25_>" ), Empty
+RoleStr_1_  : string[40]
+RoleStr_2_  : string[40]
+RoleStr_3_  : string[40]
+RoleStr_4_  : string[40]
+RoleStr_5_  : string[40]
+RoleStr_6_  : string[40]
+RoleStr_7_  : string[40]
+RoleStr_8_  : string[40]
+RoleStr_9_  : string[40]
+RoleStr_10_  : string[40]
+RoleStr_11_  : string[40]
+RoleStr_12_  : string[40]
+RoleStr_13_  : string[40]
+RoleStr_14_  : string[40]
+RoleStr_15_  : string[40]
+RoleStr_16_  : string[40]
+RoleStr_17_  : string[40]
+RoleStr_18_  : string[40]
+RoleStr_19_  : string[40]
+RoleStr_20_  : string[40]
+RoleStr_21_  : string[40]
+RoleStr_22_  : string[40]
+RoleStr_23_  : string[40]
+RoleStr_24_  : string[40]
+RoleStr_25_  : string[40]
+SelRoleStr  "Role:"  : 
+		(RoleStr1 Category  "^<RoleStr_1_>" ,
+		RoleStr2 Category  "^<RoleStr_2_>" ,
+		RoleStr3 Category  "^<RoleStr_3_>" ,
+		RoleStr4 Category  "^<RoleStr_4_>" ,
+		RoleStr5 Category  "^<RoleStr_5_>" ,
+		RoleStr6 Category  "^<RoleStr_6_>" ,
+		RoleStr7 Category  "^<RoleStr_7_>" ,
+		RoleStr8 Category  "^<RoleStr_8_>" ,
+		RoleStr9 Category  "^<RoleStr_9_>" ,
+		RoleStr10 Category  "^<RoleStr_10_>" ,
+		RoleStr11 Category  "^<RoleStr_11_>" ,
+		RoleStr12 Category  "^<RoleStr_12_>" ,
+		RoleStr13 Category  "^<RoleStr_13_>" ,
+		RoleStr14 Category  "^<RoleStr_14_>" ,
+		RoleStr15 Category  "^<RoleStr_15_>" ,
+		RoleStr16 Category  "^<RoleStr_16_>" ,
+		RoleStr17 Category  "^<RoleStr_17_>" ,
+		RoleStr18 Category  "^<RoleStr_18_>" ,
+		RoleStr19 Category  "^<RoleStr_19_>" ,
+		RoleStr20 Category  "^<RoleStr_20_>" ,
+		RoleStr21 Category  "^<RoleStr_21_>" ,
+		RoleStr22 Category  "^<RoleStr_22_>" ,
+		RoleStr23 Category  "^<RoleStr_23_>" ,
+		RoleStr24 Category  "^<RoleStr_24_>" ,
+		RoleStr25 Category  "^<RoleStr_25_>" ), Empty
+ModeStr_1_  : string[40]
+ModeStr_2_  : string[40]
+ModeStr_3_  : string[40]
+ModeStr_4_  : string[40]
+ModeStr_5_  : string[40]
+ModeStr_6_  : string[40]
+ModeStr_7_  : string[40]
+ModeStr_8_  : string[40]
+ModeStr_9_  : string[40]
+ModeStr_10_  : string[40]
+ModeStr_11_  : string[40]
+ModeStr_12_  : string[40]
+ModeStr_13_  : string[40]
+ModeStr_14_  : string[40]
+ModeStr_15_  : string[40]
+ModeStr_16_  : string[40]
+ModeStr_17_  : string[40]
+ModeStr_18_  : string[40]
+ModeStr_19_  : string[40]
+ModeStr_20_  : string[40]
+ModeStr_21_  : string[40]
+ModeStr_22_  : string[40]
+ModeStr_23_  : string[40]
+ModeStr_24_  : string[40]
+ModeStr_25_  : string[40]
+SelModeStr  "Mode:"  : 
+		(ModeStr1 Category  "^<ModeStr_1_>" ,
+		ModeStr2 Category  "^<ModeStr_2_>" ,
+		ModeStr3 Category  "^<ModeStr_3_>" ,
+		ModeStr4 Category  "^<ModeStr_4_>" ,
+		ModeStr5 Category  "^<ModeStr_5_>" ,
+		ModeStr6 Category  "^<ModeStr_6_>" ,
+		ModeStr7 Category  "^<ModeStr_7_>" ,
+		ModeStr8 Category  "^<ModeStr_8_>" ,
+		ModeStr9 Category  "^<ModeStr_9_>" ,
+		ModeStr10 Category  "^<ModeStr_10_>" ,
+		ModeStr11 Category  "^<ModeStr_11_>" ,
+		ModeStr12 Category  "^<ModeStr_12_>" ,
+		ModeStr13 Category  "^<ModeStr_13_>" ,
+		ModeStr14 Category  "^<ModeStr_14_>" ,
+		ModeStr15 Category  "^<ModeStr_15_>" ,
+		ModeStr16 Category  "^<ModeStr_16_>" ,
+		ModeStr17 Category  "^<ModeStr_17_>" ,
+		ModeStr18 Category  "^<ModeStr_18_>" ,
+		ModeStr19 Category  "^<ModeStr_19_>" ,
+		ModeStr20 Category  "^<ModeStr_20_>" ,
+		ModeStr21 Category  "^<ModeStr_21_>" ,
+		ModeStr22 Category  "^<ModeStr_22_>" ,
+		ModeStr23 Category  "^<ModeStr_23_>" ,
+		ModeStr24 Category  "^<ModeStr_24_>" ,
+		ModeStr25 Category  "^<ModeStr_25_>" ), Empty
+ScriptName  "Script name:"  : string, Empty
+strOutputPath  "Output path:"  : string, Empty
+strInputPath  "Input path:"  : string, Empty
+strInputName  "Input name:"  : string, Empty
+FieldSelectionFileName  "Selection file:"  : string, Empty
+EditSelectionButton  : 
+		(DoEdit Category  "Edit..." )
+BlaiseDataFileName  "Data file:"  : string, Empty
+DoAsciiRelational  : 
+		(yes Category  "Export the data block-based ('ASCII relational')" ), Empty
+DoGenerateExtraAttributes  : 
+		(Yes Category  "Add Offroute and Unprocessed special attribute" ), Empty
+SepChar  "Separator to use for data export (specify TAB or a single char):"  : string[3], Empty
+DoProduceANSI  : 
+		(Yes Category  "Encoding in ANSI instead of UTF-8" ), Empty
+DoRunExport  : 
+		(yes Category  "<bold>Create the ASCII file(s) for import by ^<Package>" ), Empty
+Buttons  : 
+		(Run,
+		Save,
+		Cancel)
+Fieldselector  : string, Empty
+LanguagesCount  : integer
+RolesCount  : integer
+ModesCount  : integer
+DialogTitle : string[200]
+RULES
+DialogTitle.KEEP
+IF DialogTitle = EMPTY THEN 
+    DialogTitle := 'Export Data'
+ENDIF
+Package.Ask
+SettingsButton.Ask
+strMetaName.Show
+LangStr_1_.Keep
+LangStr_2_.Keep
+LangStr_3_.Keep
+LangStr_4_.Keep
+LangStr_5_.Keep
+LangStr_6_.Keep
+LangStr_7_.Keep
+LangStr_8_.Keep
+LangStr_9_.Keep
+LangStr_10_.Keep
+LangStr_11_.Keep
+LangStr_12_.Keep
+LangStr_13_.Keep
+LangStr_14_.Keep
+LangStr_15_.Keep
+LangStr_16_.Keep
+LangStr_17_.Keep
+LangStr_18_.Keep
+LangStr_19_.Keep
+LangStr_20_.Keep
+LangStr_21_.Keep
+LangStr_22_.Keep
+LangStr_23_.Keep
+LangStr_24_.Keep
+LangStr_25_.Keep
+SelLangStr.Ask
+RoleStr_1_.Keep
+RoleStr_2_.Keep
+RoleStr_3_.Keep
+RoleStr_4_.Keep
+RoleStr_5_.Keep
+RoleStr_6_.Keep
+RoleStr_7_.Keep
+RoleStr_8_.Keep
+RoleStr_9_.Keep
+RoleStr_10_.Keep
+RoleStr_11_.Keep
+RoleStr_12_.Keep
+RoleStr_13_.Keep
+RoleStr_14_.Keep
+RoleStr_15_.Keep
+RoleStr_16_.Keep
+RoleStr_17_.Keep
+RoleStr_18_.Keep
+RoleStr_19_.Keep
+RoleStr_20_.Keep
+RoleStr_21_.Keep
+RoleStr_22_.Keep
+RoleStr_23_.Keep
+RoleStr_24_.Keep
+RoleStr_25_.Keep
+SelRoleStr.Ask
+ModeStr_1_.Keep
+ModeStr_2_.Keep
+ModeStr_3_.Keep
+ModeStr_4_.Keep
+ModeStr_5_.Keep
+ModeStr_6_.Keep
+ModeStr_7_.Keep
+ModeStr_8_.Keep
+ModeStr_9_.Keep
+ModeStr_10_.Keep
+ModeStr_11_.Keep
+ModeStr_12_.Keep
+ModeStr_13_.Keep
+ModeStr_14_.Keep
+ModeStr_15_.Keep
+ModeStr_16_.Keep
+ModeStr_17_.Keep
+ModeStr_18_.Keep
+ModeStr_19_.Keep
+ModeStr_20_.Keep
+ModeStr_21_.Keep
+ModeStr_22_.Keep
+ModeStr_23_.Keep
+ModeStr_24_.Keep
+ModeStr_25_.Keep
+SelModeStr.Ask
+ScriptName.Ask
+strOutputPath.Ask
+strInputPath.Ask
+strInputName.Ask
+FieldSelectionFileName.Ask
+EditSelectionButton.Ask
+BlaiseDataFileName.Ask
+DoAsciiRelational.Ask
+DoGenerateExtraAttributes.Ask
+SepChar.Ask
+DoProduceANSI.Ask
+DoRunExport.Ask
+Buttons.Ask
+Fieldselector.Keep
+LanguagesCount.Keep
+RolesCount.Keep
+ModesCount.Keep
+
+
+
+endblock
+
+
+BLOCK BSpecifyPackageSettings
+FIELDS
+varlength  "Max unique name length: "  : 8 .. 64, Empty
+UniqueNameBasedOn  "Unique name based on:"  : 
+		(fullname Category  "Full name" ,
+		localname Category  "Local name" ,
+		localname_indexed Category  "Local name and array index" )
+DoSetConversion  : 
+		(yes Category  "Create 0/1 variables for set fields" ), Empty
+DoMaintainSetOrder  : 
+		(yes Category  "Maintain set order" ), Empty
+DoLowercase  : 
+		(yes Category  "Convert field names to lowercase" ), Empty
+DoTreatDKRFasValues  : 
+		(yes Category  "Do not treat DK & RF as missing values for enumerated/set fields" ), Empty
+DoAddZeroToIndex  : 
+		(Yes Category  "Use zero in array index" ), Empty
+DoConvertDateTime  : 
+		(Yes Category  "Convert Date/Time fields" ), Empty
+DoDKRFConversionForNonNumeric  : 
+		(Yes Category  "Convert special answers for non-numeric fields" ), Empty
+DoRecodeEmpty  : 
+		(Yes Category  "Recode empty to missing" ), Empty
+DoGenerateFormats  : 
+		(Yes Category  "Generate formats" ), Empty
+Package  "Package:"  : 
+		(SAS Category  "<B>SAS" ,
+		SPSS Category  "<B>SPSS" ,
+		Stata Category  "<B>Stata" )
+Res (Result)   : 
+		(OK,
+		Cancel), Empty
+DialogTitle : string[200]
+RULES
+DialogTitle.KEEP
+IF DialogTitle = EMPTY THEN 
+    DialogTitle := 'Specify Package Settings'
+ENDIF
+varlength.Ask
+UniqueNameBasedOn.Ask
+DoSetConversion.Ask
+DoMaintainSetOrder.Ask
+DoLowercase.Ask
+DoTreatDKRFasValues.Ask
+DoAddZeroToIndex.Ask
+DoConvertDateTime.Ask
+DoDKRFConversionForNonNumeric.Ask
+DoRecodeEmpty.Ask
+DoGenerateFormats.Ask
+Package.Keep
+
+
+Res.ASK
+endblock
+
+BLOCK BDisplay
+  FIELDS
+     Message : STRING
+     T : STRING
+     Result "^{Message}" : (Ok, Cancel "^{T}")
+  RULES
+     Message.KEEP
+     T.KEEP
+     Result
+ENDBLOCK
+
+BLOCK BConfirm
+  FIELDS
+     Question : STRING
+     Result "^{Question}" : (Yes, No)
+  RULES
+     Question.KEEP
+     Result
+ENDBLOCK
+
+BLOCK BProcess
+  FIELDS
+     Display  "^{Display} ": STRING, EMPTY
+ENDBLOCK
+
+fields
+SpecifyParams / "^SpecifyParams.DialogTitle"  : BSpecifyParams
+SpecifyPackageSettings / "^SpecifyPackageSettings.DialogTitle"  : BSpecifyPackageSettings
+Display : BDisplay
+Confirm : BConfirm
+Process : BProcess
+endmodel
+
