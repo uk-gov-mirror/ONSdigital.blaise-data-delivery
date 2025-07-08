@@ -6,6 +6,8 @@ While this repository covers the automation and packaging of data for delivery, 
 
 Survey configurations are managed using JSON files in the `configurations` folder. If no survey-specific configuration is provided, the `default.json` file is used, which delivers Blaise data along with SPSS and ASCII formats. To customise the delivery settings for a particular survey, create a JSON file named `<survey>.json` in the `configurations` folder, where `<survey>` is the survey acronym (e.g., OPN, LM, IPS). This allows you to specify unique configuration options for each survey.
 
+The Manipula source scripts and their compiled counterparts are included directly in this repository. The data delivery process does not recompile Manipula scripts each time it runs; instead, it executes the pre-compiled versions already present in the repo. If any changes are made to the Manipula source files, they must be recompiled manually, and both the updated source and compiled files should be committed to the repository. This approach ensures consistent and reliable execution of the data delivery process, while making it clear that updates to Manipula logic require explicit recompilation and version control.
+
 ## Configuration settings
 
 | Setting | Description |
@@ -16,7 +18,6 @@ Survey configurations are managed using JSON files in the `configurations` folde
 | spssMetadata | Metadata in SPSS (.SPS) format. |
 | xmlData | Data in XML format. |
 | xmlMetadata | Metadata in XML format. |
-| createSubFolder | If true, creates a timestamped subfolder for the non-Blaise delivery formats. |
 | createSubFolder | If true, creates a timestamped subfolder for the non-Blaise delivery formats. Allows for retention of each delivery. |
 | auditTrailData | If true, includes a CSV file containing audit trail data. |
 | packageExtension | Determines the package file extension (e.g., zip). |
