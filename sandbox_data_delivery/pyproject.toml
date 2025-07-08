@@ -3,6 +3,7 @@ name = "sandbox_data_delivery"
 version = "0.1.0"
 description = "GCP Cloud Function to copy files from sandbox NiFi bucket to dev NiFi bucket"
 authors = ["Blaise Team"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9"

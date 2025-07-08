@@ -2,10 +2,11 @@ import logging
 import os
 
 from google.cloud import storage
+from google.cloud.logging_v2.handlers import (StructuredLogHandler,
+                                              setup_logging)
 
-from cloud_logging import setup_logger
-
-setup_logger()
+handler = StructuredLogHandler()
+setup_logging(handler)
 
 
 def deliver_sandbox_dd_files_to_dev(data, _context):
