@@ -339,3 +339,11 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 .vscode/settings.json
+
+# Blaise stuff
+.usersettings
+.pdf
+ReadMe.txt
+GenerateStatisticalScript_Starter.cmd
+GenerateStatisticalScript_Starter.ps1
+Manipula.msg.txt

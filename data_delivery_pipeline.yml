@@ -14,7 +14,7 @@ parameters:
     default: '' # Added default value for validation
   - name: Questionnaires
     displayName: Questionnaires separated by commas
-    default: ' '
+    default: ' ' # Space required or it breaks Azure DevOps !?
 
 trigger: none
 pr: none
@@ -24,7 +24,7 @@ variables:
     value: ${{parameters.SurveyType}}
   - name: Questionnaires
     value: ${{parameters.Questionnaires}}
-  - name: TempPath
+  - name: ProcessingPath
     value: c:\blaise\temp\datadelivery\${{parameters.SurveyType}}
 stages:
   - stage: DataDelivery
@@ -52,6 +52,7 @@ stages:
                     filePath: $(Agent.BuildDirectory)/s/scripts/RegisterBlaise.ps1
                     arguments: -BLAISE_LICENSE_KEY $(ENV_BLAISE_LICENSE_KEY) -BLAISE_ACTIVATION_CODE
                       $(ENV_BLAISE_ACTIVATION_CODE)
+                    pwsh: true
                 - task: PowerShell@2
                   displayName: Download Manipula and 7-Zip
                   inputs:
@@ -60,10 +61,11 @@ stages:
                       try {
                         Write-Host "Logging into GCP with shared service account..."
                         gcloud auth activate-service-account $env:ENV_SHARED_SERVICE_ACCOUNT --key-file=$(gcpkey.secureFilePath)
+                        
                         Write-Host "Downloading Manipula..."
-                        gsutil cp gs://$env:ENV_SHARED_BUCKET/Manipula_Package_5_9_3.zip $env:TempPath\Manipula.zip
+                        gsutil cp gs://$env:ENV_SHARED_BUCKET/Manipula_Package_5_14_6.zip $env:ProcessingPath\Manipula.zip
                         Write-Host "Downloading 7-Zip..."
-                        gsutil cp gs://ons-blaise-v2-europe-west2-shared-data/7za.exe $env:TempPath\7za.exe
+                        gsutil cp gs://ons-blaise-v2-europe-west2-shared-data/7za.exe $env:ProcessingPath\7za.exe
                       } catch {
                         Write-Error "Error during download: $_"
                         exit 1
@@ -72,11 +74,11 @@ stages:
                         gcloud auth login $env:ENV_VM_SERVICEACCOUNT
                       }
                 - task: PowerShell@2
-                  displayName: Create temp folders
+                  displayName: Set-up processing folder
                   inputs:
                     targetType: inline
                     script: |
-                      New-Item -ItemType Directory -Force -Path $env:TempPath
+                      New-Item -ItemType Directory -Force -Path $env:ProcessingPath
                       Add-MpPreference -ExclusionProcess c:\dev\agent
                       Add-MpPreference -ExclusionProcess Manipula.exe
                       Add-MpPreference -ExclusionProcess InstrumentBuilder.exe
@@ -86,11 +88,11 @@ stages:
                     filePath: $(Agent.BuildDirectory)/s/scripts/DeliverData.ps1
                     pwsh: true
                 - task: PowerShell@2
-                  displayName: Clean up temp folders
+                  displayName: Clean-up processing folder
                   inputs:
                     targetType: inline
                     script: |-
-                      Remove-Item -Recurse -Force $env:TempPath
+                      Remove-Item -Recurse -Force $env:ProcessingPath
                       Remove-MpPreference -ExclusionProcess c:\dev\agent
                       Remove-MpPreference -ExclusionProcess Manipula.exe
                       Remove-MpPreference -ExclusionProcess InstrumentBuilder.exe

@@ -10,23 +10,13 @@ $ErrorActionPreference = "Stop"
 try {
     $ddsUrl = $env:ENV_DDS_URL
     $ddsClientID = $env:ENV_DDS_CLIENT
-    $tempPath = $env:TempPath
+    $processingPath = $env:ProcessingPath
     $nifiBucket = $env:ENV_BLAISE_NIFI_BUCKET
     $dqsBucket = $env:ENV_BLAISE_DQS_BUCKET
     $restAPIUrl = $env:ENV_RESTAPI_URL
     $serverParkName = $env:ENV_BLAISE_SERVER_PARK_NAME
     $surveyType = $env:SurveyType
     $questionnaireList = $env:Questionnaires -replace '\s+', '' # Remove all spaces from the questionnaire list
-
-    LogInfo("DDS URL: $ddsUrl")
-    LogInfo("DDS Client ID: $ddsClientID")
-    LogInfo("Temp path: $tempPath")
-    LogInfo("NiFi Bucket: $nifiBucket")
-    LogInfo("DQS Bucket: $dqsBucket")
-    LogInfo("REST API URL: $restAPIUrl")
-    LogInfo("Server park name: $serverParkName")
-    LogInfo("Survey type: $surveyType")
-    LogInfo("Questionnaire list: $questionnaireList")
 
     # Get list of questionnaires for data delivery
     $questionnaires = if ([string]::IsNullOrWhitespace($questionnaireList)) {
@@ -57,7 +47,7 @@ try {
     # Create synchronised hashtable to manage the processing status of each questionnaire
     $sync = CreateQuestionnaireSync -questionnaires $questionnaires
 
-    # Deliver the questionnaire package with data for each questionnaire
+    # Deliver the data for each questionnaire
     $questionnaires | ForEach-Object -ThrottleLimit $config.throttleLimit -Parallel {
         . "$using:PSScriptRoot\functions\ThreadingFunctions.ps1"
         $process = GetProcess -questionnaire $_ -sync $using:sync
@@ -69,16 +59,16 @@ try {
             . "$using:PSScriptRoot\functions\DeliveryFunctions.ps1"
 
             # Generate unique data delivery filename for the questionnaire
-            $deliveryFileName = GenerateDeliveryFilename -prefix "dd" -questionnaireName $_.name -fileExt $using:config.packageExtension
+            $deliveryFileName = GenerateDeliveryFileName -prefix "dd" -questionnaireName $_.name -fileExt $using:config.packageExtension
 
             # Generate full file path for questionnaire
-            $deliveryFile = Join-Path $using:tempPath $deliveryFileName
+            $deliveryFile = Join-Path $using:processingPath $deliveryFileName
 
             # Set data delivery status to started
             CreateDataDeliveryStatus -fileName $deliveryFileName -batchStamp $using:batchStamp -state "started" -ddsUrl $using:ddsUrl -ddsClientID $using:ddsClientID
 
             # Create delivery file
-            CreateDeliveryFile -deliveryFile $deliveryFile -serverParkName $using:serverParkName -surveyType $using:surveyType -questionnaireName $_.name -dqsBucket $using:dqsBucket -subFolder $processingSubFolder -tempPath $using:tempPath -uneditedData $false          
+            CreateDeliveryFile -deliveryFile $deliveryFile -serverParkName $using:serverParkName -surveyType $using:surveyType -questionnaireName $_.name -dqsBucket $using:dqsBucket -subFolder $processingSubFolder -processingPath $using:processingPath        
                         
             # Upload questionnaire package to NiFi
             UploadFileToBucket -filePath $deliveryFile -bucketName $using:nifiBucket -deliveryFileName $deliveryFileName

@@ -1,0 +1,21 @@
+﻿USES
+
+	Meta (VAR)
+
+INPUTFILE
+
+	MyInputFile: Meta ('inputfile.bdbx', BLAISE)
+
+OUTPUTFILE
+
+	MyOutputFile: Meta ('outputfile.xml', XML)
+
+	SETTINGS
+		BUFFERSIZE = 1000
+
+MANIPULATE
+
+	MyOutputFile.WRITE
+	MyOutputFile.flush
+
+END

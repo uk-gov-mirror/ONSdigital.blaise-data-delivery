@@ -1,0 +1,22 @@
+﻿USES
+
+	Meta (var)
+
+INPUTFILE
+
+	MyInputFile: Meta ('inputfile.bdbx', BLAISE)
+
+OUTPUTFILE
+
+	MyOutputFile: Meta ('outputfile.json', JSON)
+
+	SETTINGS
+		BUFFERSIZE = 1000
+		ADDUTF8BOM = NO
+
+MANIPULATE
+
+	MyOutputFile.WRITE
+	MyOutputFile.flush
+
+END

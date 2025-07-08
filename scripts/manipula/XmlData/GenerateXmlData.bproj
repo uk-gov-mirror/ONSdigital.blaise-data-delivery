@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Name="GenerateXmlData" Guid="4068ad0d-e768-4119-935b-e31c8380c4f1" ProjectType="ManipulaProject">
+  <MainFile RelativePath="true">GenerateXmlData.manx</MainFile>
+  <FileItems>
+    <File FileType="ManipulaFileType" RelativePath="true">GenerateXmlData.manx</File>
+  </FileItems>
+  <Properties>
+    <IncludeSearchPath />
+    <LibrarySearchPath />
+    <DatamodelSearchPath />
+    <ExternalSearchPath />
+    <ConditionalDefines />
+    <ResourceDB />
+    <SurveyRoot />
+    <AppSupport />
+    <IsAppMainUserInterface />
+  </Properties>
+</Project>

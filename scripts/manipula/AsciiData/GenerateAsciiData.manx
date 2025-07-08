@@ -1,0 +1,23 @@
+﻿USES
+
+	Meta (var)
+
+INPUTFILE
+
+	MyInputFile: Meta ('inputfile.bdbx', BLAISE)
+
+OUTPUTFILE
+
+	MyOutputFile: Meta ('outputfile.asc', ASCII)
+
+	SETTINGS
+		BUFFERSIZE = 1000
+		ADDUTF8BOM = NO
+		CHARACTERSET = ANSI
+
+MANIPULATE
+
+	MyOutputFile.WRITE
+	MyOutputFile.flush
+
+END
