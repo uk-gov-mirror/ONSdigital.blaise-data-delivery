@@ -24,6 +24,5 @@ jobs:
           languages: ${{ matrix.language }}
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
-        with:
       - name: Run CodeQL
         uses: github/codeql-action/analyze@v3
