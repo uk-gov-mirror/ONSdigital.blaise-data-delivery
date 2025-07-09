@@ -1,7 +1,5 @@
 [tool.poetry]
-name = "sandbox_data_delivery"
 version = "0.1.0"
-description = "GCP Cloud Function to copy files from sandbox NiFi bucket to dev NiFi bucket"
 authors = ["Blaise Team"]
 package-mode = false
 
@@ -9,6 +7,8 @@ package-mode = false
 python = "^3.9"
 google-cloud-storage = "^1.40.0"
 google-cloud-logging = "^3.11.3"
+
+[tool.poetry.group.dev.dependencies]
 parameterized = "^0.9.0"
 setuptools = "^80.9.0"
 black = "^25.1.0"

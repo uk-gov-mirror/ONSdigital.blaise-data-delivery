@@ -25,6 +25,6 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@v2
         with:
-          working-directory: sandbox_data_delivery
+          working-directory: cloud_functions
       - name: Run CodeQL
         uses: github/codeql-action/analyze@v2

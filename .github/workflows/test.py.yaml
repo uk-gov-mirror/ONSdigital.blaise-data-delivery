@@ -18,8 +18,8 @@ jobs:
       - name: Install Poetry
         run: pip install poetry
       - name: Install dependencies
-        working-directory: sandbox_data_delivery
+        working-directory: cloud_functions
         run: poetry install
       - name: Run unittest
-        working-directory: sandbox_data_delivery
+        working-directory: cloud_functions
         run: poetry run python -m unittest
