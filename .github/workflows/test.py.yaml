@@ -14,12 +14,10 @@ jobs:
         python-version: [ 3.9 ]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
       - name: Install Poetry
         run: pip install poetry
       - name: Install dependencies
-        working-directory: cloud_functions
         run: poetry install
       - name: Run unittest
-        working-directory: cloud_functions
-        run: poetry run python -m unittest
+        run: poetry -C cloud_functions run python -m unittest discover cloud_functions
