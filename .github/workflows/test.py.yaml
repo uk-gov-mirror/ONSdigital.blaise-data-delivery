@@ -20,4 +20,4 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Run unittest
-        run: poetry -C cloud_functions run python -m unittest discover cloud_functions
+        run: poetry run python -m unittest discover cloud_functions
