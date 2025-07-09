@@ -1,1 +1,1 @@
-import cloud_functions.sandbox_data_delivery
+from cloud_functions.sandbox_data_delivery import copy_sandbox_dd_files_to_dev
