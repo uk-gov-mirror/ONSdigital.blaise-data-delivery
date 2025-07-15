@@ -31,7 +31,7 @@ function AddSpssMetadataToDelivery {
         $arguments = @(
             "`"$msuxPath`"",
             "-K:meta=`"$bmixPath`"",
-            "-P:SPSS;;;;;;;;;2;;;;;;;;;;N",
+            "-P:SPSS;;;;;;;;;2;;;TAB;;;;;;;N",
             "-Q:True"
         )
         $process = Start-Process -FilePath $manipulaPath -ArgumentList $arguments -Wait -PassThru -NoNewWindow
