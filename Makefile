@@ -10,6 +10,7 @@ show-help:
 format:
 	@poetry run black .
 	@poetry run isort .
+	@poetry run mypy .
 
 .PHONY: test
 ## Run Python unit tests
