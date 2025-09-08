@@ -4,8 +4,11 @@ from unittest.mock import MagicMock, patch
 
 from parameterized import parameterized
 
-from cloud_functions.sandbox_data_delivery import (copy_sandbox_dd_files_to_dev, get_environment_suffix,
-                  split_filename)
+from cloud_functions.sandbox_data_delivery import (
+    copy_sandbox_dd_files_to_dev,
+    get_environment_suffix,
+    split_filename,
+)
 
 
 class TestDeliverDataFunction(unittest.TestCase):
